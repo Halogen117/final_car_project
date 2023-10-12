@@ -1,4 +1,4 @@
-package carparkSystem;
+package com.mycompany.finalcarvroom;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -28,10 +28,10 @@ public class carparkAPI {
     	manipulateDb manDb = new manipulateDb();
     	//db.Conn();  //Connect
     	
-    	String urlDB = "jdbc:postgresql://localhost/carparkInformation";
+    	String urlDB = "jdbc:postgresql://localhost/user_storage";
         String user = "postgres";
-        String password = ""; // edit your postgre password
-
+        String password = "1qwer$#@!";
+        boolean run = true;
         try {
         	connectDB = DriverManager.getConnection(urlDB, user, password);
         	System.out.println("Connected to PostgreSQL server");
@@ -75,15 +75,16 @@ public class carparkAPI {
         	se.printStackTrace();
         }
     }
+    public void testing(){
+    }
 }
 
 class Datab{
-    // to connect to postgre
-    public void Conn() {
-    	String urlDB = "jdbc:postgresql://localhost/carparkInformation";
+    public Connection Conn() {
+    	String urlDB = "jdbc:postgresql://localhost/user_storage";
         String user = "postgres";
-        String password = ""; //add your postgre password here
-
+        String password = "1qwer$#@!";
+        boolean run = true;
         try {
         	Connection connectDB = DriverManager.getConnection(urlDB, user, password);
         	System.out.println("Connected to PostgreSQL server");
@@ -91,11 +92,15 @@ class Datab{
         	// COMMENT OUT THIS LINE IF YOU ALREADY HAVE A TABLE
         	//createDatabase(connectDB);
         	//createFavDb(connectDB);
+            return connectDB;    
         }
         catch (SQLException se) {
         	se.printStackTrace();
         }
+        return null;
     }
+    
+    
     ////////////////////// USER DATABASE /////////////////////////////
     public void createUserDb(Connection connectDB) {
     	try {
@@ -163,7 +168,7 @@ class Datab{
 }
 
 class manipulateDb {
-	
+	Datab db = new Datab();
 	//////////////////////FAVOURITE DATABASE ////////////////////////////////////////
 	public void insertFavDb(Connection connectDB, String userID, String carparkID) {
 		try {
@@ -367,18 +372,34 @@ class manipulateDb {
 	}
 	
 	//CreateAccount
-	public void insertUserDb(Connection connectDB, String [] createAcc) {
-		try {
-			Statement statement = connectDB.createStatement();
+	public int insertUserDb(Connection connectDBs, String [] createAcc) {
+                
+                try {
+                        String urlDB = "jdbc:postgresql://localhost/user_storage";
+                        String user = "postgres";
+                        String password = "1qwer$#@!";
+                        Connection connectDB = DriverManager.getConnection(urlDB, user, password);
+                        System.out.println("Connected to PostgreSQL server");
+
+                        // COMMENT OUT THIS LINE IF YOU ALREADY HAVE A TABLE
+                        //createDatabase(connectDB);
+                        //createFavDb(connectDB);
+                        //connectDB = DriverManager.getConnection(urlDB, user, password);
+                        System.out.println("Connected to PostgreSQL server");
+
+                        // COMMENT OUT THIS LINE IF YOU ALREADY HAVE A TABLE
+                        Statement statement = connectDB.createStatement();
 			/////////////////// check if email and phone number already exist /////////////////////////
 			boolean getContact = checkContactExist(connectDB, createAcc[4]);
 			boolean getEmail = checkEmailExist(connectDB, createAcc[2]);
 			
 			if(getEmail) {
-				System.out.println("Email already Existed!");
+				return 1; 
+                                //System.out.println("Email already Existed!");
 			}
 			else if(getContact) {
-				System.out.println("Phone Number already Existed");
+				//System.out.println("Phone Number already Existed");
+                                return 2;
 			}
 			else {
 				String sql = "INSERT INTO user_DB "
@@ -388,14 +409,16 @@ class manipulateDb {
 						+ createAcc[9] + "','" + createAcc[10] +"')";
 				
 				statement.executeUpdate(sql);
-		        System.out.println("User Account Created!");
+		        //System.out.println("User Account Created!");
 				//activate "Authentication Failed" display message code here
-			}
-		}catch(SQLException e) {
-			System.out.println("User Account Creation Failed!");
-			e.printStackTrace();
-			
-		}
+                        return 0;
+                        }
+
+                }catch (SQLException se) {
+                        se.printStackTrace();
+                        
+                }
+                return 4;
 	}
     
 }

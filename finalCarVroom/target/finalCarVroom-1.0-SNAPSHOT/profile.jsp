@@ -280,13 +280,13 @@
                                       <div class="col-lg-6">
                                         <div class="form-group focused">
                                           <label class="form-control-label" for="input-username">Username</label>
-                                          <input type="text" id="input-username" class="form-control form-control-alternative" placeholder="Username" value="User Tan">
+                                          <input type="text" id="input-username" class="form-control form-control-alternative" placeholder="Username" value=<%= session.getAttribute("username") %>>
                                         </div>
                                       </div>
                                       <div class="col-lg-6">
                                         <div class="form-group">
                                           <label class="form-control-label" for="input-email">Email Address</label>
-                                          <input type="email" id="input-email" class="form-control form-control-alternative" placeholder="usertan@example.com">
+                                          <input type="email" id="input-email" class="form-control form-control-alternative" placeholder="usertan@example.com" value=<%= session.getAttribute("email") %>>
                                         </div>
                                       </div>
                                     </div>
@@ -294,7 +294,7 @@
                                       <div class="col-lg-6">
                                         <div class="form-group focused">
                                           <label class="form-control-label" for="input-first-name">First Name</label>
-                                          <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="First name" value="John">
+                                          <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="First name" value=<%= session.getAttribute("username") %>>
                                         </div>
                                       </div>
                                       <div class="col-lg-6">
@@ -316,7 +316,7 @@
                                       <div class="col-lg-4">
                                         <div class="form-group focused">
                                           <label class="form-control-label" for="input-moblie">Mobile No.</label>
-                                          <input type="text" id="input-city" class="form-control form-control-alternative" placeholder="Mobile No." value="81234567">
+                                          <input type="text" id="input-city" class="form-control form-control-alternative" placeholder="Mobile No." value=<%= session.getAttribute("contact") %>>
                                         </div>
                                       </div>
                             

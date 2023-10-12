@@ -26,11 +26,11 @@
 
 </head>
 
-<body class="bg-gradient-light">
+<body class="bg-gradient-light" style="padding-bottom: 70px;">
 
     <div class="container">
         
-        <div class="container d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+        <div class="container d-flex justify-content-center align-items-center" style="min-height: 50vh; padding-bottom: 70px;">
             <div class="card o-hidden col-xl-7 border-0 shadow-lg my-5">
 
             <div class="card-body p-0">
@@ -59,14 +59,29 @@
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
+                                            name="exampleInputPassword" placeholder="Password">
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
+                                            name="exampleRepeatPassword" placeholder="Repeat Password">
                                     </div>
                                 </div>
-                                <a href="login.jsp" class="btn btn-primary btn-user btn-block">
+                                <h5 class="h5 text-gray-900 mb-4">Security Question 1: What was the name of your first pet?</h5>
+                                <div class="form-group">
+                                    <input type="email" class="form-control form-control-user" id="ans1"
+                                        placeholder="Security Question 1 Answer">
+                                </div>
+                                <h5 class="h5 text-gray-900 mb-4">Security Question 2: What is your favorite movie?</h5>
+                                    <div class="form-group">
+                                    <input type="email" class="form-control form-control-user" id="ans2"
+                                        placeholder="Security Question 2 Answer">
+                                </div>
+                                    <h5 class="h5 text-gray-900 mb-4">Security Question 3: What is your lucky number?</h5>
+                                    <div class="form-group">
+                                    <input type="email" class="form-control form-control-user" id="ans3"
+                                        placeholder="Security Question 3 Answer">
+                                </div>
+                                <a href="RegisterServlet" class="btn btn-primary btn-user btn-block">
                                     Register Account
                                 </a>
                                 <hr>
@@ -84,7 +99,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
 

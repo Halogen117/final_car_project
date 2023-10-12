@@ -47,7 +47,7 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                     </div>
-                                    <form class="user">
+                                    <form action="LoginServlet" class="user">
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
@@ -64,9 +64,7 @@
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <a href="index.jsp" class="btn btn-primary btn-user btn-block">
-                                            Login
-                                        </a>
+                                        <input type="submit" value="Login" class="btn btn-primary btn-user btn-block">
                                         <hr>
                                     
                                     </form>
@@ -89,7 +87,22 @@
             </div>
 
         </div>
-
+        <%
+        if(session.getAttribute("work") == "worked"){
+            %>
+        <p>Successful Registration!</p>
+        <%
+        }else if(session.getAttribute("work") == "failed"){
+        %>
+            <p>Failed Registration!</p>
+        <%
+            }else{
+            
+        %>
+        <p></p>
+        <%
+        }
+        %>
     </div>
 
 
