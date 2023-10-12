@@ -30,8 +30,8 @@ public class carparkAPI {
     	
     	String urlDB = "jdbc:postgresql://localhost/carparkInformation";
         String user = "postgres";
-        String password = "";
-        boolean run = true;
+        String password = ""; // edit your postgre password
+
         try {
         	connectDB = DriverManager.getConnection(urlDB, user, password);
         	System.out.println("Connected to PostgreSQL server");
@@ -78,7 +78,24 @@ public class carparkAPI {
 }
 
 class Datab{
-    
+    // to connect to postgre
+    public void Conn() {
+    	String urlDB = "jdbc:postgresql://localhost/carparkInformation";
+        String user = "postgres";
+        String password = ""; //add your postgre password here
+
+        try {
+        	Connection connectDB = DriverManager.getConnection(urlDB, user, password);
+        	System.out.println("Connected to PostgreSQL server");
+        	
+        	// COMMENT OUT THIS LINE IF YOU ALREADY HAVE A TABLE
+        	//createDatabase(connectDB);
+        	//createFavDb(connectDB);
+        }
+        catch (SQLException se) {
+        	se.printStackTrace();
+        }
+    }
     ////////////////////// USER DATABASE /////////////////////////////
     public void createUserDb(Connection connectDB) {
     	try {
