@@ -5,25 +5,27 @@
 
 //initialise SVY21 
 //a free open source library taken from https://github.com/cgcai/SVY21#javascript
-var cv = new SVY21();
+let cv = new SVY21();
 let map;
 let marker;
 let infoWindow;
-var markersArray = [];
-var carparkJson;
+let markersArray = [];
+let carparkJson;
 let carparkAvailabilityJson;
 let userFavouritedCarparks;
 //For testing purposes, userID is set to 1 for now
 let userID = 1;
+let filteredData;
 
 //Function for when user clicks on Get Nearby carparks
-const findMyLocation = () => {
-    const success = (position) => {
+async function findMyLocation() {
+    const success = async (position) => {
         var markerId = 0;
 
         //Offset value 
         const offsetTextBox = document.getElementById('offsetTextBox');
         var offset = parseInt(offsetTextBox.value);
+
 
         const pos = {
             lat: position.coords.latitude,
@@ -42,14 +44,16 @@ const findMyLocation = () => {
 
 
         if (offset > 0) {
-            var filteredData = filterByLocation(carparkJson, result.E, result.N, offset);
+            filteredData = filterByLocation(carparkJson, result.E, result.N, offset);
             clearOverlays();
             clearCarparkCards();
-            for (const carpark of filteredData) {
 
+            for (const carpark of filteredData) {
+                console.log("inside findmylocation");
                 let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.car_park_no);
+                let lastDate = moment(getCarparkLastUpdatedTime(carpark.car_park_no)).format('ddd, HH:mm:ss');
                 initMarker(carpark, map, totalCarparkAvailableLot);
-                createCarparkCards(markerId, carpark, totalCarparkAvailableLot);
+                createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastDate);
                 markerId++;
 
 
@@ -71,7 +75,8 @@ const findMyLocation = () => {
         status.textContent = "Unable to retrieve your location";
     };
     navigator.geolocation.getCurrentPosition(success, error);
-};
+}
+;
 
 
 
@@ -85,7 +90,7 @@ async function initMap() {
 
     // Short namespaces can be used.
     map = new google.maps.Map(document.getElementById("map"), {
-        center: {lat: -34.397, lng: 150.644},
+        center: {lat: 1.3521, lng: 103.8198},
         zoom: 8,
         mapId: '8a715e13e7d9ce06',
         mapTypeControl: false,
@@ -93,7 +98,8 @@ async function initMap() {
     //Initialise Infowindow
     infoWindow = new google.maps.InfoWindow();
 
-    findMyLocation();
+    await getCarparkInformation();
+    await findMyLocation();
     //Add a button to the map
     const locationButton = document.createElement("button");
     locationButton.textContent = "Get nearby car parks";
@@ -121,7 +127,7 @@ async function initMap() {
     marker = new google.maps.marker.AdvancedMarkerElement({
         map,
     });
-    infoWindow = new google.maps.InfoWindow({});
+    
     // Add the gmp-placeselect listener, and display the results on the map.
     pac.addListener("gmp-placeselect", async ({ place }) => {
         await place.fetchFields({
@@ -131,6 +137,7 @@ async function initMap() {
 
         clearOverlays();
         clearCarparkCards();
+        fetchCarparkAvailabilityData();
         const offsetTextBox = document.getElementById('offsetTextBox');
         var offset = parseInt(offsetTextBox.value);
         // If the place has a geometry, then present it on a map.
@@ -152,17 +159,18 @@ async function initMap() {
                 "</div>";
 
         updateInfoWindow(content, place.location);
-        var placeJson = place.toJSON();
+        let placeJson = place.toJSON();
         //Convert The location lat and lon to SVY21 northing and easting (y and x values)
         var result = cv.computeSVY21(placeJson.location.lat, placeJson.location.lng);
         if (offset > 0) {
-            var filteredData = filterByLocation(carparkJson, result.E, result.N, offset);
+            filteredData = filterByLocation(carparkJson, result.E, result.N, offset);
             clearOverlays();
             clearCarparkCards();
             for (const carpark of filteredData) {
                 let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.car_park_no);
+                let lastDate = moment(getCarparkLastUpdatedTime(carpark.car_park_no)).format('ddd, HH:mm:ss');
                 initMarker(carpark, map, totalCarparkAvailableLot);
-                createCarparkCards(markerId, carpark, totalCarparkAvailableLot);
+                createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastDate);
                 markerId++;
             }
 
@@ -176,50 +184,91 @@ async function initMap() {
     locationButton.addEventListener("click", findMyLocation);
 
 }
+
 //Getter methods
+
+//getTotalCarparkAvailable adds up the different lot type of a specific carpark as given by carparkNo and returns the total available lots
 function getTotalCarparkAvailable(carparkNo) {
-    var totalCarparkAvailableLot = 0;
-    let carparkJson = carparkAvailabilityJson.find(item => item.carpark_number === carparkNo);
-    for (var i = 0; i < carparkJson.carpark_info.length; i++) {
-        totalCarparkAvailableLot += parseInt(carparkJson.carpark_info[i].lots_available);
+    let totalCarparkAvailableLot = 0;
+    if (carparkAvailabilityJson !== null || typeof carparkAvailabilityJson !== "undefined") {
+        let carparkJson = carparkAvailabilityJson.find(item => item.carpark_number === carparkNo);
+        for (let i = 0; i < carparkJson.carpark_info.length; i++) {
+            totalCarparkAvailableLot += parseInt(carparkJson.carpark_info[i].lots_available);
+        }
     }
+
     return totalCarparkAvailableLot;
 }
 
-function getUserFavouritedCarparks(userID) {
-    const xhr = new XMLHttpRequest();
-    let url = '/finalCarVroom/getFavourite';
-    let params = 'userID=' + userID;
-    xhr.open("GET", url + "?" + params, true);
-    xhr.onload = () => {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log("Successfully fetched User's favourited carparks");
-            userFavouritedCarparks = JSON.parse(xhr.response);
+function getCarparkLastUpdatedTime(carparkNo) {
+    let carparkJson = carparkAvailabilityJson.find(item => item.carpark_number === carparkNo);
+    return carparkJson.update_datetime;
+}
 
+function getUserFavouritedCarparks(userID) {
+    return new Promise(function (resolve, reject) {
+        const xhr = new XMLHttpRequest();
+        let url = '/finalCarVroom/getFavourite';
+        let params = 'userID=' + userID;
+        xhr.open("GET", url + "?" + params, true);
+        let status = xhr.status;
+        xhr.onload = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                userFavouritedCarparks = JSON.parse(xhr.response);
+                resolve("it works");
+            } else {
+                reject(status);
+            }
         }
-    }
-    xhr.send();
+        xhr.send();
+    });
+
 
 }
 
 //Get carpark availability data from beta.data.gov.sg
 function fetchCarparkAvailabilityData() {
-    var local = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss');
-    console.log(local, "- UTC now to local");
-    console.log("Fetching updated data.");
-    const xhr = new XMLHttpRequest();
+    return new Promise(function (resolve, reject) {
 
-    xhr.open("GET", "https://api.data.gov.sg/v1/transport/carpark-availability", true);
-    xhr.onload = () => {
-        carparkAvailabilityJson = JSON.parse(xhr.response).items[0].carpark_data;
+        const xhr = new XMLHttpRequest();
 
-        console.log(carparkAvailabilityJson);
-        //console.log(jsonResponse.find(item => item.carpark_number === "PL27"));
+        xhr.open("GET", "https://api.data.gov.sg/v1/transport/carpark-availability", true);
+        let status = xhr.status;
+        xhr.onload = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                carparkAvailabilityJson = JSON.parse(xhr.response).items[0].carpark_data;
+                resolve("it works");
+            } else {
+                reject(status);
+            }
 
-    };
-    xhr.send();
+            //console.log(jsonResponse.find(item => item.carpark_number === "PL27"));
+
+        };
+        xhr.send();
+    });
 
 }
+//Open CSV file using jQuery
+function getCarparkInformation() {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            type: "GET",
+            url: "resources/HDBCarparkInformation.csv",
+            dataType: "text",
+            success: function (data) {
+                carparkJson = csvToJSON(data);
+                resolve("success get csv");
+            },
+            error: function (error) {
+                reject(error);
+            }
+        });
+    });
+}
+//---End of getter methods---
+
+
 //Insert userid and carparkid into database using xmlhttprequest
 function insertFavDB(userID, carparkID) {
     const xhr = new XMLHttpRequest();
@@ -271,13 +320,30 @@ function insertHistDB(userID, carparkID) {
     xhr.send(params);
 }
 
-//Change the parameter value to userID retrieved from Httpsession
-getUserFavouritedCarparks(userID);
-fetchCarparkAvailabilityData();
-setInterval(fetchCarparkAvailabilityData, 60 * 1000);
 
+
+
+
+//Calls these two functions then initmap is called
+fetchCarparkAvailabilityData().then(function () {
+    return getCarparkInformation();
+    //Change the parameter value to userID retrieved from Httpsession
+
+}).then(function () {
+    return getUserFavouritedCarparks(userID);
+
+}).then(function () {
 //call initmap to initalise the map
-initMap();
+    initMap();
+}).catch(function(err){
+    console.log(err);
+});
+
+
+
+
+
+
 // Helper function to create an info window.
 function updateInfoWindow(content, center) {
     infoWindow.close();
@@ -289,20 +355,7 @@ function updateInfoWindow(content, center) {
         shouldFocus: false,
     });
 }
-//Open CSV file using jQuery
-$(document).ready(function () {
-    $.ajax({
-        type: "GET",
-        url: "resources/HDBCarparkInformation.csv",
-        dataType: "text",
-        success: function (data) {
-            carparkJson = csvToJSON(data);
 
-
-
-        }
-    });
-});
 
 //Filter the carpark CSV data by current location using an offset value
 function filterByLocation(data, x, y, offset) {
@@ -383,7 +436,7 @@ async function initMarker(carpark, map, lotsAvailable) {
         infoWindow.setContent(content);
         infoWindow.open(marker.map, marker);
         document.getElementById(carpark.car_park_no).focus();
-        insertHistDB(userID,carpark.car_park_no);
+        insertHistDB(userID, carpark.car_park_no);
     });
     //Push markers to an array which can be used later to clear array
     markersArray.push(marker);
@@ -427,7 +480,7 @@ function csvToJSON(csvDataString) {
 
 //Create the carparkcards html and buttons
 //Call this multiple times for multiple carparks
-function createCarparkCards(id, carpark, lotsAvailable) {
+function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
     const carparkCard = document.createElement("div");
     carparkCard.classList.add("col-xl-3");
     carparkCard.classList.add("col-md-6");
@@ -437,12 +490,13 @@ function createCarparkCards(id, carpark, lotsAvailable) {
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div class="text-s font-weight-bold text-primary text-uppercase mb-1">${carpark.address}</div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">Lots Available: ${lotsAvailable} </div>
+                                                <div id="lots_${carpark.car_park_no}" class="h5 mb-0 font-weight-bold text-gray-800">Lots Available: ${lotsAvailable} </div>
+                                                <div id="lastUpdated_${carpark.car_park_no}" class="h5 mb-0 font-weight-bold text-gray-800">Last Updated: ${lastUpdatedDatetime} </div>
                                             </div>
                                             <div class="btn-group">
                                                 <button id="btn_${carpark.car_park_no}" class="btn btn-success">Go</button>
                                                  <button type="button" id="fav_${carpark.car_park_no}" class="btn btn-primary"><i class="fa-solid fa-heart"></i></button>
-
+                                                 
                                             </div>
                                         </div>
                                     </div>
@@ -478,3 +532,19 @@ function createCarparkCards(id, carpark, lotsAvailable) {
     });
 
 }
+
+
+document.getElementById("refreshBtn").onclick = function () {
+    fetchCarparkAvailabilityData();
+    if (filteredData !== null || typeof filteredData !== "undefined") {
+        for (const carpark of filteredData) {
+            console.log(carpark.car_park_no);
+            let totalLotsAvailable = getTotalCarparkAvailable(carpark.car_park_no);
+            let lastDate = moment(getCarparkLastUpdatedTime(carpark.car_park_no)).format('ddd, HH:mm:ss');
+            document.getElementById("lots_" + carpark.car_park_no).textContent = "Lots Available: " + totalLotsAvailable;
+            document.getElementById("lastUpdated_" + carpark.car_park_no).textContent = "Last Updated: " + lastDate;
+        }
+    }
+};
+
+

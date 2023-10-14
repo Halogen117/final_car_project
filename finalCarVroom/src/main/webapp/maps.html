@@ -106,7 +106,7 @@
 
                 <!-- Nav Item - Favourites -->
                 <li class="nav-item">
-                    <a class="nav-link" href="favourites.jsp">
+                    <a class="nav-link" href="favourites.html">
                         <i class="fas fa-fw fa-heart"></i>
                         <span>Favourites</span></a>
                 </li>
@@ -292,9 +292,8 @@
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-                        <h1>Carparks near current location!</h1>
                         <label for="offsetTextBox">(For Testing purposes1!)Set an offset value of current location:</label>
-                        <input type="text" placeholder="Enter Offset" id="offsetTextBox">
+                        <input value='500' type="text" placeholder="Enter Offset" id="offsetTextBox">
                         <div class="pac-card" id="pac-card">
                         </div>
                         <!-- Map Content -->
@@ -305,10 +304,10 @@
                         </div>
 
                         <div class="d-sm-flex align-items-center justify-content-between mb-4 ">
-                            <h1 class="h3 mb-0 text-gray-800">Nearby
+                            <h1 class="h3 mb-0 text-gray-800">Nearby Car parks
                                 <i class="fas fa-fw fa-map-pin"></i>
                             </h1>
-
+                            <button id='refreshBtn'class="btn btn-primary"><i class="btnIcon fa-solid fa-rotate-right"></i>Refresh Lots</button>
 
                         </div>
 
