@@ -31,6 +31,12 @@
 
         <!-- Custom fontawesome kit for icons used in Google maps markers -->
         <script src="https://kit.fontawesome.com/737527f161.js" crossorigin="anonymous"></script>
+        <script src="js/svy21.js"></script>
+        <script src="js/moment.min.js"></script>
+        <script type="module" src="js/map.js"></script>
+
+
+
 
         <link href="css/maps.css" rel="stylesheet" href="url"/>
 
@@ -287,9 +293,137 @@
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
                         <h1>Carparks near current location!</h1>
-                        <label for="offsetTextBox">(For Testing purposes)Set an offset value of current location:</label>
+                        <label for="offsetTextBox">(For Testing purposes1!)Set an offset value of current location:</label>
                         <input type="text" placeholder="Enter Offset" id="offsetTextBox">
+                        <div class="pac-card" id="pac-card">
+                        </div>
+                        <!-- Map Content -->
                         <div id="map"></div>
+
+                        <!-- Page Heading -->
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        </div>
+
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4 ">
+                            <h1 class="h3 mb-0 text-gray-800">Nearby
+                                <i class="fas fa-fw fa-map-pin"></i>
+                            </h1>
+
+
+                        </div>
+
+                        <!-- Content Row -->
+                        <div id="carpark" class="row">
+
+                            <!-- Earnings (Monthly) Card Example -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-s font-weight-bold text-primary text-uppercase mb-1">NTU Carpark A</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">Lots Available: </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="#" class="btn btn-success">Go</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Earnings (Monthly) Card Example -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-s font-weight-bold text-primary text-uppercase mb-1">
+                                                    NTU Carpark F</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">Lots Available: </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="#" class="btn btn-success">Go</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Earnings (Monthly) Card Example -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-s font-weight-bold text-primary text-uppercase mb-1">
+                                                    NTU Carpark G</div>
+                                                <div class="h5 mb-2 font-weight-bold text-gray-800">Lots Available: </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="#" class="btn btn-success">Go</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Earnings (Monthly) Card Example -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-s font-weight-bold text-primary text-uppercase mb-1">
+                                                    NTU Carpark G</div>
+                                                <div class="h5 mb-2 font-weight-bold text-gray-800">Lots Available: </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="#" class="btn btn-success">Go</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Earnings (Monthly) Card Example -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-s font-weight-bold text-primary text-uppercase mb-1">
+                                                    NTU Carpark G</div>
+                                                <div class="h5 mb-2 font-weight-bold text-gray-800">Lots Available: </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="#" class="btn btn-success">Go</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Earnings (Monthly) Card Example -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-s font-weight-bold text-primary text-uppercase mb-1">
+                                                    NTU Carpark G</div>
+                                                <div class="h5 mb-2 font-weight-bold text-gray-800">Lots Available: </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="#" class="btn btn-success">Go</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>                        
+
+                        <!-- Content Row -->
 
 
                         <!-- End of Main Content -->
@@ -352,12 +486,7 @@
                 <script src="js/demo/chart-area-demo.js"></script>
                 <script src="js/demo/chart-pie-demo.js"></script>
 
-                </body>
-
-                </html>
-
-                <script>
-                    (g => {
+                <script>(g => {
                         var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
                         b = b[c] || (b[c] = {});
                         var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async(f, n) => {
@@ -373,14 +502,14 @@
                                 m.head.append(a)
                             }));
                         d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
-                    })({
-                        key: "AIzaSyC0H6jLTIEIjD41R18auYzogx7ZSn2rlsQ",
-                        v: "weekly",
-                        // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
-                        // Add other bootstrap parameters as needed, using camel case.
-                    });
-                </script>
-                <script src="js/svy21.js"></script>
-                <script src="js/map.js"></script>
+                    })
+                            ({key: "AIzaSyAJEWhhOxBAq1umLcPBZ1TQvmzV-cZBP-8", v: "alpha"});</script>
+
+                </body>
+
+                </html>
+
+
+
 
 

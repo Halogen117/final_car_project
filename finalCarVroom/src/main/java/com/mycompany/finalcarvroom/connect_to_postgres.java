@@ -14,9 +14,9 @@ import java.sql.ResultSetMetaData;
  * @author Halogen
  */
 public class connect_to_postgres {
-    private final String user = "postgres";
-    private final String password = "1qwer$#@!";
-    private final String url = "jdbc:postgresql://localhost/user_storage?user="+user+"&password="+password+"";
+    private static final String user = "postgres";
+    private static final String password = "admin";
+    private static final String url = "jdbc:postgresql://localhost/carpark?user="+user+"&password="+password+"";
     
     public connect_to_postgres(){
     
@@ -25,6 +25,7 @@ public class connect_to_postgres {
         Connection conn_to = null;
         
         try{
+            DriverManager.registerDriver(new org.postgresql.Driver());
             conn_to = DriverManager.getConnection(url);
             System.out.println("Connected to the PostgreSQL server successfully.");
         
