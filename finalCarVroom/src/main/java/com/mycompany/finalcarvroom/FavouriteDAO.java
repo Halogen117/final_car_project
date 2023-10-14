@@ -26,10 +26,11 @@ public class FavouriteDAO {
     private static final String DELETE_FAV_SQL = "delete from favourite_db where user_id=? AND carpark_id=?;";
     private static final String SELECT_ALL_FAV_BY_USERID = "SELECT * FROM favourite_db WHERE user_id=?";
 
-    public void insertFavourite(String userID, String carparkID) {
-        try {
+    public void insertFavourite(String userID, String carparkID) throws SQLException {
+        
             ConnectDB conn = new ConnectDB();
-            Connection connection = conn.getConnection();
+        //System.out.println("Connected to PostgreSQL server");
+        try (Connection connection = conn.getConnection()) {
             //System.out.println("Connected to PostgreSQL server");
             PreparedStatement statement = connection.prepareStatement(INSERT_FAV_SQL);
             statement.setString(1, userID);
@@ -38,17 +39,14 @@ public class FavouriteDAO {
 
             statement.executeUpdate();
             System.out.println("Data Successfully Inserted!");
-            connection.close();
-
-        } catch (SQLException e) {
-            System.out.println("Error in updating to Favourite Server");
-            e.printStackTrace();
         }
+
+       
     }
     //Get favourited carparks by user ID
 
     public List<String> getAllFavourites(String userID) {
-        List<String> favouritedCarparks = new ArrayList<String>();
+        List<String> favouritedCarparks = new ArrayList<>();
         try {
             ConnectDB conn = new ConnectDB();
             Connection connection = conn.getConnection();

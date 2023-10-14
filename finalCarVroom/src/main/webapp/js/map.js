@@ -14,7 +14,7 @@ var carparkJson;
 let carparkAvailabilityJson;
 let userFavouritedCarparks;
 //For testing purposes, userID is set to 1 for now
-let userID=1;
+let userID = 1;
 
 //Function for when user clicks on Get Nearby carparks
 const findMyLocation = () => {
@@ -176,6 +176,7 @@ async function initMap() {
     locationButton.addEventListener("click", findMyLocation);
 
 }
+//Getter methods
 function getTotalCarparkAvailable(carparkNo) {
     var totalCarparkAvailableLot = 0;
     let carparkJson = carparkAvailabilityJson.find(item => item.carpark_number === carparkNo);
@@ -201,7 +202,7 @@ function getUserFavouritedCarparks(userID) {
 
 }
 
-
+//Get carpark availability data from beta.data.gov.sg
 function fetchCarparkAvailabilityData() {
     var local = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss');
     console.log(local, "- UTC now to local");
@@ -219,6 +220,7 @@ function fetchCarparkAvailabilityData() {
     xhr.send();
 
 }
+//Insert userid and carparkid into database using xmlhttprequest
 function insertFavDB(userID, carparkID) {
     const xhr = new XMLHttpRequest();
     let url = '/finalCarVroom/insertFavourite';
@@ -235,6 +237,7 @@ function insertFavDB(userID, carparkID) {
     };
     xhr.send(params);
 }
+//Delete from favourite_db with userid and carparkid
 function deleteFavDB(userID, carparkID) {
     const xhr = new XMLHttpRequest();
     let url = '/finalCarVroom/deleteFavourite';
@@ -251,8 +254,24 @@ function deleteFavDB(userID, carparkID) {
     };
     xhr.send(params);
 }
+function insertHistDB(userID, carparkID) {
+    const xhr = new XMLHttpRequest();
+    let url = '/finalCarVroom/insertHistory';
+    let params = 'userID=' + userID + '&carparkID=' + carparkID;
+    xhr.open('POST', url, true);
 
-//Change the parameter "1" or other value to userID retrieved from Httpsession
+//Send the proper header information along with the request
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    xhr.onreadystatechange = function () {//Call a function when the state changes.
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log(xhr.responseText);
+        }
+    };
+    xhr.send(params);
+}
+
+//Change the parameter value to userID retrieved from Httpsession
 getUserFavouritedCarparks(userID);
 fetchCarparkAvailabilityData();
 setInterval(fetchCarparkAvailabilityData, 60 * 1000);
@@ -364,7 +383,7 @@ async function initMarker(carpark, map, lotsAvailable) {
         infoWindow.setContent(content);
         infoWindow.open(marker.map, marker);
         document.getElementById(carpark.car_park_no).focus();
-
+        insertHistDB(userID,carpark.car_park_no);
     });
     //Push markers to an array which can be used later to clear array
     markersArray.push(marker);
@@ -406,6 +425,8 @@ function csvToJSON(csvDataString) {
     return jsonFormatted;
 }
 
+//Create the carparkcards html and buttons
+//Call this multiple times for multiple carparks
 function createCarparkCards(id, carpark, lotsAvailable) {
     const carparkCard = document.createElement("div");
     carparkCard.classList.add("col-xl-3");
@@ -442,11 +463,11 @@ function createCarparkCards(id, carpark, lotsAvailable) {
     }
     favButton.addEventListener("click", function () {
         if (foundCarpark >= 0) {
-            deleteFavDB(userID,carpark.car_park_no);
+            deleteFavDB(userID, carpark.car_park_no);
             favButton.style.color = "#ffffff";
             foundCarpark = -1;
             alert("Successfully unfavourited Carpark!");
-            
+
         } else {
             insertFavDB(userID, carpark.car_park_no);
             foundCarpark = 1;

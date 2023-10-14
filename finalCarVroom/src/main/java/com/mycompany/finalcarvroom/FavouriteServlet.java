@@ -6,12 +6,15 @@ package com.mycompany.finalcarvroom;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONArray;
 
 /**
@@ -42,8 +45,6 @@ public class FavouriteServlet extends HttpServlet {
         //HttpSession user_session = request.getSession();
 
         PrintWriter out = response.getWriter();
-
-
 
         manipulateDb mDb = new manipulateDb();
         String userID = request.getParameter("userID");
@@ -93,19 +94,22 @@ public class FavouriteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getServletPath();
-        switch (action) {
-            case "/insertFavourite":
-                insertFavourite(request, response);
-                break;
-            case "/deleteFavourite":
-                deleteFavourite(request, response);
-                break;
+        try {
+            switch (action) {
+                case "/insertFavourite":
+                    insertFavourite(request, response);
+                    break;
+                case "/deleteFavourite":
+                    deleteFavourite(request, response);
+                    break;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FavouriteServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-
 
     }
 
-    private void insertFavourite(HttpServletRequest request, HttpServletResponse response) {
+    private void insertFavourite(HttpServletRequest request, HttpServletResponse response) throws SQLException {
         String userID = request.getParameter("userID");
         String carparkID = request.getParameter("carparkID");
         favouriteDAO.insertFavourite(userID, carparkID);

@@ -1,3 +1,5 @@
+com\mycompany\finalcarvroom\History.class
+com\mycompany\finalcarvroom\HistoryServlet.class
 com\mycompany\finalcarvroom\carparkAPI.class
 com\mycompany\finalcarvroom\find_my_location.class
 com\mycompany\finalcarvroom\LoginServlet.class
@@ -10,6 +12,7 @@ com\mycompany\finalcarvroom\RegisterServlet.class
 com\mycompany\finalcarvroom\PasswordManager.class
 com\mycompany\finalcarvroom\FavouriteServlet.class
 com\mycompany\finalcarvroom\LogoutServlet.class
+com\mycompany\finalcarvroom\HistoryDAO.class
 com\mycompany\finalcarvroom\ConnectDB.class
 com\mycompany\finalcarvroom\carpark_api.class
 com\mycompany\finalcarvroom\connect_to_postgres.class
