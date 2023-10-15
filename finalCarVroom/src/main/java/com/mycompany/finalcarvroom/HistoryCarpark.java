@@ -10,28 +10,14 @@ import java.util.Date;
  *
  * @author mokda
  */
-public class History {
-
-    public void setHistory_ID(int history_ID) {
-        this.history_ID = history_ID;
-    }
+public class HistoryCarpark extends History{
 
     public int getHistory_ID() {
         return history_ID;
     }
 
-   
-    protected int history_ID;
-    protected String user_ID;
-    protected String carpark_ID;
-    protected Date time_stamp;
-
-    public History(int history_ID,String user_ID, String carpark_ID, Date time_stamp) {
-        this.history_ID=history_ID;
-        this.user_ID = user_ID;
-        this.carpark_ID = carpark_ID;
-        this.time_stamp = time_stamp;
-
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public void setUser_ID(String user_ID) {
@@ -45,6 +31,16 @@ public class History {
     public void setTime_stamp(Date time_stamp) {
         this.time_stamp = time_stamp;
     }
+    private String address;
+    
+    public HistoryCarpark(int history_ID,String user_ID, String carpark_ID, Date time_stamp,String address) {
+        super(history_ID,user_ID, carpark_ID, time_stamp);
+        this.address=address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
 
     public String getUser_ID() {
         return user_ID;
@@ -57,4 +53,5 @@ public class History {
     public Date getTime_stamp() {
         return time_stamp;
     }
+    
 }

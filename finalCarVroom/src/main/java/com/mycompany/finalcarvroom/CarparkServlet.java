@@ -21,10 +21,10 @@ import org.json.JSONArray;
  *
  * @author mokda
  */
-@WebServlet(name = "HistoryServlet", urlPatterns = {"/getHistory", "/insertHistory","/deleteHistory","/deleteAllHistory"})
-public class HistoryServlet extends HttpServlet {
+@WebServlet(name = "CarparkServlet", urlPatterns = {"/getAllCarpark"})
+public class CarparkServlet extends HttpServlet {
 
-    private HistoryDAO historyDAO;
+    private CarparkDAO carparkDAO;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,10 +35,9 @@ public class HistoryServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    public void init() {
-        historyDAO = new HistoryDAO();
+    public void init(){
+        carparkDAO=new CarparkDAO();
     }
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -47,10 +46,10 @@ public class HistoryServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HistoryServlet</title>");
+            out.println("<title>Servlet CarparkServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HistoryServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CarparkServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -69,24 +68,18 @@ public class HistoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getServletPath();
-        if ("/getHistory".equals(action)) {
+        if ("/getAllCarpark".equals(action)) {
             try {
                 PrintWriter out = response.getWriter();
-                
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
-                
-                String userID = request.getParameter("userID");
-                String duration = request.getParameter("duration");
-                
-                List<HistoryCarpark> historyCarpark = historyDAO.getHistory(userID, duration);
-                JSONArray jsArray = new JSONArray(historyCarpark);
+                List<Carpark> carparkList = carparkDAO.getAllCarpark();
+                JSONArray jsArray = new JSONArray(carparkList);
                 out.print(jsArray);
                 out.flush();
             } catch (SQLException ex) {
-                Logger.getLogger(HistoryServlet.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CarparkServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
     }
 
@@ -101,36 +94,7 @@ public class HistoryServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            String action = request.getServletPath();
-            switch (action) {
-                case "/insertHistory":
-                    insertHistory(request, response);
-                    break;
-                case "/deleteHistory":
-                    deleteHistory(request, response);
-                    break;
-                case "/deleteAllHistory":
-                    deleteAllHistory(request, response);
-                    break;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(HistoryServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void insertHistory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
-        String userID = request.getParameter("userID");
-        String carparkID = request.getParameter("carparkID");
-        historyDAO.insertHistory(userID, carparkID);
-    }
-    private void deleteHistory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
-        int historyID = Integer.parseInt(request.getParameter("historyID"));
-        historyDAO.deleteHistory(historyID);
-    }
-    private void deleteAllHistory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
-        String userID = request.getParameter("userID");
-        historyDAO.deleteAllHistory(userID);
+        processRequest(request, response);
     }
 
     /**

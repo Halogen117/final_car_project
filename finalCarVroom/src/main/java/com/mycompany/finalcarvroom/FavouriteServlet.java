@@ -39,7 +39,7 @@ public class FavouriteServlet extends HttpServlet {
         favouriteDAO = new FavouriteDAO();
     }
 
-    //Ignore this method
+    //IGNORE THIS METHOD
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //HttpSession user_session = request.getSession();
