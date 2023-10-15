@@ -12,30 +12,12 @@ package com.mycompany.finalcarvroom;
 import java.sql.*;
 
 public class CreateDB {
-    public Connection Conn() {
-    	String urlDB = "jdbc:postgresql://localhost/carparkInformation";
-        String user = "postgres";
-        String password = "68709904";
-        try {
-        	Connection connectDB = DriverManager.getConnection(urlDB, user, password);
-        	System.out.println("Connected to PostgreSQL server");
-        	
-        	// COMMENT OUT THIS LINE IF YOU ALREADY HAVE A TABLE
-        	//createDatabase(connectDB);
-        	//createFavDb(connectDB);
-        	return connectDB;
-        }
-        catch (SQLException se) {
-        	se.printStackTrace();
-        }
-        return null;
-    }
-    
+    ConnectDB create = new ConnectDB();
     ////////////////////// USER DATABASE /////////////////////////////
     public void createUserDb() {
         
     	try {
-            Connection connectDB = Conn();
+            Connection connectDB = create.getConnection();
             Statement statement = connectDB.createStatement();
 
             String sql = "CREATE TABLE user_DB" + //EDIT here
@@ -64,7 +46,7 @@ public class CreateDB {
     //////////////////// HISTORY DATABASE /////////////////////////////
     public void createHistoryDb() {
     	try {
-            Connection connectDB = Conn();
+            Connection connectDB = create.getConnection();
             Statement statement = connectDB.createStatement();
 
             String sql = "CREATE TABLE history_DB" + //EDIT here
@@ -85,7 +67,7 @@ public class CreateDB {
     /////////////////// FAVOURITE DATABASE //////////////////////////////
     public void createFavDb() {
     	try {
-            Connection connectDB = Conn();
+            Connection connectDB = create.getConnection();
             Statement statement = connectDB.createStatement();
 
             String sql = "CREATE TABLE favourite_DB" + //EDIT here
