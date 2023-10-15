@@ -28,6 +28,7 @@ public class RetrieveUserData {
         				+ "WHERE email = \'" + emailInput +"\'");
         	if (rs.next()) {
         		// Check password using this function as password in DB is encrypted
+        		System.out.println("Email found: " + rs.getString("email"));
         		if(PasswordManager.verifyPassword(passwordInput, rs.getString("Password"))) {
         			authenticated = true;
             		System.out.println("Authenticated!");
@@ -58,10 +59,10 @@ public class RetrieveUserData {
     	try {
     		Connection conn = connPostGres.connect();
         	Statement statement = conn.createStatement();
-        	ResultSet rs = statement.executeQuery("SELECT Username FROM user_datas "
-        				+ "WHERE Email = \'" + emailInput + "\'");
+        	ResultSet rs = statement.executeQuery("SELECT name FROM user_db "
+        				+ "WHERE email = \'" + emailInput + "\'");
         	if (rs.next()) {
-        		usernameQuery = rs.getString("Username");
+        		usernameQuery = rs.getString("name");
         		System.out.println("Username found: " + usernameQuery);
 			}
         	rs.close();

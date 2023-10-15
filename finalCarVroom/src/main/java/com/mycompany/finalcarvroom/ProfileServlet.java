@@ -29,7 +29,8 @@ public class ProfileServlet extends HttpServlet {
           
           String urlDB = "jdbc:postgresql://localhost/carparkInformation";
           String user = "postgres";
-          String password = "68709904";
+          //String password = "68709904";
+          String password = "Pass1234";
           
           try {
             connectDB = DriverManager.getConnection(urlDB, user, password);

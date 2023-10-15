@@ -21,9 +21,10 @@ import java.net.URL;
  */
 public class carparkAPI {
 
-    private static final String urlDB = "jdbc:postgresql://localhost/carpark";
+    private static final String urlDB = "jdbc:postgresql://localhost/user_storage";
     private static final String user = "postgres";
-    private static final String password = "admin";
+    // private static final String password = "admin";
+    private static final String password = "Pass1234";
 
     public static void main(String[] args) {
 
@@ -82,9 +83,9 @@ public class carparkAPI {
 }
 
 class Datab {
-    private static final String urlDB = "jdbc:postgresql://localhost/carpark";
+    private static final String urlDB = "jdbc:postgresql://localhost/user_storage";
     private static final String user = "postgres";
-    private static final String password = "admin";
+    private static final String password = "Pass1234";
     public Connection Conn() {
 
         boolean run = true;
@@ -171,9 +172,9 @@ class Datab {
 
 class manipulateDb {
     //Change this to your database jdbc, user and password
-    private static final String urlDB = "jdbc:postgresql://localhost/carpark";
+    private static final String urlDB = "jdbc:postgresql://localhost/user_storage";
     private static final String user = "postgres";
-    private static final String password = "admin";
+    private static final String password = "Pass1234";
     Datab db = new Datab();
     //////////////////////FAVOURITE DATABASE ////////////////////////////////////////
 
@@ -381,21 +382,25 @@ class manipulateDb {
             //createDatabase(connectDB);
             //createFavDb(connectDB);
             //connectDB = DriverManager.getConnection(urlDB, user, password);
-            System.out.println("Connected to PostgreSQL server");
-
+            
             // COMMENT OUT THIS LINE IF YOU ALREADY HAVE A TABLE
             Statement statement = connectDB.createStatement();
+            System.out.println("Statement created");
             /////////////////// check if email and phone number already exist /////////////////////////
             boolean getContact = checkContactExist(connectDB, createAcc[4]);
             boolean getEmail = checkEmailExist(connectDB, createAcc[2]);
-
+            
+            System.out.println("Email existed: " + getEmail);
+            System.out.println("Contact existed: " + getContact);
+            
             if (getEmail) {
+            	//System.out.println("Email already Existed!");
                 return 1;
-                //System.out.println("Email already Existed!");
             } else if (getContact) {
                 //System.out.println("Phone Number already Existed");
                 return 2;
             } else {
+            	System.out.println("Now creating account...");
                 String sql = "INSERT INTO user_DB "
                         + "VALUES('" + createAcc[0] + "','" + createAcc[1] + "','" + createAcc[2] + "','"
                         + createAcc[3] + "','" + createAcc[4] + "','" + createAcc[5] + "','"
@@ -405,14 +410,13 @@ class manipulateDb {
                 statement.executeUpdate(sql);
                 //System.out.println("User Account Created!");
                 //activate "Authentication Failed" display message code here
-                return 0;
+                return 4;
             }
 
         } catch (SQLException se) {
             se.printStackTrace();
-
         }
-        return 4;
+        return 0;
     }
 
 }

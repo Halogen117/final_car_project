@@ -41,49 +41,47 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user">
+                            <form class="user" action="RegisterServlet">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
+                                            name="firstName" placeholder="First Name" required>
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
+                                           name="lastName" placeholder="Last Name" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        placeholder="Email Address">
+                                        name="inputEmail" placeholder="Email Address" required>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="password" class="form-control form-control-user"
-                                            name="exampleInputPassword" placeholder="Password">
+                                            name="inputPassword" placeholder="Password" required>
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
-                                            name="exampleRepeatPassword" placeholder="Repeat Password">
+                                            name="exampleRepeatPassword" placeholder="Repeat Password" required>
                                     </div>
                                 </div>
                                 <h5 class="h5 text-gray-900 mb-4">Security Question 1: What was the name of your first pet?</h5>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="ans1"
-                                        placeholder="Security Question 1 Answer">
+                                    <input type="text" class="form-control form-control-user" id="ans1"
+                                        name="ans1" placeholder="Security Question 1 Answer" required>
                                 </div>
                                 <h5 class="h5 text-gray-900 mb-4">Security Question 2: What is your favorite movie?</h5>
                                     <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="ans2"
-                                        placeholder="Security Question 2 Answer">
+                                    <input type="text" class="form-control form-control-user" id="ans2"
+                                        name="ans2" placeholder="Security Question 2 Answer" required>
                                 </div>
                                     <h5 class="h5 text-gray-900 mb-4">Security Question 3: What is your lucky number?</h5>
                                     <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="ans3"
-                                        placeholder="Security Question 3 Answer">
+                                    <input type="text" class="form-control form-control-user" id="ans3"
+                                        name="ans3" placeholder="Security Question 3 Answer" required>
                                 </div>
-                                <a href="RegisterServlet" class="btn btn-primary btn-user btn-block">
-                                    Register Account
-                                </a>
+                                <input type="submit" value="egister Account" class="btn btn-primary btn-user btn-block">
                                 <hr>
                           
                             </form>
