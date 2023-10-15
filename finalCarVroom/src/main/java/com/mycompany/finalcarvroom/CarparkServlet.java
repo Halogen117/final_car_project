@@ -16,12 +16,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
  * @author mokda
  */
-@WebServlet(name = "CarparkServlet", urlPatterns = {"/getAllCarpark"})
+@WebServlet(name = "CarparkServlet", urlPatterns = {"/getAllCarpark", "/getCarpark"})
 public class CarparkServlet extends HttpServlet {
 
     private CarparkDAO carparkDAO;
@@ -35,9 +36,10 @@ public class CarparkServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    public void init(){
-        carparkDAO=new CarparkDAO();
+    public void init() {
+        carparkDAO = new CarparkDAO();
     }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -78,6 +80,19 @@ public class CarparkServlet extends HttpServlet {
                 out.print(jsArray);
                 out.flush();
             } catch (SQLException ex) {
+                Logger.getLogger(CarparkServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if ("/getCarpark".equals(action)) {
+            try {
+                PrintWriter out = response.getWriter();
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                String carparkID = request.getParameter("carparkID");
+                Carpark carpark = carparkDAO.getCarpark(carparkID);
+                JSONObject json = new JSONObject(carpark);
+                out.print(json);
+                out.flush();
+            }catch(SQLException ex){
                 Logger.getLogger(CarparkServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

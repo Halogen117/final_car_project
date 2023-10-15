@@ -17,6 +17,7 @@ let userFavouritedCarparks;
 //For testing purposes, userID is set to 1 for now
 let userID = 1;
 let filteredData;
+let redirectCarparkID;
 
 //Function for when user clicks on Get Nearby carparks
 async function findMyLocation() {
@@ -68,7 +69,7 @@ async function findMyLocation() {
             infoWindow.setPosition(pos);
             infoWindow.setContent("You are here");
             infoWindow.open(map);
-        }).catch(function(err){
+        }).catch(function (err) {
             console.log(err);
         });
 
@@ -103,7 +104,28 @@ async function initMap() {
     //Initialise Infowindow
     infoWindow = new google.maps.InfoWindow();
 
-    await findMyLocation();
+    if (redirectCarparkID === undefined || redirectCarparkID === null) {
+        await findMyLocation();
+    } else {
+        getCarpark(redirectCarparkID).then((value) => {
+            clearCarparkCards();
+            clearOverlays();
+            var markerId = 0;
+            let carpark = value;
+            var resultLatLon = cv.computeLatLon(parseFloat(carpark.y_coord), parseFloat(carpark.x_coord));
+
+            let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
+            let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
+            initMarker(carpark, map, totalCarparkAvailableLot);
+            createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastDate);
+            map.setZoom(18);
+            map.panTo({lat: resultLatLon.lat, lng: resultLatLon.lon});
+            
+
+        });
+    }
+
+
     //Add a button to the map
     const locationButton = document.createElement("button");
     locationButton.textContent = "Get nearby car parks";
@@ -183,7 +205,7 @@ async function initMap() {
 
             }
             marker.position = place.location;
-        }).catch(function(err){
+        }).catch(function (err) {
             console.log(err);
         });
 
@@ -196,6 +218,13 @@ async function initMap() {
     locationButton.addEventListener("click", findMyLocation);
 
 }
+//If url has a parameter
+const url = new URL(window.location.href);
+if (url.searchParams.has("carparkID")) {
+    redirectCarparkID = url.searchParams.get("carparkID");
+
+}
+
 
 //Getter methods
 
@@ -228,6 +257,27 @@ function getUserFavouritedCarparks(userID) {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 userFavouritedCarparks = JSON.parse(xhr.response);
                 resolve("it works");
+            } else {
+                reject(status);
+            }
+        }
+        xhr.send();
+    });
+
+
+}
+function getCarpark(carparkID) {
+    return new Promise(function (resolve, reject) {
+        const xhr = new XMLHttpRequest();
+        let url = '/finalCarVroom/getCarpark';
+        let params = 'carparkID=' + carparkID;
+        xhr.open("GET", url + "?" + params, true);
+        let status = xhr.status;
+        xhr.onload = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+
+                let carpark = JSON.parse(xhr.response);
+                resolve(carpark);
             } else {
                 reject(status);
             }

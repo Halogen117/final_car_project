@@ -93,7 +93,8 @@ getUserHistory(userID, '7 days').then(function () {
                     formatter: function (value, row, index) {
                         //return '<input name="elementname"  value="'+value+'"/>';
                         curID = row['history_ID'];
-                        return `<button type="button" class="btn btn-danger" onclick="deleteItem(${curID})">Delete</button>`;
+                        return `<div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <button type="button" class="btn btn-danger" onclick="deleteItem(${curID})">Delete</button><button class="btn btn-success" onclick="redirect('${row.carpark_ID}')">Go</button></div>`;
 
                     }
                 }
@@ -113,6 +114,9 @@ function deleteItem(curID) {
         values: id,
     });
     alert("Successfully Deleted");
+}
+function redirect(carparkID){
+    window.location.href='/finalCarVroom/maps.html?carparkID='+carparkID;
 }
 document.getElementById("deleteAllButton").onclick = function () {
     deleteAllUserHistory(userID);
