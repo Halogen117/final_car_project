@@ -7,7 +7,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     Author     : mokda
 */
 #map {
-    height: 50%;
+    height: 460px;
 }
 .container-fluid{
     height:100%;
@@ -90,5 +90,8 @@ body {
     margin-top: 10px;
     
     font-size:14px;
+}
+.btnIcon{
+    margin-right: 10px;
 }
 

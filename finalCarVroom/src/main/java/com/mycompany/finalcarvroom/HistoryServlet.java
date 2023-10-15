@@ -7,24 +7,24 @@ package com.mycompany.finalcarvroom;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONArray;
 
 /**
  *
  * @author mokda
  */
-@WebServlet(name = "FavouriteServlet", urlPatterns = {"/insertFavourite", "/deleteFavourite", "/getFavourite"})
-public class FavouriteServlet extends HttpServlet {
+@WebServlet(name = "HistoryServlet", urlPatterns = {"/getHistory", "/insertHistory"})
+public class HistoryServlet extends HttpServlet {
 
-    private FavouriteDAO favouriteDAO;
+    private HistoryDAO historyDAO;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,23 +36,24 @@ public class FavouriteServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     public void init() {
-        favouriteDAO = new FavouriteDAO();
+        historyDAO = new HistoryDAO();
     }
 
-    //Ignore this method
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //HttpSession user_session = request.getSession();
-
-        PrintWriter out = response.getWriter();
-
-        manipulateDb mDb = new manipulateDb();
-        String userID = request.getParameter("userID");
-        String carparkID = request.getParameter("carparkID");
-        System.out.println("inertion");
-        mDb.insertFavDb(null, userID, carparkID);
-        out.println("<html><body><b>Successfully Normal Inserted"
-                + "</b></body></html>");
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet HistoryServlet</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet HistoryServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -67,19 +68,26 @@ public class FavouriteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String action = request.getServletPath();
-        if ("/getFavourite".equals(action)) {
-            PrintWriter out = response.getWriter();
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            String userID = request.getParameter("userID");
-            List<String> listFavourite = favouriteDAO.getAllFavourites(userID);
-            JSONArray jsArray = new JSONArray(listFavourite);
-            out.print(jsArray);
-            out.flush();
-        }
+        if ("/getHistory".equals(action)) {
+            try {
+                PrintWriter out = response.getWriter();
+                
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                
+                String userID = request.getParameter("userID");
+                String days = request.getParameter("days");
+                
+                List<History> historyCarpark = historyDAO.getHistory(userID, days);
+                JSONArray jsArray = new JSONArray(historyCarpark);
+                out.print(jsArray);
+                out.flush();
+            } catch (SQLException ex) {
+                Logger.getLogger(HistoryServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
+        }
     }
 
     /**
@@ -93,32 +101,24 @@ public class FavouriteServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getServletPath();
         try {
+            String action = request.getServletPath();
             switch (action) {
-                case "/insertFavourite":
-                    insertFavourite(request, response);
+                case "/insertHistory":
+                    insertHistory(request, response);
                     break;
-                case "/deleteFavourite":
-                    deleteFavourite(request, response);
+                case "/deleteHistory":
                     break;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(FavouriteServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HistoryServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
-    private void insertFavourite(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+    private void insertHistory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
         String userID = request.getParameter("userID");
         String carparkID = request.getParameter("carparkID");
-        favouriteDAO.insertFavourite(userID, carparkID);
-    }
-
-    private void deleteFavourite(HttpServletRequest request, HttpServletResponse response) {
-        String userID = request.getParameter("userID");
-        String carparkID = request.getParameter("carparkID");
-        favouriteDAO.deleteFavourite(userID, carparkID);
+        historyDAO.insertHistory(userID, carparkID);
     }
 
     /**

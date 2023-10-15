@@ -89,7 +89,7 @@
 
                          <!-- Nav Item - Favourites -->
             <li class="nav-item">
-                <a class="nav-link" href="favourites.jsp">
+                <a class="nav-link" href="favourites.html">
                     <i class="fas fa-fw fa-heart"></i>
                     <span>Favourites</span></a>
             </li>
@@ -103,7 +103,7 @@
 
             <!-- Nav Item - Map -->
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="maps.html">
                     <i class="fas fa-fw fa-map-marker"></i>
                     <span>Map</span></a>
             </li>

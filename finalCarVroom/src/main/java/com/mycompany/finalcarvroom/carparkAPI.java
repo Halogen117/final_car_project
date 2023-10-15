@@ -43,9 +43,9 @@ public class carparkAPI {
 
             // COMMENT OUT THIS LINE IF YOU ALREADY HAVE A TABLE
             //db.createDatabase(connectDB);
-            db.createFavDb(connectDB);
+            //db.createFavDb(connectDB);
             db.createHistoryDb(connectDB);
-            db.createUserDb(connectDB);
+            //db.createUserDb(connectDB);
 
             String[] createAcc = new String[11];
 
@@ -61,16 +61,16 @@ public class carparkAPI {
             createAcc[9] = "Pizza";
             createAcc[10] = "Singapore";
 
-            manipulateDb manip = new manipulateDb();
+            //manipulateDb manip = new manipulateDb();
 
-            manip.insertUserDb(connectDB, createAcc);
+            //manip.insertUserDb(connectDB, createAcc);
 
             //create array for ["name", "password", "phoneNum"] , and boolean array [false, false, false]
-            manip.updateProfileDetails(connectDB, "user3", "Russel", "name");
-            String[] userDetails = manip.getUserDetails(connectDB, "user3");
-            for (int i = 0; i < userDetails.length; i++) {
-                System.out.println(userDetails[i]);
-            }
+            //manip.updateProfileDetails(connectDB, "user3", "Russel", "name");
+            //String[] userDetails = manip.getUserDetails(connectDB, "user3");
+            //for (int i = 0; i < userDetails.length; i++) {
+            //    System.out.println(userDetails[i]);
+           // }
 
             connectDB.close();
         } catch (SQLException se) {
@@ -140,7 +140,8 @@ class Datab {
             String sql = "CREATE TABLE history_DB"
                     + //EDIT here
                     "(user_ID TEXT,"
-                    + "carpark_ID TEXT)";
+                    + "carpark_ID TEXT,"
+                    +"time_stamp TIMESTAMP WITH TIME ZONE)";
 
             statement.executeUpdate(sql);
             System.out.println("Table successfully created!");

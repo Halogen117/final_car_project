@@ -108,7 +108,7 @@
 
              <!-- Nav Item - Favourites -->
             <li class="nav-item">
-                <a class="nav-link" href="favourites.jsp">
+                <a class="nav-link" href="favourites.html">
                     <i class="fas fa-fw fa-heart"></i>
                     <span>Favourites</span></a>
             </li>
