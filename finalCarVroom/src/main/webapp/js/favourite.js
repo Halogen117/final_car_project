@@ -112,10 +112,10 @@ function getUserFavouritedCarparks(userID) {
 function getTotalCarparkAvailable(carparkNo) {
     let totalCarparkAvailableLot = 0;
     if (carparkAvailabilityJson !== null || typeof carparkAvailabilityJson !== "undefined") {
-        
+
         let carparkJson = carparkAvailabilityJson.find(item => item.carpark_number === carparkNo);
         console.log(carparkAvailabilityJson);
-        
+
         for (let i = 0; i < carparkJson.carpark_info.length; i++) {
             totalCarparkAvailableLot += parseInt(carparkJson.carpark_info[i].lots_available);
         }
@@ -257,6 +257,9 @@ async function initMarker(carpark, map, lotsAvailable) {
         infoWindow.setContent(content);
         infoWindow.open(marker.map, marker);
         document.getElementById(carpark.carpark_id).focus();
+        if (map.getZoom() < 15) {
+            map.setZoom(16);
+        }
 
     });
     //Push markers to an array which can be used later to clear array
@@ -295,9 +298,9 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
     document.getElementById('btn_' + carpark.carpark_id).onclick = function () {
         console.log(markersArray);
         google.maps.event.trigger(markersArray[id], 'click');
-        map.setZoom(14);
-        
-        
+        map.setZoom(16);
+
+
 
     };
     var favButton = document.getElementById('fav_' + carpark.carpark_id);
@@ -324,6 +327,10 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
 }
 
 document.getElementById("refreshBtn").onclick = function () {
+    let refreshBtn = document.getElementById("refreshBtn");
+    let refreshIcon = document.getElementById("refreshIcon");
+    refreshBtn.disabled = true;
+    refreshIcon.setAttribute("class", "fa-spin btnIcon fa-solid fa-rotate-right");
     fetchCarparkAvailabilityData().then(function () {
         for (let i = 0; i < userFavouritedCarparks.length; i++) {
             let filteredData = allCarparkJson.filter(function (a) {
@@ -340,6 +347,9 @@ document.getElementById("refreshBtn").onclick = function () {
             }
         }
 
+    }).then(function () {
+        refreshBtn.disabled = false;
+        refreshIcon.setAttribute("class", "btnIcon fa-solid fa-rotate-right");
     }).catch(function (err) {
         console.log(err);
     });

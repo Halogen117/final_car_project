@@ -115,12 +115,15 @@ function deleteItem(curID) {
     });
     alert("Successfully Deleted");
 }
-function redirect(carparkID){
-    window.location.href='/finalCarVroom/maps.html?carparkID='+carparkID;
+function redirect(carparkID) {
+    window.location.href = '/finalCarVroom/maps.html?carparkID=' + carparkID;
 }
 document.getElementById("deleteAllButton").onclick = function () {
-    deleteAllUserHistory(userID);
-    table.bootstrapTable('removeAll');
-    alert("Successfully Deleted all history");
+    if (table.bootstrapTable('getData').length !== 0) {
+        deleteAllUserHistory(userID);
+        table.bootstrapTable('removeAll');
+        alert("Successfully Deleted all history");
+    }
+
 }
 

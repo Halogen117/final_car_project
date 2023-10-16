@@ -521,6 +521,10 @@ async function initMarker(carpark, map, lotsAvailable) {
         infoWindow.open(marker.map, marker);
         document.getElementById(carpark.carpark_id).focus();
         insertHistDB(userID, carpark.carpark_id);
+        if(map.getZoom()<15){
+            map.setZoom(16);    
+        }
+        
     });
     //Push markers to an array which can be used later to clear array
     markersArray.push(marker);
