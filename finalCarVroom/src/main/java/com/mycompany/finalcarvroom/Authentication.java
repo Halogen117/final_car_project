@@ -4,6 +4,7 @@
  */
 package com.mycompany.finalcarvroom;
 
+import java.util.Base64;
 import java.sql.*;
 /**
  *
