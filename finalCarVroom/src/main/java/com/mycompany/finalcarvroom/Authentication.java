@@ -98,4 +98,92 @@ public class Authentication {
 		}
 		return true;
 	}
+	//////////////// FORGET PASSWORD ////////////////////
+	public String forget_password(String email){
+            String [] userDetails = new String[11];
+            try{
+            Connection connectDB = create.getConnection();
+            
+            Statement statement = connectDB.createStatement();
+            String sql = "SELECT name FROM user_DB WHERE email = '" + email +"'";
+            ResultSet resultSet = statement.executeQuery(sql);
+            // get User details
+            if(resultSet.next()) {
+                for(int i = 1; i <= userDetails.length; i++) {
+                        userDetails[i-1] = resultSet.getString(i);
+                }
+            }
+            else {
+                    System.out.println("User Does not exist");
+            }
+            connectDB.close();
+        }catch(SQLException e) {
+                e.printStackTrace();
+        }
+        return userDetails[0];
+        }
+        
+        ///////////////////////// ENCODER /////////////////////////
+        public String encoder_link(String email){
+            String [] userDetails = new String[2];
+            String baser = "";
+            try{
+            Connection connectDB = create.getConnection();
+            
+            Statement statement = connectDB.createStatement();
+            String sql = "SELECT user_id, name FROM user_DB WHERE email = '" + email +"'";
+            ResultSet resultSet = statement.executeQuery(sql);
+            // get User details
+            if(resultSet.next()) {
+                for(int i = 1; i <= userDetails.length; i++) {
+                        userDetails[i-1] = resultSet.getString(i);
+                }
+            }
+            else {
+                    System.out.println("User Does not exist");
+            }
+            connectDB.close();
+        }catch(SQLException e) {
+                e.printStackTrace();
+        }
+            // Return user
+            System.out.println(userDetails[0]);
+            // Return email
+            System.out.println(userDetails[1]);
+            // Return userid
+            baser = userDetails[0]+"_|_"+userDetails[1]+"_|_"+email;
+            // Encode base 64
+            baser = Base64.getEncoder().encodeToString(baser.getBytes());
+            return baser;
+        }
+        
+        
+        /////////////////// DECODER ///////////////////////////////
+        public boolean decoder_link(String decoder){
+            String acquire_base_64 = decoder;
+            byte[] baser = Base64.getDecoder().decode(acquire_base_64);
+            String decoded = new String(baser);
+            String[] arrOfStr = decoded.split("_|_");
+
+            // Check if valid based on the data
+            System.out.println(arrOfStr[0]);
+            System.out.println(arrOfStr[2]);
+            System.out.println(arrOfStr[4]);
+            try{
+            Connection connectDB = create.getConnection();
+            
+            Statement statement = connectDB.createStatement();
+            String sql = "SELECT 1 FROM user_DB WHERE user_id = '" + arrOfStr[0] +"' AND email = '"+arrOfStr[4]+"' AND name = '"+arrOfStr[2]+"'";
+            ResultSet resultSet = statement.executeQuery(sql);
+            if(resultSet.next()) {
+                return true;
+            }else{
+                return false;
+            }
+            }catch(SQLException e) {
+                e.printStackTrace();
+            }
+            
+            return false;
+        }
 }
