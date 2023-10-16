@@ -47,6 +47,9 @@ public class carparkAPI {
             //db.createHistoryDb(connectDB);
             //db.createUserDb(connectDB);
             table.createHistoryDb();
+            table.createCarparkDb();
+            table.createFavDb();
+            table.createUserDb();
 
             String[] createAcc = new String[11];
 

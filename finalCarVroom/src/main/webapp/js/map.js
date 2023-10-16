@@ -120,7 +120,7 @@ async function initMap() {
             createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastDate);
             map.setZoom(18);
             map.panTo({lat: resultLatLon.lat, lng: resultLatLon.lon});
-            
+
 
         });
     }
@@ -130,6 +130,8 @@ async function initMap() {
     const locationButton = document.createElement("button");
     locationButton.textContent = "Get nearby car parks";
     locationButton.classList.add("custom-map-control-button");
+    locationButton.classList.add("btn");
+    locationButton.classList.add("btn-primary");
     // Request needed libraries.
 //@ts-ignore
 
@@ -618,16 +620,27 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
 
 
 document.getElementById("refreshBtn").onclick = function () {
-    fetchCarparkAvailabilityData();
-    if (filteredData !== null || typeof filteredData !== "undefined") {
-        for (const carpark of filteredData) {
-            console.log(carpark.carpark_id);
-            let totalLotsAvailable = getTotalCarparkAvailable(carpark.carpark_id);
-            let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
-            document.getElementById("lots_" + carpark.carpark_id).textContent = "Lots Available: " + totalLotsAvailable;
-            document.getElementById("lastUpdated_" + carpark.carpark_id).textContent = "Last Updated: " + lastDate;
+    let refreshBtn = document.getElementById("refreshBtn");
+    let refreshIcon = document.getElementById("refreshIcon");
+    refreshBtn.disabled = true;
+    refreshIcon.setAttribute("class", "fa-spin btnIcon fa-solid fa-rotate-right");
+    fetchCarparkAvailabilityData().then(function () {
+        if (filteredData !== null || typeof filteredData !== "undefined") {
+            for (const carpark of filteredData) {
+                console.log(carpark.carpark_id);
+                let totalLotsAvailable = getTotalCarparkAvailable(carpark.carpark_id);
+                let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
+                document.getElementById("lots_" + carpark.carpark_id).textContent = "Lots Available: " + totalLotsAvailable;
+                document.getElementById("lastUpdated_" + carpark.carpark_id).textContent = "Last Updated: " + lastDate;
+            }
         }
-    }
+    }).then(function () {
+        refreshBtn.disabled = false;
+        refreshIcon.setAttribute("class","btnIcon fa-solid fa-rotate-right");
+    }).catch(function (err) {
+        console.log(err);
+    });
+
 };
 
 
