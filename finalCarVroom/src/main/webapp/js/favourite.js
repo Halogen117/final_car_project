@@ -32,7 +32,7 @@ async function initMap() {
             let carparkNo = a.carpark_id;
             return carparkNo === userFavouritedCarparks[i];
         });
-        console.log(filteredData);
+
         if (filteredData.length !== 0) {
             let carpark = filteredData[0];
             let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
@@ -72,7 +72,6 @@ function getAllCarparks() {
         xhr.onload = () => {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 allCarparkJson = JSON.parse(xhr.response);
-                console.log(allCarparkJson);
                 resolve("it works");
             } else {
                 reject(status);
@@ -95,7 +94,6 @@ function getUserFavouritedCarparks(userID) {
         xhr.onload = () => {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 userFavouritedCarparks = JSON.parse(xhr.response);
-                console.log(userFavouritedCarparks);
                 resolve("it works");
             } else {
                 reject(status);
@@ -114,7 +112,6 @@ function getTotalCarparkAvailable(carparkNo) {
     if (carparkAvailabilityJson !== null || typeof carparkAvailabilityJson !== "undefined") {
 
         let carparkJson = carparkAvailabilityJson.find(item => item.carpark_number === carparkNo);
-        console.log(carparkAvailabilityJson);
 
         for (let i = 0; i < carparkJson.carpark_info.length; i++) {
             totalCarparkAvailableLot += parseInt(carparkJson.carpark_info[i].lots_available);
@@ -170,7 +167,7 @@ function deleteFavDB(userID, carparkID) {
 
     xhr.onreadystatechange = function () {//Call a function when the state changes.
         if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log(xhr.responseText);
+
         }
     };
     xhr.send(params);
@@ -191,20 +188,13 @@ function clearCarparkCards() {
 
 
 //Initialise the markers on the map given the filtered data which is based on the user's current location
-async function initMarker(carpark, map, lotsAvailable) {
+async function initMarker(carpark, map) {
 
 
     //import advancedmarkerelement and pinelement library
     const {AdvancedMarkerElement, PinElement} = await google.maps.importLibrary(
             "marker",
             );
-
-    //Clear the all the markers before placing new ones
-
-
-
-    //Loop thru the filteredData and create a marker for each entry(carpark)
-
 
 
     //Creating a custom icon for the marker
@@ -219,7 +209,7 @@ async function initMarker(carpark, map, lotsAvailable) {
     });
     //Converting the xy coords to lat lon to be used to place the markers
     var resultLatLon = cv.computeLatLon(parseFloat(carpark.y_coord), parseFloat(carpark.x_coord));
-    console.log(resultLatLon);
+
 
     //Create the marker using advancedmarkerelement
     //passing in the map, the pinElement with the custom icon the position and the title(hover on the marker to display the title)
@@ -230,36 +220,47 @@ async function initMarker(carpark, map, lotsAvailable) {
         title: carpark.address,
     });
 
-
-    //Creating content html for the infowindow which is when user clicks on the marker, a info window will popup
-    const content = document.createElement("div");
-    content.classList.add("carparkDetail");
-    content.innerHTML = `
-    <div id="content">
-        <div id="firstHeading" class="address">${carpark.address}</div>
-        <div id="bodyContent">
-            <div>Free Parking : ${carpark.free_parking}</div>
-            <div>Lots Available : ${lotsAvailable}</div>
-            <div>Night Parking : ${carpark.night_parking}</div>
-            <div>Type of Parking System : ${carpark.type_of_parking_system}</div>
-            <div>Short-term Parking : ${carpark.short_term_parking}</div>
-            <div>Car Park Type : ${carpark.car_park_type}</div>
-            <div>Car park decks	 : ${carpark.car_park_decks}</div>
-            <div>Gantry Height(m) : ${carpark.gantry_height}</div>
-            
-        </div>
-    </div>
-    `;
     //add a click listener when user clicks on marker and display the info window
     marker.addListener("click", function () {
-        console.log(marker);
-        infoWindow.close();
-        infoWindow.setContent(content);
-        infoWindow.open(marker.map, marker);
-        document.getElementById(carpark.carpark_id).focus();
+
         if (map.getZoom() < 15) {
             map.setZoom(16);
         }
+        
+        //Creating content html for the infowindow which is when user clicks on the marker, a info window will popup
+        let lotsAvailable = getTotalCarparkAvailable(carpark.carpark_id);
+        let lastUpdatedDateTime = getCarparkLastUpdatedTime(carpark.carpark_id);
+
+        lotsAvailable = `${lotsAvailable} (Last updated on : ${moment(lastUpdatedDateTime).format('ddd, HH:mm:ss')})`;
+        if (lotsAvailable === -1 && lastUpdatedDateTime === -1) {
+            lotsAvailable = 'No data';
+        }
+        const content = document.createElement("div");
+        content.classList.add("carparkDetail");
+        content.innerHTML = `
+                <div id="content">
+                    <div id="firstHeading" class="address">${carpark.address}</div>
+                    <div id="bodyContent">
+                        <div>Free Parking : ${carpark.free_parking}</div>
+                        <div>Lots Available : ${lotsAvailable}</div>
+                        <div>Night Parking : ${carpark.night_parking}</div>
+                        <div>Type of Parking System : ${carpark.type_of_parking_system}</div>
+                        <div>Short-term Parking : ${carpark.short_term_parking}</div>
+                        <div>Car Park Type : ${carpark.car_park_type}</div>
+                        <div>Car park decks	 : ${carpark.car_park_decks}</div>
+                        <div>Gantry Height(m) : ${carpark.gantry_height}</div>
+
+                    </div>
+                </div>
+                `;
+        infoWindow.close();
+        infoWindow.setContent(content);
+        infoWindow.open(marker.map, marker);
+        
+        document.getElementById(carpark.carpark_id).focus();
+
+
+
 
     });
     //Push markers to an array which can be used later to clear array
@@ -296,7 +297,7 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
 
     document.getElementById("carpark").appendChild(carparkCard);
     document.getElementById('btn_' + carpark.carpark_id).onclick = function () {
-        console.log(markersArray);
+
         google.maps.event.trigger(markersArray[id], 'click');
         map.setZoom(16);
 
@@ -305,7 +306,6 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
     };
     var favButton = document.getElementById('fav_' + carpark.carpark_id);
     let foundCarpark = userFavouritedCarparks.indexOf(carpark.carpark_id);
-    console.log(foundCarpark);
     //if there exists a carpark it will be more than or equals to 0
     //hence we can use this logic to manipulate the favourite button 
     if (foundCarpark >= 0) {
@@ -327,6 +327,8 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
 }
 
 document.getElementById("refreshBtn").onclick = function () {
+    console.log(infoWindow);
+    infoWindow.close();
     let refreshBtn = document.getElementById("refreshBtn");
     let refreshIcon = document.getElementById("refreshIcon");
     refreshBtn.disabled = true;
