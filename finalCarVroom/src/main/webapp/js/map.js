@@ -191,7 +191,7 @@ function initCarparks(lat, lng) {
 
 
         map.setCenter({lat: lat, lng: lng});
-        if (map.getZoom() < 16) {
+        if (map.getZoom() < 15) {
             map.setZoom(16);
         }
 
@@ -206,7 +206,7 @@ function initCarparks(lat, lng) {
             clearCarparkCards();
             console.log(filteredData);
             if (filteredData.length !== 0) {
-                refreshBtn.disabled=false;
+                refreshBtn.disabled = false;
                 for (const carpark of filteredData) {
                     let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
                     let lastUpdatedDate = getCarparkLastUpdatedTime(carpark.carpark_id);
@@ -223,15 +223,15 @@ function initCarparks(lat, lng) {
                 }
                 //MarkerID also acts a counter for number of carparks
                 infoWindowContentString = `Found ${markerId} nearby carparks`;
-            }else{
-                let carparkCardsRow= document.getElementById("carpark");
-                carparkCardsRow.innerHTML=`<p class="h4 ml-4">No nearby carparks, choose a new location!</p>`;
-                refreshBtn.disabled=true;
-                infoWindowContentString= `No carparks nearby`;
+            } else {
+                let carparkCardsRow = document.getElementById("carpark");
+                carparkCardsRow.innerHTML = `<p class="h4 ml-4">No nearby carparks, choose a new location!</p>`;
+                refreshBtn.disabled = true;
+                infoWindowContentString = `No carparks nearby`;
             }
 
-            
-            
+
+
             infoWindow.close();
             infoWindow.setContent(infoWindowContentString);
             infoWindow.open(draggableMarker.map, draggableMarker);
@@ -611,7 +611,9 @@ function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime) {
     document.getElementById('btn_' + carpark.carpark_id).onclick = function () {
 
         google.maps.event.trigger(markersArray[id], 'click');
-        map.setZoom(14);
+        if (map.getZoom() < 16) {
+            map.setZoom(16);
+        }
     };
     var favButton = document.getElementById('fav_' + carpark.carpark_id);
     let foundCarpark = userFavouritedCarparks.indexOf(carpark.carpark_id);
