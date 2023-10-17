@@ -21,7 +21,9 @@ let redirectCarparkID;
 
 //Function for when user clicks on Get Nearby carparks
 async function findMyLocation() {
-    const success = async (position) => {
+    getPosition().then(function (position) {
+        
+
         var markerId = 0;
 
         //Offset value 
@@ -34,7 +36,7 @@ async function findMyLocation() {
                 lng: position.coords.longitude
             };
             //Convert The current location lat and lon to SVY21 northing and easting (y and x values)
-            var result = cv.computeSVY21(pos.lat, pos.lng);
+            var result = cv.computeSVY21(position.coords.latitude, position.coords.longitude);
 
             //Focus the map to the current location
             map.panTo(pos);
@@ -76,13 +78,17 @@ async function findMyLocation() {
         //Initialise Markers
 
 
-    };
-    const error = () => {
-        status.textContent = "Unable to retrieve your location";
-    };
-    navigator.geolocation.getCurrentPosition(success, error);
+    });
+
+
+
 }
 ;
+let getPosition = function (options) {
+    return new Promise(function (resolve, reject) {
+        navigator.geolocation.getCurrentPosition(resolve, reject, options);
+    });
+}
 
 
 
@@ -521,10 +527,10 @@ async function initMarker(carpark, map, lotsAvailable) {
         infoWindow.open(marker.map, marker);
         document.getElementById(carpark.carpark_id).focus();
         insertHistDB(userID, carpark.carpark_id);
-        if(map.getZoom()<15){
-            map.setZoom(16);    
+        if (map.getZoom() < 15) {
+            map.setZoom(16);
         }
-        
+
     });
     //Push markers to an array which can be used later to clear array
     markersArray.push(marker);
@@ -640,7 +646,7 @@ document.getElementById("refreshBtn").onclick = function () {
         }
     }).then(function () {
         refreshBtn.disabled = false;
-        refreshIcon.setAttribute("class","btnIcon fa-solid fa-rotate-right");
+        refreshIcon.setAttribute("class", "btnIcon fa-solid fa-rotate-right");
     }).catch(function (err) {
         console.log(err);
     });
