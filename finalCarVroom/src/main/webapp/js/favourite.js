@@ -226,7 +226,7 @@ async function initMarker(carpark, map) {
         if (map.getZoom() < 15) {
             map.setZoom(16);
         }
-        
+
         //Creating content html for the infowindow which is when user clicks on the marker, a info window will popup
         let lotsAvailable = getTotalCarparkAvailable(carpark.carpark_id);
         let lastUpdatedDateTime = getCarparkLastUpdatedTime(carpark.carpark_id);
@@ -256,7 +256,7 @@ async function initMarker(carpark, map) {
         infoWindow.close();
         infoWindow.setContent(content);
         infoWindow.open(marker.map, marker);
-        
+
         document.getElementById(carpark.carpark_id).focus();
 
 
@@ -304,7 +304,7 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
 
 
     };
-    var favButton = document.getElementById('fav_' + carpark.carpark_id);
+    let favButton = document.getElementById('fav_' + carpark.carpark_id);
     let foundCarpark = userFavouritedCarparks.indexOf(carpark.carpark_id);
     //if there exists a carpark it will be more than or equals to 0
     //hence we can use this logic to manipulate the favourite button 
@@ -316,7 +316,8 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
             deleteFavDB(userID, carpark.carpark_id);
             favButton.style.color = "#ffffff";
             foundCarpark = -1;
-            alert("Successfully unfavourited Carpark!");
+            //setTimeout($("#favouriteAlert").addClass("show"),5000);
+            createAlert();
             carparkCard.remove();
             markersArray[id].setMap(null);
             markersArray[id] = null;
@@ -324,6 +325,34 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
 
     });
 
+}
+function removeShowClass(alertName) {
+    setTimeout(function () {
+        $(alertName).removeClass('show');
+    }, 2000);
+}
+function createAlert() {
+    let alert = document.createElement("div");
+    alert.classList.add('alert', 'alert-success', 'alert-dismissible', 'fade', 'in', 'out', 'd-flex', 'align-items-center');
+    alert.setAttribute('style', 'border-radius : 20px');
+    alert.setAttribute('id', 'favouriteAlert');
+    alert.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16" style="margin-right: 10px;">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                        <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                        </svg>
+                                        <div>
+                                            Successfully unfavourited Carpark!
+                                        </div>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>`;
+    $(alert).appendTo("#alertsRow");
+    $(alert).addClass("show");
+    setTimeout(function () {
+        $(alert).removeClass('show');
+        alert.remove();
+    }, 2000);
+    
 }
 
 document.getElementById("refreshBtn").onclick = function () {

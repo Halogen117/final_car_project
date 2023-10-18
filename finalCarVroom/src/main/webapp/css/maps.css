@@ -92,4 +92,9 @@ body {
 .btnIcon{
     margin-right: 10px;
 }
-
+#alertsRow{
+    position:fixed; 
+    top: 50px; 
+    left: 50%; 
+    z-index:9999; 
+}
