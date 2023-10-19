@@ -251,4 +251,23 @@ public class ManipulateDB {
 			return 2;
 		}
 	}
+        
+        public int insertFeedbackDb(String user_id, String feedback){
+            try {
+                    Connection connectDB = create.getConnection();
+                    Statement statement = connectDB.createStatement();
+                    String sql = "INSERT INTO feedback_DB "
+                                    + "VALUES('" + user_id + "','" + feedback + "')";
+
+                    statement.executeUpdate(sql);
+                    System.out.println("Feedback Created!");
+                    return 1;
+                    //activate "Authentication Failed" display message code here
+                    
+		}catch(SQLException e) {
+			System.out.println("User Account Creation Failed!");
+			e.printStackTrace();
+			return 2;
+		}
+        }
 }

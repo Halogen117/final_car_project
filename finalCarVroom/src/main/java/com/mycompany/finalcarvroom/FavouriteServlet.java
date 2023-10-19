@@ -39,14 +39,14 @@ public class FavouriteServlet extends HttpServlet {
         favouriteDAO = new FavouriteDAO();
     }
 
-    //Ignore this method
+    //IGNORE THIS METHOD
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //HttpSession user_session = request.getSession();
 
         PrintWriter out = response.getWriter();
 
-        manipulateDb mDb = new manipulateDb();
+        ManipulateDB mDb = new ManipulateDB();
         String userID = request.getParameter("userID");
         String carparkID = request.getParameter("carparkID");
         System.out.println("inertion");
@@ -109,10 +109,13 @@ public class FavouriteServlet extends HttpServlet {
 
     }
 
-    private void insertFavourite(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+    private void insertFavourite(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         String userID = request.getParameter("userID");
         String carparkID = request.getParameter("carparkID");
         favouriteDAO.insertFavourite(userID, carparkID);
+
+        
+        
     }
 
     private void deleteFavourite(HttpServletRequest request, HttpServletResponse response) {

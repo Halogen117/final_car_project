@@ -8,75 +8,41 @@
 let cv = new SVY21();
 let map;
 let marker;
+let draggableMarker;
 let infoWindow;
 let markersArray = [];
 let carparkJson;
+let allCarparkJson;
 let carparkAvailabilityJson;
 let userFavouritedCarparks;
 //For testing purposes, userID is set to 1 for now
 let userID = 1;
 let filteredData;
+let redirectCarparkID;
+
+
+
 
 //Function for when user clicks on Get Nearby carparks
 async function findMyLocation() {
-    const success = async (position) => {
-        var markerId = 0;
+    getCurrentPosition().then(function (position) {
+        let lat = position.coords.latitude;
+        let lng = position.coords.longitude;
 
-        //Offset value 
-        const offsetTextBox = document.getElementById('offsetTextBox');
-        var offset = parseInt(offsetTextBox.value);
+        initCarparks(lat, lng);
 
 
-        const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-        };
-        //Convert The current location lat and lon to SVY21 northing and easting (y and x values)
-        var result = cv.computeSVY21(pos.lat, pos.lng);
-
-        //Focus the map to the current location
-        map.panTo(pos);
-        if (map.getZoom() < 16) {
-            map.setZoom(16);
-        }
+    });
 
 
 
-
-        if (offset > 0) {
-            filteredData = filterByLocation(carparkJson, result.E, result.N, offset);
-            clearOverlays();
-            clearCarparkCards();
-
-            for (const carpark of filteredData) {
-                console.log("inside findmylocation");
-                let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.car_park_no);
-                let lastDate = moment(getCarparkLastUpdatedTime(carpark.car_park_no)).format('ddd, HH:mm:ss');
-                initMarker(carpark, map, totalCarparkAvailableLot);
-                createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastDate);
-                markerId++;
-
-
-            }
-        }
-
-
-        //Gets the nearby carparks details 
-
-
-        infoWindow.setPosition(pos);
-        infoWindow.setContent("You are here");
-        infoWindow.open(map);
-        //Initialise Markers
-
-
-    };
-    const error = () => {
-        status.textContent = "Unable to retrieve your location";
-    };
-    navigator.geolocation.getCurrentPosition(success, error);
 }
 ;
+let getCurrentPosition = function (options) {
+    return new Promise(function (resolve, reject) {
+        navigator.geolocation.getCurrentPosition(resolve, reject, options);
+    });
+}
 
 
 
@@ -98,12 +64,53 @@ async function initMap() {
     //Initialise Infowindow
     infoWindow = new google.maps.InfoWindow();
 
-    await getCarparkInformation();
-    await findMyLocation();
+    //Checks if user has entered a carpark parameter in url
+    if (redirectCarparkID === undefined || redirectCarparkID === null) {
+        await findMyLocation();
+    } else {
+        getCarpark(redirectCarparkID).then((value) => {
+            clearCarparkCards();
+            clearOverlays();
+            var markerId = 0;
+            let carpark = value;
+            var resultLatLon = cv.computeLatLon(parseFloat(carpark.y_coord), parseFloat(carpark.x_coord));
+
+            let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
+            let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
+            initMarker(carpark, map);
+            createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastDate);
+            map.setZoom(18);
+            map.panTo({lat: resultLatLon.lat, lng: resultLatLon.lon});
+
+
+        });
+    }
+
+
+    draggableMarker = new google.maps.marker.AdvancedMarkerElement({
+        map,
+        position: {lat: 1.3521, lng: 103.8198},
+        gmpDraggable: true,
+        title: "Drag me",
+    });
+    draggableMarker.addListener("dragend", (event) => {
+        const position = draggableMarker.position;
+        let lat = position.lat;
+        let lng = position.lng;
+        initCarparks(lat, lng);
+
+
+    });
+
+
+
+
     //Add a button to the map
     const locationButton = document.createElement("button");
-    locationButton.textContent = "Get nearby car parks";
+    locationButton.textContent = "Jump to my location";
     locationButton.classList.add("custom-map-control-button");
+    locationButton.classList.add("btn");
+    locationButton.classList.add("btn-primary");
     // Request needed libraries.
 //@ts-ignore
 
@@ -124,30 +131,18 @@ async function initMap() {
     card.appendChild(pac.element);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(card);
     // Create the marker and infowindow
-    marker = new google.maps.marker.AdvancedMarkerElement({
-        map,
-    });
-    
+
+
     // Add the gmp-placeselect listener, and display the results on the map.
+    // This method happens after a user have clicked on a place on the search result list
     pac.addListener("gmp-placeselect", async ({ place }) => {
         await place.fetchFields({
             fields: ["displayName", "formattedAddress", "location"],
         });
-        var markerId = 0;
-
-        clearOverlays();
-        clearCarparkCards();
-        fetchCarparkAvailabilityData();
-        const offsetTextBox = document.getElementById('offsetTextBox');
-        var offset = parseInt(offsetTextBox.value);
-        // If the place has a geometry, then present it on a map.
-        if (place.viewport) {
-            map.fitBounds(place.viewport);
-        } else {
-            map.setCenter(place.location);
-            map.setZoom(17);
-        }
-
+        let placeJson = place.toJSON();
+        let lat = placeJson.location.lat;
+        let lng = placeJson.location.lng;
+        initCarparks(lat, lng);
         let content =
                 '<div id="infowindow-content">' +
                 '<span id="place-displayname" class="title">' +
@@ -157,25 +152,15 @@ async function initMap() {
                 place.formattedAddress +
                 "</span>" +
                 "</div>";
+        infoWindow.close();
+        infoWindow.setContent(content);
+        infoWindow.setPosition({lat: lat, lng: lng});
+        infoWindow.open({
+            map,
+            anchor: draggableMarker,
+            shouldFocus: false,
+        });
 
-        updateInfoWindow(content, place.location);
-        let placeJson = place.toJSON();
-        //Convert The location lat and lon to SVY21 northing and easting (y and x values)
-        var result = cv.computeSVY21(placeJson.location.lat, placeJson.location.lng);
-        if (offset > 0) {
-            filteredData = filterByLocation(carparkJson, result.E, result.N, offset);
-            clearOverlays();
-            clearCarparkCards();
-            for (const carpark of filteredData) {
-                let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.car_park_no);
-                let lastDate = moment(getCarparkLastUpdatedTime(carpark.car_park_no)).format('ddd, HH:mm:ss');
-                initMarker(carpark, map, totalCarparkAvailableLot);
-                createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastDate);
-                markerId++;
-            }
-
-        }
-        marker.position = place.location;
     });
 
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
@@ -184,17 +169,98 @@ async function initMap() {
     locationButton.addEventListener("click", findMyLocation);
 
 }
+//If url has a parameter
+const url = new URL(window.location.href);
+if (url.searchParams.has("carparkID")) {
+    redirectCarparkID = url.searchParams.get("carparkID");
+
+}
+
+function initCarparks(lat, lng) {
+    let markerId = 0;
+    let infoWindowContentString;
+    let refreshBtn = document.getElementById("refreshBtn");
+    draggableMarker.position = {lat: lat, lng: lng};
+    clearOverlays();
+    clearCarparkCards();
+    getUserFavouritedCarparks(userID).then(function () {
+        return fetchCarparkAvailabilityData();
+    }).then(function () {
+        const offsetTextBox = document.getElementById('offsetTextBox');
+        let offset = parseInt(offsetTextBox.value);
+        // If the place has a geometry, then present it on a map.
+
+
+        map.setCenter({lat: lat, lng: lng});
+        if (map.getZoom() < 15) {
+            map.setZoom(16);
+        }
+
+
+
+        //Convert The location lat and lon to SVY21 northing and easting (y and x values)
+        let result = cv.computeSVY21(lat, lng);
+        if (offset > 0) {
+            filteredData = filterByLocation(allCarparkJson, result.E, result.N, offset);
+
+            clearOverlays();
+            clearCarparkCards();
+            
+            if (filteredData.length !== 0) {
+                refreshBtn.disabled = false;
+                for (const carpark of filteredData) {
+                    let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
+                    let lastUpdatedDate = getCarparkLastUpdatedTime(carpark.carpark_id);
+                    let lastUpdatedDateFormatted;
+                    if (lastUpdatedDate === -1) {
+                        lastUpdatedDateFormatted = -1;
+                    } else {
+                        lastUpdatedDateFormatted = moment(lastUpdatedDate).format('ddd, HH:mm:ss');
+                    }
+
+                    initMarker(carpark, map);
+                    createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted);
+                    markerId++;
+                }
+                //MarkerID also acts a counter for number of carparks
+                infoWindowContentString = `Found ${markerId} nearby carparks`;
+            } else {
+                let carparkCardsRow = document.getElementById("carpark");
+                carparkCardsRow.innerHTML = `<p class="h4 ml-4">No nearby carparks, choose a new location!</p>`;
+                refreshBtn.disabled = true;
+                infoWindowContentString = `No carparks nearby`;
+            }
+
+
+
+            infoWindow.close();
+            infoWindow.setContent(infoWindowContentString);
+            infoWindow.open(draggableMarker.map, draggableMarker);
+
+        }
+
+    }).catch(function (err) {
+        console.log(err);
+    });
+}
+
 
 //Getter methods
 
 //getTotalCarparkAvailable adds up the different lot type of a specific carpark as given by carparkNo and returns the total available lots
 function getTotalCarparkAvailable(carparkNo) {
     let totalCarparkAvailableLot = 0;
+
     if (carparkAvailabilityJson !== null || typeof carparkAvailabilityJson !== "undefined") {
         let carparkJson = carparkAvailabilityJson.find(item => item.carpark_number === carparkNo);
-        for (let i = 0; i < carparkJson.carpark_info.length; i++) {
-            totalCarparkAvailableLot += parseInt(carparkJson.carpark_info[i].lots_available);
+        if (carparkJson === undefined || carparkJson === null) {
+            totalCarparkAvailableLot = -1;
+        } else {
+            for (let i = 0; i < carparkJson.carpark_info.length; i++) {
+                totalCarparkAvailableLot += parseInt(carparkJson.carpark_info[i].lots_available);
+            }
         }
+
     }
 
     return totalCarparkAvailableLot;
@@ -202,6 +268,9 @@ function getTotalCarparkAvailable(carparkNo) {
 
 function getCarparkLastUpdatedTime(carparkNo) {
     let carparkJson = carparkAvailabilityJson.find(item => item.carpark_number === carparkNo);
+    if (carparkJson === undefined || carparkJson === null) {
+        return -1;
+    }
     return carparkJson.update_datetime;
 }
 
@@ -216,6 +285,65 @@ function getUserFavouritedCarparks(userID) {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 userFavouritedCarparks = JSON.parse(xhr.response);
                 resolve("it works");
+            } else {
+                reject(status);
+            }
+        }
+        xhr.send();
+    });
+
+
+}
+function getProfileServ(userID) {
+    return new Promise(function (resolve, reject) {
+        const xhr = new XMLHttpRequest();
+        let url = '/finalCarVroom/ProfileServlet';
+        let params = 'userID=' + userID;
+        xhr.open("GET", url + "?" + params, true);
+        let status = xhr.status;
+        xhr.onload = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                userFavouritedCarparks = JSON.parse(xhr.response);
+                resolve("it works");
+            } else {
+                reject(status);
+            }
+        }
+        xhr.send();
+    });
+
+
+}
+document.getElementById('logout').onclick=function(){
+    return new Promise(function (resolve, reject) {
+        const xhr = new XMLHttpRequest();
+        let url = '/finalCarVroom/LogoutServlet';
+        xhr.open("GET", url, true);
+        let status = xhr.status;
+        xhr.onload = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                
+                resolve("it works");
+            } else {
+                reject(status);
+            }
+        }
+        xhr.send();
+    });
+}
+
+function getCarpark(carparkID) {
+    return new Promise(function (resolve, reject) {
+        const xhr = new XMLHttpRequest();
+        let url = '/finalCarVroom/getCarpark';
+        let params = 'carparkID=' + carparkID;
+        xhr.open("GET", url + "?" + params, true);
+        let status = xhr.status;
+        xhr.onload = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+
+                let carpark = JSON.parse(xhr.response);
+                resolve(carpark);
             } else {
                 reject(status);
             }
@@ -266,58 +394,98 @@ function getCarparkInformation() {
         });
     });
 }
+function getAllCarparks() {
+    return new Promise(function (resolve, reject) {
+        const xhr = new XMLHttpRequest();
+        let url = '/finalCarVroom/getAllCarpark';
+        xhr.open("GET", url, true);
+        let status = xhr.status;
+        xhr.onload = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                allCarparkJson = JSON.parse(xhr.response);
+
+                resolve("it works");
+            } else {
+                reject(status);
+            }
+        }
+        xhr.send();
+    });
+
+
+}
 //---End of getter methods---
 
 
 //Insert userid and carparkid into database using xmlhttprequest
 function insertFavDB(userID, carparkID) {
-    const xhr = new XMLHttpRequest();
-    let url = '/finalCarVroom/insertFavourite';
-    let params = 'userID=' + userID + '&carparkID=' + carparkID;
-    xhr.open('POST', url, true);
+    return new Promise(function (resolve, reject) {
+
+
+        const xhr = new XMLHttpRequest();
+        let url = '/finalCarVroom/insertFavourite';
+        let params = 'userID=' + userID + '&carparkID=' + carparkID;
+        xhr.open('POST', url, true);
 
 //Send the proper header information along with the request
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-    xhr.onreadystatechange = function () {//Call a function when the state changes.
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log(xhr.responseText);
-        }
-    };
-    xhr.send(params);
+        xhr.onload = function () {//Call a function when the state changes.
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                resolve("Successfully favourited Carpark!");
+            } else {
+                reject({status: xhr.status,
+                    statusText: xhr.statusText});
+            }
+        };
+        xhr.send(params);
+    });
 }
 //Delete from favourite_db with userid and carparkid
 function deleteFavDB(userID, carparkID) {
-    const xhr = new XMLHttpRequest();
-    let url = '/finalCarVroom/deleteFavourite';
-    let params = 'userID=' + userID + '&carparkID=' + carparkID;
-    xhr.open('POST', url, true);
+    return new Promise(function (resolve, reject) {
+
+
+        const xhr = new XMLHttpRequest();
+        let url = '/finalCarVroom/deleteFavourite';
+        let params = 'userID=' + userID + '&carparkID=' + carparkID;
+        xhr.open('POST', url, true);
 
 //Send the proper header information along with the request
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-    xhr.onreadystatechange = function () {//Call a function when the state changes.
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log(xhr.responseText);
-        }
-    };
-    xhr.send(params);
+        xhr.onload = function () {//Call a function when the state changes.
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                resolve("Successfully unfavourited carpark!");
+            } else {
+                reject({status: xhr.status,
+                    statusText: xhr.statusText});
+            }
+        };
+        xhr.send(params);
+    });
 }
 function insertHistDB(userID, carparkID) {
-    const xhr = new XMLHttpRequest();
-    let url = '/finalCarVroom/insertHistory';
-    let params = 'userID=' + userID + '&carparkID=' + carparkID;
-    xhr.open('POST', url, true);
+    return new Promise(function (resolve, reject) {
+
+
+        const xhr = new XMLHttpRequest();
+        let url = '/finalCarVroom/insertHistory';
+        let params = 'userID=' + userID + '&carparkID=' + carparkID;
+        xhr.open('POST', url, true);
 
 //Send the proper header information along with the request
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-    xhr.onreadystatechange = function () {//Call a function when the state changes.
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log(xhr.responseText);
-        }
-    };
-    xhr.send(params);
+        xhr.onload = function () {//Call a function when the state changes.
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                resolve("Successfully inserted to History_db");
+            }else{
+                reject("Error in inserting to history_db");
+            }
+        };
+        xhr.send(params);
+    });
 }
 
 
@@ -326,7 +494,7 @@ function insertHistDB(userID, carparkID) {
 
 //Calls these two functions then initmap is called
 fetchCarparkAvailabilityData().then(function () {
-    return getCarparkInformation();
+    return getAllCarparks();
     //Change the parameter value to userID retrieved from Httpsession
 
 }).then(function () {
@@ -335,7 +503,7 @@ fetchCarparkAvailabilityData().then(function () {
 }).then(function () {
 //call initmap to initalise the map
     initMap();
-}).catch(function(err){
+}).catch(function (err) {
     console.log(err);
 });
 
@@ -370,21 +538,13 @@ function filterByLocation(data, x, y, offset) {
 ;
 
 //Initialise the markers on the map given the filtered data which is based on the user's current location
-async function initMarker(carpark, map, lotsAvailable) {
+async function initMarker(carpark, map) {
 
 
     //import advancedmarkerelement and pinelement library
     const {AdvancedMarkerElement, PinElement} = await google.maps.importLibrary(
             "marker",
             );
-
-    //Clear the all the markers before placing new ones
-
-
-
-    //Loop thru the filteredData and create a marker for each entry(carpark)
-
-
 
     //Creating a custom icon for the marker
     const icon = document.createElement("div");
@@ -398,7 +558,7 @@ async function initMarker(carpark, map, lotsAvailable) {
     });
     //Converting the xy coords to lat lon to be used to place the markers
     var resultLatLon = cv.computeLatLon(parseFloat(carpark.y_coord), parseFloat(carpark.x_coord));
-    console.log(resultLatLon);
+
 
     //Create the marker using advancedmarkerelement
     //passing in the map, the pinElement with the custom icon the position and the title(hover on the marker to display the title)
@@ -410,33 +570,48 @@ async function initMarker(carpark, map, lotsAvailable) {
     });
 
 
-    //Creating content html for the infowindow which is when user clicks on the marker, a info window will popup
-    const content = document.createElement("div");
-    content.classList.add("carparkDetail");
-    content.innerHTML = `
-    <div id="content">
-        <div id="firstHeading" class="address">${carpark.address}</div>
-        <div id="bodyContent">
-            <div>Free Parking : ${carpark.free_parking}</div>
-            <div>Lots Available : ${lotsAvailable}</div>
-            <div>Night Parking : ${carpark.night_parking}</div>
-            <div>Type of Parking System : ${carpark.type_of_parking_system}</div>
-            <div>Short-term Parking : ${carpark.short_term_parking}</div>
-            <div>Car Park Type : ${carpark.car_park_type}</div>
-            <div>Car park decks	 : ${carpark.car_park_decks}</div>
-            <div>Gantry Height(m) : ${carpark.gantry_height}</div>
-            
-        </div>
-    </div>
-    `;
+
     //add a click listener when user clicks on marker and display the info window
     marker.addListener("click", function () {
-        console.log(marker);
+
+
+        //Creating content html for the infowindow which is when user clicks on the marker, a info window will popup
+        let lotsAvailable = getTotalCarparkAvailable(carpark.carpark_id);
+        let lastUpdatedDateTime = getCarparkLastUpdatedTime(carpark.carpark_id);
+
+        lotsAvailable = `${lotsAvailable} (Last updated on : ${moment(lastUpdatedDateTime).format('ddd, HH:mm:ss')})`;
+        if (lotsAvailable === -1 && lastUpdatedDateTime === -1) {
+            lotsAvailable = 'No data';
+        }
+        const content = document.createElement("div");
+        content.classList.add("carparkDetail");
+        content.innerHTML = `
+                <div id="content">
+                    <div id="firstHeading" class="address">${carpark.address}</div>
+                    <div id="bodyContent">
+                        <div>Free Parking : ${carpark.free_parking}</div>
+                        <div>Lots Available : ${lotsAvailable}</div>
+                        <div>Night Parking : ${carpark.night_parking}</div>
+                        <div>Type of Parking System : ${carpark.type_of_parking_system}</div>
+                        <div>Short-term Parking : ${carpark.short_term_parking}</div>
+                        <div>Car Park Type : ${carpark.car_park_type}</div>
+                        <div>Car park decks	 : ${carpark.car_park_decks}</div>
+                        <div>Gantry Height(m) : ${carpark.gantry_height}</div>
+
+                    </div>
+                </div>
+                `;
         infoWindow.close();
         infoWindow.setContent(content);
         infoWindow.open(marker.map, marker);
-        document.getElementById(carpark.car_park_no).focus();
-        insertHistDB(userID, carpark.car_park_no);
+        document.getElementById(carpark.carpark_id).focus();
+        insertHistDB(userID, carpark.carpark_id);
+        if (map.getZoom() < 15) {
+            map.setZoom(16);
+        }
+
+
+
     });
     //Push markers to an array which can be used later to clear array
     markersArray.push(marker);
@@ -460,42 +635,34 @@ function clearCarparkCards() {
 
 
 
-//Function to convert CSV to JSON 
-function csvToJSON(csvDataString) {
-    const rowsHeader = csvDataString.split('\r').join('').split('\n')
-    const headers = rowsHeader[0].split(',');
-    const content = rowsHeader.filter((_, i) => i > 0);
-    console.log('Headers: ', headers);
-    const jsonFormatted = content.map(row => {
-        const columns = row.split(',');
-        return columns.reduce((p, c, i) => {
-            p[headers[i]] = c;
-            return p;
-        }, {});
-    });
-    console.log('jsonFormatted:', jsonFormatted);
-    // here you have the JSON formatted
-    return jsonFormatted;
-}
+
 
 //Create the carparkcards html and buttons
 //Call this multiple times for multiple carparks
-function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
+function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime) {
+    let lastUpdatedDatetime = _lastUpdatedDatetime;
+    if (lastUpdatedDatetime === -1) {
+        lastUpdatedDatetime = "No data";
+    }
+    let lotsAvailable = _lotsAvailable;
+    if (lotsAvailable === -1) {
+        lotsAvailable = "No data";
+    }
     const carparkCard = document.createElement("div");
     carparkCard.classList.add("col-xl-3");
     carparkCard.classList.add("col-md-6");
     carparkCard.classList.add("mb-4");
-    carparkCard.innerHTML = `<div tabindex="-1" id="${carpark.car_park_no}" class="card border-left-primary shadow h-100 py-2">
+    carparkCard.innerHTML = `<div tabindex="-1" id="${carpark.carpark_id}" class="card border-left-primary shadow h-100 py-2">
                                     <div class="card-body">
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div class="text-s font-weight-bold text-primary text-uppercase mb-1">${carpark.address}</div>
-                                                <div id="lots_${carpark.car_park_no}" class="h5 mb-0 font-weight-bold text-gray-800">Lots Available: ${lotsAvailable} </div>
-                                                <div id="lastUpdated_${carpark.car_park_no}" class="h5 mb-0 font-weight-bold text-gray-800">Last Updated: ${lastUpdatedDatetime} </div>
+                                                <div id="lots_${carpark.carpark_id}" class="h5 mb-0 font-weight-bold text-gray-800">Lots Available: ${lotsAvailable} </div>
+                                                <div id="lastUpdated_${carpark.carpark_id}" class="h5 mb-0 font-weight-bold text-gray-800">Last Updated: ${lastUpdatedDatetime} </div>
                                             </div>
                                             <div class="btn-group">
-                                                <button id="btn_${carpark.car_park_no}" class="btn btn-success">Go</button>
-                                                 <button type="button" id="fav_${carpark.car_park_no}" class="btn btn-primary"><i class="fa-solid fa-heart"></i></button>
+                                                <button id="btn_${carpark.carpark_id}" class="btn btn-success">Go</button>
+                                                 <button type="button" id="fav_${carpark.carpark_id}" class="btn btn-primary"><i class="fa-solid fa-heart"></i></button>
                                                  
                                             </div>
                                         </div>
@@ -503,13 +670,16 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
                                 </div>`;
 
     document.getElementById("carpark").appendChild(carparkCard);
-    document.getElementById('btn_' + carpark.car_park_no).onclick = function () {
-        console.log(markersArray);
+    document.getElementById('btn_' + carpark.carpark_id).onclick = function () {
+
         google.maps.event.trigger(markersArray[id], 'click');
+        if (map.getZoom() < 16) {
+            map.setZoom(16);
+        }
     };
-    var favButton = document.getElementById('fav_' + carpark.car_park_no);
-    let foundCarpark = userFavouritedCarparks.indexOf(carpark.car_park_no);
-    console.log(foundCarpark);
+    var favButton = document.getElementById('fav_' + carpark.carpark_id);
+    let foundCarpark = userFavouritedCarparks.indexOf(carpark.carpark_id);
+
     //if there exists a carpark it will be more than or equals to 0
     //hence we can use this logic to manipulate the favourite button 
     if (foundCarpark >= 0) {
@@ -517,16 +687,24 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
     }
     favButton.addEventListener("click", function () {
         if (foundCarpark >= 0) {
-            deleteFavDB(userID, carpark.car_park_no);
-            favButton.style.color = "#ffffff";
-            foundCarpark = -1;
-            alert("Successfully unfavourited Carpark!");
+            deleteFavDB(userID, carpark.carpark_id).then(function (resolve) {
+                favButton.style.color = "#ffffff";
+                foundCarpark = -1;
+                createSuccessAlert(resolve);
+            }).catch(function (err) {
+                createErrorAlert(err);
+            });
+
 
         } else {
-            insertFavDB(userID, carpark.car_park_no);
-            foundCarpark = 1;
-            favButton.style.color = "#ff0000";
-            alert("Successfully Favourited Carpark!");
+            insertFavDB(userID, carpark.carpark_id).then(function (resolve) {
+                foundCarpark = 1;
+                favButton.style.color = "#ff0000";
+                createSuccessAlert(resolve);
+            }).catch(function (err) {
+                createErrorAlert(err);
+            });
+
         }
 
     });
@@ -535,16 +713,80 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
 
 
 document.getElementById("refreshBtn").onclick = function () {
-    fetchCarparkAvailabilityData();
-    if (filteredData !== null || typeof filteredData !== "undefined") {
-        for (const carpark of filteredData) {
-            console.log(carpark.car_park_no);
-            let totalLotsAvailable = getTotalCarparkAvailable(carpark.car_park_no);
-            let lastDate = moment(getCarparkLastUpdatedTime(carpark.car_park_no)).format('ddd, HH:mm:ss');
-            document.getElementById("lots_" + carpark.car_park_no).textContent = "Lots Available: " + totalLotsAvailable;
-            document.getElementById("lastUpdated_" + carpark.car_park_no).textContent = "Last Updated: " + lastDate;
+    infoWindow.close();
+    let refreshBtn = document.getElementById("refreshBtn");
+    let refreshIcon = document.getElementById("refreshIcon");
+    refreshBtn.disabled = true;
+    refreshIcon.setAttribute("class", "fa-spin btnIcon fa-solid fa-rotate-right");
+    fetchCarparkAvailabilityData().then(function () {
+        if (filteredData !== null || typeof filteredData !== "undefined") {
+            for (const carpark of filteredData) {
+
+                let totalLotsAvailable = getTotalCarparkAvailable(carpark.carpark_id);
+                let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
+                document.getElementById("lots_" + carpark.carpark_id).textContent = "Lots Available: " + totalLotsAvailable;
+                document.getElementById("lastUpdated_" + carpark.carpark_id).textContent = "Last Updated: " + lastDate;
+            }
         }
-    }
+    }).then(function () {
+        refreshBtn.disabled = false;
+        refreshIcon.setAttribute("class", "btnIcon fa-solid fa-rotate-right");
+    }).catch(function (err) {
+        console.log(err);
+    });
+
 };
 
 
+
+//Functions for creating Alert Message by appending to id="alertsContainer"
+function createSuccessAlert(alertMessage) {
+    let alert = document.createElement("div");
+    alert.classList.add('alert', 'alert-success', 'alert-dismissible', 'fade', 'in', 'out', 'd-flex', 'align-items-center');
+    alert.setAttribute('style', 'border-radius : 20px');
+    alert.setAttribute('id', 'favouriteAlertSuccess');
+    alert.setAttribute('role', 'alert');
+    alert.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16" style="margin-right: 10px;">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                        <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                        </svg>
+                                        <div>
+                                            ${alertMessage}
+                                        </div>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>`;
+    $(alert).appendTo("#alertsContainer");
+    $(alert).addClass("show");
+    setTimeout(function () {
+        $(alert).removeClass('show');
+        alert.remove();
+    }, 2000);
+
+}
+function createErrorAlert(alertMessage) {
+    let alert = document.createElement("div");
+    alert.classList.add('alert', 'alert-danger', 'd-flex', 'align-items-center', 'alert-dismissible', 'fade', 'in', 'out');
+    alert.setAttribute('style', 'border-radius : 20px');
+    alert.setAttribute('id', 'favouriteAlertError');
+    alert.setAttribute('role', 'alert');
+    alert.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+            <div>
+                ${alertMessage}
+            </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>`;
+    $(alert).appendTo("#alertsContainer");
+    $(alert).addClass("show");
+    setTimeout(function () {
+        $(alert).removeClass('show');
+        alert.remove();
+    }, 2000);
+
+
+}
+//end of functions for creating alert messages

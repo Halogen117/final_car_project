@@ -12,11 +12,22 @@ import java.util.Date;
  */
 public class History {
 
+    public void setHistory_ID(int history_ID) {
+        this.history_ID = history_ID;
+    }
+
+    public int getHistory_ID() {
+        return history_ID;
+    }
+
+   
+    protected int history_ID;
     protected String user_ID;
     protected String carpark_ID;
     protected Date time_stamp;
 
-    public History(String user_ID, String carpark_ID, Date time_stamp) {
+    public History(int history_ID,String user_ID, String carpark_ID, Date time_stamp) {
+        this.history_ID=history_ID;
         this.user_ID = user_ID;
         this.carpark_ID = carpark_ID;
         this.time_stamp = time_stamp;

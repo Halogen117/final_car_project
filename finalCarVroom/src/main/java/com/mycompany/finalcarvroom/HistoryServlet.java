@@ -21,7 +21,7 @@ import org.json.JSONArray;
  *
  * @author mokda
  */
-@WebServlet(name = "HistoryServlet", urlPatterns = {"/getHistory", "/insertHistory"})
+@WebServlet(name = "HistoryServlet", urlPatterns = {"/getHistory", "/insertHistory","/deleteHistory","/deleteAllHistory"})
 public class HistoryServlet extends HttpServlet {
 
     private HistoryDAO historyDAO;
@@ -77,9 +77,9 @@ public class HistoryServlet extends HttpServlet {
                 response.setCharacterEncoding("UTF-8");
                 
                 String userID = request.getParameter("userID");
-                String days = request.getParameter("days");
+                String duration = request.getParameter("duration");
                 
-                List<History> historyCarpark = historyDAO.getHistory(userID, days);
+                List<HistoryCarpark> historyCarpark = historyDAO.getHistory(userID, duration);
                 JSONArray jsArray = new JSONArray(historyCarpark);
                 out.print(jsArray);
                 out.flush();
@@ -108,6 +108,10 @@ public class HistoryServlet extends HttpServlet {
                     insertHistory(request, response);
                     break;
                 case "/deleteHistory":
+                    deleteHistory(request, response);
+                    break;
+                case "/deleteAllHistory":
+                    deleteAllHistory(request, response);
                     break;
             }
         } catch (SQLException ex) {
@@ -119,6 +123,14 @@ public class HistoryServlet extends HttpServlet {
         String userID = request.getParameter("userID");
         String carparkID = request.getParameter("carparkID");
         historyDAO.insertHistory(userID, carparkID);
+    }
+    private void deleteHistory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+        int historyID = Integer.parseInt(request.getParameter("historyID"));
+        historyDAO.deleteHistory(historyID);
+    }
+    private void deleteAllHistory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+        String userID = request.getParameter("userID");
+        historyDAO.deleteAllHistory(userID);
     }
 
     /**

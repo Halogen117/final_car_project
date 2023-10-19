@@ -104,13 +104,6 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-            <!-- Sidebar Message -->
-            <div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>Carpark Near U</strong> </p>
-                <a class="btn btn-primary btn-sm" href="register.jsp">Register Now!</a>
-            </div>
-
         </ul>
         <!-- End of Sidebar -->
 
@@ -128,19 +121,6 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -296,7 +276,6 @@
                         <div class="col">
                             <h2><strong>Our Mission</strong></h2>
                             <p class="lead text-muted">Empowering Parking Choices in Singapore.</p>
-                            <a href="#" class="btn btn-primary justify-content-between mb-2 ">About Us</a>
                         </div>
                     </div>
                 </div>

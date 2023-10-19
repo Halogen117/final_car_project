@@ -41,20 +41,24 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user" action="RegisterServlet">
+                            <form class="user" action="RegisterServlet" method="Get">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            name="firstName" placeholder="First Name" required>
+                                        <input type="text" class="form-control form-control-user" name="firstName"
+                                            placeholder="First Name" required>
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                           name="lastName" placeholder="Last Name" required>
+                                        <input type="text" class="form-control form-control-user" name="lastName"
+                                            placeholder="Last Name" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        name="inputEmail" placeholder="Email Address" required>
+                                    <input type="email" class="form-control form-control-user" name="inputEmail"
+                                        placeholder="Email Address" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="type" class="form-control form-control-user" name="phoneNumber"
+                                        placeholder="Phone Number" required>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
@@ -63,27 +67,133 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
-                                            name="exampleRepeatPassword" placeholder="Repeat Password" required>
+                                            name="repeatPassword" placeholder="Repeat Password" required>
                                     </div>
                                 </div>
                                 <h5 class="h5 text-gray-900 mb-4">Security Question 1: What was the name of your first pet?</h5>
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-user" id="ans1"
-                                        name="ans1" placeholder="Security Question 1 Answer" required>
+                                    <input type="text" class="form-control form-control-user" name="ans1"
+                                        placeholder="Security Question 1 Answer" required>
                                 </div>
                                 <h5 class="h5 text-gray-900 mb-4">Security Question 2: What is your favorite movie?</h5>
                                     <div class="form-group">
-                                    <input type="text" class="form-control form-control-user" id="ans2"
-                                        name="ans2" placeholder="Security Question 2 Answer" required>
+                                    <input type="text" class="form-control form-control-user" name="ans2"
+                                        placeholder="Security Question 2 Answer" required>
                                 </div>
                                     <h5 class="h5 text-gray-900 mb-4">Security Question 3: What is your lucky number?</h5>
                                     <div class="form-group">
-                                    <input type="text" class="form-control form-control-user" id="ans3"
-                                        name="ans3" placeholder="Security Question 3 Answer" required>
+                                    <input type="text" class="form-control form-control-user" name="ans3"
+                                        placeholder="Security Question 3 Answer" required>
                                 </div>
-                                <input type="submit" value="egister Account" class="btn btn-primary btn-user btn-block">
+                                <input type="submit" value="submit">
+                                <a class="btn btn-primary btn-user btn-block">
+                                    Register Account
+                                </a>
+                                
                                 <hr>
-                          
+                                <%
+                                HttpSession user_session = request.getSession();
+                                
+                                if(session.getAttribute("work") == "not_same_password"){
+                                user_session.setAttribute("work", "");
+                                    %>
+                                
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                        <div>
+                                            Same Password! Please retype.
+                                        </div>
+                                    </div>
+                                </div>
+                                <%
+                                }else if(session.getAttribute("work") == "first_name_blank"){
+                                    user_session.setAttribute("work", "");
+                                %>                      
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                        <div>
+                                            First Name should not be blank! Please Retype.
+                                        </div>
+                                    </div>
+                                </div>
+                                <%
+                                }else if(session.getAttribute("work") == "last_name_blank"){
+                                    user_session.setAttribute("work", "");
+                                %>                              
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                        <div>
+                                            Last Name should not be blank! Please Retype.
+                                        </div>
+                                    </div>
+                                </div>
+                                <%
+                                }else if(session.getAttribute("work") == "pass_req_no"){
+                                    user_session.setAttribute("work", "");
+                                %>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                        <div>
+                                            Password needs to have the following requirements:<br>
+                                            Minimum of 8 characters<br>
+                                            At least 1 Uppercase, lowercase, digit and special character
+                                        </div>
+                                    </div>
+                                </div>
+                                <%
+                                }else if(session.getAttribute("work") == "phone_no"){
+                                    user_session.setAttribute("work", "");
+                                %>            
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                        <div>
+                                            Phone Number format is incorrect! <br>
+                                            Follow the example format: 62888888 or 9180 9182
+                                        </div>
+                                    </div>
+                                </div>
+                                <%
+                                }else if(session.getAttribute("work") == "same_email"){
+                                    user_session.setAttribute("work", "");
+                                %>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                        <div>
+                                            Email already exists! Use another one!
+                                        </div>
+                                    </div>
+                                </div>
+                                <%
+                                    }else{
+
+                                %>
+                                <%
+                                }
+                                %>
                             </form>
                             <hr>
                             <div class="text-center">
