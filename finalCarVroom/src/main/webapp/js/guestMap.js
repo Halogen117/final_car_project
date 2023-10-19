@@ -14,12 +14,12 @@ let markersArray = [];
 let carparkJson;
 let allCarparkJson;
 let carparkAvailabilityJson;
-let userFavouritedCarparks;
+let offset=500;
 //For testing purposes, userID is set to 1 for now
-let userID= $.cookie("userId");
+
 let filteredData;
 let redirectCarparkID;
-let offset= 500;
+
 
 
 
@@ -183,9 +183,8 @@ function initCarparks(lat, lng) {
     draggableMarker.position = {lat: lat, lng: lng};
     clearOverlays();
     clearCarparkCards();
-    getUserFavouritedCarparks(userID).then(function () {
-        return fetchCarparkAvailabilityData();
-    }).then(function () {
+    fetchCarparkAvailabilityData().then(function () {
+
 
         // If the place has a geometry, then present it on a map.
 
@@ -204,7 +203,7 @@ function initCarparks(lat, lng) {
 
             clearOverlays();
             clearCarparkCards();
-            
+
             if (filteredData.length !== 0) {
                 refreshBtn.disabled = false;
                 for (const carpark of filteredData) {
@@ -237,6 +236,8 @@ function initCarparks(lat, lng) {
             infoWindow.open(draggableMarker.map, draggableMarker);
 
         }
+    
+
 
     }).catch(function (err) {
         console.log(err);
@@ -273,26 +274,7 @@ function getCarparkLastUpdatedTime(carparkNo) {
     return carparkJson.update_datetime;
 }
 
-function getUserFavouritedCarparks(userID) {
-    return new Promise(function (resolve, reject) {
-        const xhr = new XMLHttpRequest();
-        let url = '/finalCarVroom/getFavourite';
-        let params = 'userID=' + userID;
-        xhr.open("GET", url + "?" + params, true);
-        let status = xhr.status;
-        xhr.onload = () => {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                userFavouritedCarparks = JSON.parse(xhr.response);
-                resolve("it works");
-            } else {
-                reject(status);
-            }
-        }
-        xhr.send();
-    });
 
-
-}
 
 
 function getCarpark(carparkID) {
@@ -380,76 +362,8 @@ function getAllCarparks() {
 //---End of getter methods---
 
 
-//Insert userid and carparkid into database using xmlhttprequest
-function insertFavDB(userID, carparkID) {
-    return new Promise(function (resolve, reject) {
 
 
-        const xhr = new XMLHttpRequest();
-        let url = '/finalCarVroom/insertFavourite';
-        let params = 'userID=' + userID + '&carparkID=' + carparkID;
-        xhr.open('POST', url, true);
-
-//Send the proper header information along with the request
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-        xhr.onload = function () {//Call a function when the state changes.
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                resolve("Successfully favourited Carpark!");
-            } else {
-                reject({status: xhr.status,
-                    statusText: xhr.statusText});
-            }
-        };
-        xhr.send(params);
-    });
-}
-//Delete from favourite_db with userid and carparkid
-function deleteFavDB(userID, carparkID) {
-    return new Promise(function (resolve, reject) {
-
-
-        const xhr = new XMLHttpRequest();
-        let url = '/finalCarVroom/deleteFavourite';
-        let params = 'userID=' + userID + '&carparkID=' + carparkID;
-        xhr.open('POST', url, true);
-
-//Send the proper header information along with the request
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-        xhr.onload = function () {//Call a function when the state changes.
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                resolve("Successfully unfavourited carpark!");
-            } else {
-                reject({status: xhr.status,
-                    statusText: xhr.statusText});
-            }
-        };
-        xhr.send(params);
-    });
-}
-function insertHistDB(userID, carparkID) {
-    return new Promise(function (resolve, reject) {
-
-
-        const xhr = new XMLHttpRequest();
-        let url = '/finalCarVroom/insertHistory';
-        let params = 'userID=' + userID + '&carparkID=' + carparkID;
-        xhr.open('POST', url, true);
-
-//Send the proper header information along with the request
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-        xhr.onload = function () {//Call a function when the state changes.
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                resolve("Successfully inserted to History_db");
-            }else{
-                reject("Error in inserting to history_db");
-            }
-        };
-        xhr.send(params);
-    });
-}
 
 
 
@@ -459,9 +373,6 @@ function insertHistDB(userID, carparkID) {
 fetchCarparkAvailabilityData().then(function () {
     return getAllCarparks();
     //Change the parameter value to userID retrieved from Httpsession
-
-}).then(function () {
-    return getUserFavouritedCarparks(userID);
 
 }).then(function () {
 //call initmap to initalise the map
@@ -568,7 +479,7 @@ async function initMarker(carpark, map) {
         infoWindow.setContent(content);
         infoWindow.open(marker.map, marker);
         document.getElementById(carpark.carpark_id).focus();
-        insertHistDB(userID, carpark.carpark_id);
+        
         if (map.getZoom() < 15) {
             map.setZoom(16);
         }
@@ -625,7 +536,6 @@ function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime) {
                                             </div>
                                             <div class="btn-group">
                                                 <button id="btn_${carpark.carpark_id}" class="btn btn-success">Go</button>
-                                                 <button type="button" id="fav_${carpark.carpark_id}" class="btn btn-primary"><i class="fa-solid fa-heart"></i></button>
                                                  
                                             </div>
                                         </div>
@@ -640,37 +550,12 @@ function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime) {
             map.setZoom(16);
         }
     };
-    var favButton = document.getElementById('fav_' + carpark.carpark_id);
-    let foundCarpark = userFavouritedCarparks.indexOf(carpark.carpark_id);
+
+
 
     //if there exists a carpark it will be more than or equals to 0
     //hence we can use this logic to manipulate the favourite button 
-    if (foundCarpark >= 0) {
-        favButton.style.color = "#ff0000";
-    }
-    favButton.addEventListener("click", function () {
-        if (foundCarpark >= 0) {
-            deleteFavDB(userID, carpark.carpark_id).then(function (resolve) {
-                favButton.style.color = "#ffffff";
-                foundCarpark = -1;
-                createSuccessAlert(resolve);
-            }).catch(function (err) {
-                createErrorAlert(err);
-            });
 
-
-        } else {
-            insertFavDB(userID, carpark.carpark_id).then(function (resolve) {
-                foundCarpark = 1;
-                favButton.style.color = "#ff0000";
-                createSuccessAlert(resolve);
-            }).catch(function (err) {
-                createErrorAlert(err);
-            });
-
-        }
-
-    });
 
 }
 

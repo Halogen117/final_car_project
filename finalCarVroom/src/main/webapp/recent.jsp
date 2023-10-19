@@ -27,7 +27,11 @@
 
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
 
+        <!--Jquery and JqueryCookie reference-->
+        <script src="js/jquery-3.7.1.min.js" type="text/javascript" ></script>
+        <script src="js/jquery_cookie.js" type="text/javascript"></script>
 
+        <script type="module" src="js/userHelper.js"></script>
         <script src="js/moment.min.js"></script>
         <link href="css/maps.css" rel="stylesheet" href="url"/>
         <script type="module" src="js/cookies.js"></script>
@@ -175,7 +179,7 @@
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                      aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="profile.jsp">
+                                    <a id="profileBtn" class="dropdown-item" href="profile.jsp">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Profile
                                     </a>
@@ -196,7 +200,7 @@
                     <div class="container-fluid">
 
                         <!-- Page Heading -->
-                        <h1 id="username" class="h2 mb-1 text-gray-900">Hi User Tan,</h1>
+                        <h1 class="h2 mb-1 text-gray-900">Hi <span id="welcomeUserText">User Tan</span>,</h1>
 
                         <p class="mb-4">Your Recent Activities can be found here...</p>
 
@@ -325,7 +329,7 @@
                             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                <a class="btn btn-primary" href="login.jsp">Logout</a>
+                                <button class="btn btn-primary" id="logoutBtn">Logout</button>
                             </div>
                         </div>
                     </div>
@@ -352,8 +356,6 @@
                 </div>
 
                 <!-- Bootstrap core JavaScript-->
-                <script src="vendor/jquery/jquery.min.js"></script>
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
                 <!-- Core plugin JavaScript-->

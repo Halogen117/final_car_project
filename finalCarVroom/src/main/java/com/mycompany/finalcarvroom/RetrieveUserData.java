@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 public class RetrieveUserData {
     // Use other class for DB connection
 
-    private connect_to_postgres connPostGres = new connect_to_postgres();
+    private ConnectDB connPostGres = new ConnectDB();
 
     public RetrieveUserData() {
     }
@@ -20,7 +20,7 @@ public class RetrieveUserData {
 
         try {
 
-            Connection conn = connPostGres.connect();
+            Connection conn = connPostGres.getConnection();
             Statement statement = conn.createStatement();
             // Query to check for email and password
             // ENSURE THAT YOU HAVE CREATED A TABLE CALLED USERINFO
@@ -53,7 +53,7 @@ public class RetrieveUserData {
         String emailInput = email;
         String[] userDataQuery = new String[2];
         try {
-            Connection conn = connPostGres.connect();
+            Connection conn = connPostGres.getConnection();
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery("SELECT user_id, name FROM user_db "
                     + "WHERE email = \'" + emailInput + "\'");

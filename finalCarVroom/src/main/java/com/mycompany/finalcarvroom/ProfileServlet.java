@@ -24,6 +24,7 @@ import org.json.JSONObject;
 public class ProfileServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
         // Java code to process the request
         ManipulateDB mDb = new ManipulateDB();
 
@@ -31,7 +32,7 @@ public class ProfileServlet extends HttpServlet {
         String currentUserId = (String) user_session.getAttribute("userId");
         System.out.println(currentUserId);
         String[] userDetails = mDb.getUserDetails(currentUserId);  //user must change to user ID (Global variable)
-
+        
         // Retrieve current user session
         UserData currUserData = new UserData();
         currUserData.setFirst_name(userDetails[1]);

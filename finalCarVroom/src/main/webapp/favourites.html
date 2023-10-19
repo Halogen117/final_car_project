@@ -17,17 +17,26 @@
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
+        
+
         <!-- Custom styles for this template-->
         <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
+        <!--Jquery and JqueryCookie reference-->
+        <script src="js/jquery-3.7.1.min.js" type="text/javascript" ></script>
+        <script src="js/jquery_cookie.js" type="text/javascript"></script>
+        
         <!-- Link to social media logo -->
         <link rel="stylesheet" href=
               "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <script src="https://kit.fontawesome.com/737527f161.js" crossorigin="anonymous"></script>
+
+
+        <script type="module" src="js/userHelper.js"></script>
         <script src="js/svy21.js"></script>
         <script src="js/moment.min.js"></script>
         <script type="module" src="js/favourite.js"></script>
-        <script type="module" src="js/cookies.js"></script>
+
         <link href="css/maps.css" rel="stylesheet" href="url"/>
     </head>
 
@@ -131,6 +140,7 @@
                             <i class="fa fa-bars"></i>
                         </button>
 
+
                         <!-- Topbar Navbar -->
                         <ul class="navbar-nav ml-auto">
 
@@ -157,9 +167,6 @@
                                     </form>
                                 </div>
                             </li>
-
-
-
                             <div class="topbar-divider d-none d-sm-block"></div>
 
                             <!-- Nav Item - User Information -->
@@ -173,7 +180,7 @@
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                      aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="profile.jsp">
+                                    <a id="profileBtn" class="dropdown-item" href="profile.jsp">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Profile
                                     </a>
@@ -194,7 +201,7 @@
                     <div class="container-fluid">
 
                         <!-- Page Heading -->
-                        <h1 class="h2 mb-1 text-gray-900">Hi User Tan,</h1>
+                        <h1 class="h2 mb-1 text-gray-900">Hi <span id="welcomeUserText">User Tan</span>,</h1>
 
                         <p class="mb-4">Your Favourites can be found here...</p>
 
@@ -225,7 +232,7 @@
                                     </h1>
 
 
-                                    <button id='refreshBtn'class="btn btn-primary"><i id="refreshIcon" class="btnIcon fa-solid fa-rotate-right"></i>Refresh Lots</button>
+                                    <button id='refreshBtn'class="btn btn-success"><i id="refreshIcon" class="btnIcon fa-solid fa-rotate-right"></i>Refresh Lots</button>
 
 
                                 </div>
@@ -392,18 +399,15 @@
                             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                <a class="btn btn-primary" href="login.jsp">Logout</a>
+                                <button class="btn btn-primary" id="logoutBtn">Logout</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Bootstrap core JavaScript-->
-                <script src="vendor/jquery/jquery.min.js"></script>
+
                 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-                <!-- Core plugin JavaScript-->
-                <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
                 <!-- Custom scripts for all pages-->
                 <script src="js/sb-admin-2.min.js"></script>
