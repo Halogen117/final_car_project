@@ -4,6 +4,7 @@
  */
 package com.mycompany.finalcarvroom;
 
+import java.util.Base64;
 import java.sql.*;
 import java.util.Base64;
 /**
@@ -12,7 +13,9 @@ import java.util.Base64;
  */
 public class Authentication {
     ConnectDB create = new ConnectDB();
-    public void login(String email, String password) {
+    ////////////////////// LOGIN ////////////////////////
+    public String login(String email, String password) {
+                String userName = "";
 		try {
                     Connection connectDB = create.getConnection();
                     Statement statement = connectDB.createStatement();
@@ -20,22 +23,28 @@ public class Authentication {
                     String sql = "SELECT * FROM user_DB WHERE email = '" + email +"' AND password = '" + password +"'";
 
                     ResultSet resultSet = statement.executeQuery(sql);
-
+                    
                     if(resultSet.next()) {
                             System.out.println("Login Successful");
+                            userName = resultSet.getString("user_ID");
+                            connectDB.close();
+                            return userName;
                             //activate "Login Successful" display message code here
                             //Close Guest Page and
                             //Display Member Page
                     }
                     else {
                             System.out.println("Authentication Failed");
+                            connectDB.close();
+                            return userName;
                             //activate "Authentication Failed" display message code here
                             //Reset password textbox
                     }
-                    connectDB.close();
+                    
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}
+                return userName;
 	}
 	
 	
@@ -123,7 +132,6 @@ public class Authentication {
         }
         return userDetails[0];
         }
-
         public String encoder_link(String email){
             String [] userDetails = new String[2];
             String baser = "";

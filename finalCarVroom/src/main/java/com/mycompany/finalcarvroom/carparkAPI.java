@@ -30,22 +30,26 @@ public class carparkAPI {
 
         Connection connectDB = null;
 
-        Datab db = new Datab();
-        manipulateDb manDb = new manipulateDb();
+        //Datab db = new Datab();
+        //manipulateDb manDb = new manipulateDb();
         //db.Conn();  //Connect
 
 
         boolean run = true;
         try {
-            DriverManager.registerDriver(new org.postgresql.Driver());
-            connectDB = DriverManager.getConnection(urlDB, user, password);
-            System.out.println("Connected to PostgreSQL server");
-
+            //DriverManager.registerDriver(new org.postgresql.Driver());
+            //connectDB = DriverManager.getConnection(urlDB, user, password);
+            //System.out.println("Connected to PostgreSQL server");
+            CreateDB table = new CreateDB();
             // COMMENT OUT THIS LINE IF YOU ALREADY HAVE A TABLE
             //db.createDatabase(connectDB);
             //db.createFavDb(connectDB);
-            db.createHistoryDb(connectDB);
+            //db.createHistoryDb(connectDB);
             //db.createUserDb(connectDB);
+            table.createHistoryDb();
+            table.createCarparkDb();
+            table.createFavDb();
+            table.createUserDb();
 
             String[] createAcc = new String[11];
 
@@ -78,8 +82,7 @@ public class carparkAPI {
         }
     }
 
-    public void testing() {
-    }
+
 }
 
 class Datab {

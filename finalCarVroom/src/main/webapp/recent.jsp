@@ -216,7 +216,6 @@
                                         <div id="toolbar">
                                             <button class="btn btn-danger" id="deleteAllButton">Delete all history</button>
                                         </div>
-
                                         <table data-id-field="history_ID" data-page-size="10" data-pagination="true" data-toolbar-align="right" data-toolbar="#toolbar" id="recentTable" data-search="true">
                                             <thead>
                                                 <tr>
