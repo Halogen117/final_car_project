@@ -34,7 +34,7 @@ public class CreateDB {
             //db.createHistoryDb(connectDB);
             //db.createUserDb(connectDB);
             //table.createHistoryDb();
-            table.createCarparkDb();
+            //table.createCarparkDb();
             //table.createFavDb();
             //table.createUserDb();
             //table.createFeedbackDb();

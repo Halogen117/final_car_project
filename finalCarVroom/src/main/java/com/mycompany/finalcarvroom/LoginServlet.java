@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
             user_session.setAttribute("userId", userNameId[0]);
             user_session.setAttribute("username", userNameId[1]);
             Cookie urlCookie = new Cookie("userId", URLEncoder.encode( userNameId[0], "UTF-8" ));
-            Cookie urlCookie_2 = new Cookie("userId", URLEncoder.encode( userNameId[1], "UTF-8" ));
+            Cookie urlCookie_2 = new Cookie("username", URLEncoder.encode( userNameId[1], "UTF-8" ));
             response.addCookie(urlCookie);
             response.addCookie(urlCookie_2);
             // Change page to main page
