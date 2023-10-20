@@ -10,7 +10,7 @@ let allCarparkJson;
 let map;
 let carparkAvailabilityJson;
 let markersArray = [];
-let userID = 1;
+let userID = $.cookie("userId");
 let infoWindow;
 let markersArrayLength = 0;
 
@@ -28,6 +28,7 @@ async function initMap() {
     infoWindow = new google.maps.InfoWindow();
     clearOverlays();
     clearCarparkCards();
+    
     if (userFavouritedCarparks.length !== 0) {
         for (let i = 0; i < userFavouritedCarparks.length; i++) {
             //Filter all of the carpark data to only the user favourited carparks
