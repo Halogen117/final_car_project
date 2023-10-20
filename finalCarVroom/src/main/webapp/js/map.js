@@ -16,10 +16,10 @@ let allCarparkJson;
 let carparkAvailabilityJson;
 let userFavouritedCarparks;
 //For testing purposes, userID is set to 1 for now
-let userID= $.cookie("userId");
+let userID = $.cookie("userId");
 let filteredData;
 let redirectCarparkID;
-let offset= 500;
+let offset = 500;
 let xValues = [];
 let yValues = [];
 let barColors;
@@ -97,13 +97,12 @@ async function initMap() {
         gmpDraggable: true,
         title: "Drag me",
     });
+    //This method is fired when user moves the draggable marker
     draggableMarker.addListener("dragend", (event) => {
         const position = draggableMarker.position;
         let lat = position.lat;
         let lng = position.lng;
         initCarparks(lat, lng);
-
-
     });
 
 
@@ -180,6 +179,8 @@ if (url.searchParams.has("carparkID")) {
 
 }
 
+//Gets the user favourited carparks and fetch new carpark's available lots
+//Initialise the carpark cards and markers
 function initCarparks(lat, lng) {
     let markerId = 0;
     let infoWindowContentString;
@@ -205,10 +206,10 @@ function initCarparks(lat, lng) {
         let result = cv.computeSVY21(lat, lng);
         if (offset > 0) {
             filteredData = filterByLocation(allCarparkJson, result.E, result.N, offset);
-            
+
             clearOverlays();
             clearCarparkCards();
-            
+
             if (filteredData.length !== 0) {
                 xValues = [];
                 yValues = [];
@@ -453,7 +454,7 @@ function insertHistDB(userID, carparkID) {
         xhr.onload = function () {//Call a function when the state changes.
             if (xhr.readyState === 4 && xhr.status === 200) {
                 resolve("Successfully inserted to History_db");
-            }else{
+            } else {
                 reject("Error in inserting to history_db");
             }
         };
@@ -539,7 +540,8 @@ async function initMarker(carpark, map) {
         map,
         content: faPin.element,
         position: {lat: resultLatLon.lat, lng: resultLatLon.lon},
-        title: carpark.address,
+        title: carpark.carpark_id,
+
     });
 
 
@@ -689,13 +691,13 @@ function updateChart() {
     //removeCanvas('barChart');
     plotChart();
     plotPChart();
-  }
-function plotChart(){
-    
+}
+function plotChart() {
+
     var filteredData = [];
     for (var i = 0; i < xValues.length; i++) {
         if (yValues[i] >= 0) {
-            filteredData.push({ x: xValues[i], y: yValues[i] });
+            filteredData.push({x: xValues[i], y: yValues[i]});
         }
     }
 
@@ -704,85 +706,120 @@ function plotChart(){
 
     xValues = filteredData.map(item => item.x);
     yValues = filteredData.map(item => item.y);
-    
+
     var barCanvas = document.getElementById('barChart');
-    
+
     // Destroy the existing chart instance if it exists
     if (barChartInst) {
         barChartInst.destroy();
     }
     var barCtx = barCanvas.getContext('2d');
-    
+
     barChartInst = new Chart(barCtx, {
-      type: "bar",
-      data: {
-        labels: xValues,
-        datasets: [{
-          backgroundColor: barColors,
-          data: yValues
-        }]
-      },
-      options: {
-          scales: {
+        type: "bar",
+        data: {
+            labels: xValues,
+            datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+        },
+        options: {
+            onClick(event, clickedElements) {
+                if (clickedElements.length !== 0) {
+                    if (clickedElements[0]._model.label !== undefined) {
+                        let carparkID = clickedElements[0]._model.label;
+                        document.getElementById(carparkID).focus();
+                        for (const marker of markersArray) {
+                            if (marker.title === carparkID) {
+                                google.maps.event.trigger(marker, 'click');
+                                if (map.getZoom() < 16) {
+                                    map.setZoom(16);
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            scales: {
                 y: {
                     beginAtZero: true, // Start the y-axis scale at 0
                 }
             },
             tooltips: {
-              callbacks: {
-                label: function(tooltipItem, data) {
-                  var label = data.labels[tooltipItem.index];
-                  var value = data.datasets[0].data[tooltipItem.index];
-                  return label + ": " + value;
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index];
+                        var value = data.datasets[0].data[tooltipItem.index];
+                        return label + ": " + value;
+                    }
                 }
-              }
             }
-          }
-        });
+        }
+    });
 }
 
-function plotPChart(){
+function plotPChart() {
     var pieCanvas = document.getElementById('pieChart');
-    
+
     // Destroy the existing chart instance if it exists
     if (pieChartInst) {
         pieChartInst.destroy();
     }
     var pieCtx = pieCanvas.getContext('2d');
     pieChartInst = new Chart(pieCtx, {
-      type: "pie",
-      data: {
-        labels: xValues,
-        datasets: [{
-          backgroundColor: barColors,
-          data: yValues
-        }]
-      },
-      options: {
-        tooltips: {
-          callbacks: {
-            label: function(tooltipItem, data) {
-              var label = data.labels[tooltipItem.index];
-              var value = data.datasets[0].data[tooltipItem.index];
-              return label + ": " + value;
+        type: "pie",
+        data: {
+            labels: xValues,
+            datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+        },
+        options: {
+            onClick(event, clickedElements) {
+                console.log(clickedElements);
+                console.log(event);
+                if (clickedElements.length !== 0) {
+                    if (clickedElements[0]._model.label !== undefined) {
+                        let carparkID = clickedElements[0]._model.label;
+                        document.getElementById(carparkID).focus();
+                        for (const marker of markersArray) {
+                            if (marker.title === carparkID) {
+                                google.maps.event.trigger(marker, 'click');
+                                if (map.getZoom() < 16) {
+                                    map.setZoom(16);
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index];
+                        var value = data.datasets[0].data[tooltipItem.index];
+                        return label + ": " + value;
+                    }
+                }
             }
-          }
         }
-      }
     });
 }
 function generateDynamicColors(count) {
-      var dynamicColors = [];
-      for (var i = 0; i < count; i++) {
+    var dynamicColors = [];
+    for (var i = 0; i < count; i++) {
         // Generate a random color
         var color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
         dynamicColors.push(color);
-      }
-      return dynamicColors;
     }
+    return dynamicColors;
+}
 
 
 
+//Refresh button
 document.getElementById("refreshBtn").onclick = function () {
     infoWindow.close();
     let refreshBtn = document.getElementById("refreshBtn");
