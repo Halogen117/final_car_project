@@ -20,6 +20,10 @@ let userID= $.cookie("userId");
 let filteredData;
 let redirectCarparkID;
 let offset= 500;
+let xValues = [];
+let yValues = [];
+let barColors;
+var i = 0;
 
 
 
@@ -201,11 +205,13 @@ function initCarparks(lat, lng) {
         let result = cv.computeSVY21(lat, lng);
         if (offset > 0) {
             filteredData = filterByLocation(allCarparkJson, result.E, result.N, offset);
-
+            
             clearOverlays();
             clearCarparkCards();
             
             if (filteredData.length !== 0) {
+                xValues = [];
+                yValues = [];
                 refreshBtn.disabled = false;
                 for (const carpark of filteredData) {
                     let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
@@ -216,11 +222,15 @@ function initCarparks(lat, lng) {
                     } else {
                         lastUpdatedDateFormatted = moment(lastUpdatedDate).format('ddd, HH:mm:ss');
                     }
-
+                    xValues.push(carpark.carpark_id);
+                    yValues.push(totalCarparkAvailableLot); ///////////////////////////////////////////////////////////////////////
+                    i++;
                     initMarker(carpark, map);
                     createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted);
                     markerId++;
                 }
+                barColors = generateDynamicColors(xValues.length);
+                updateChart();
                 //MarkerID also acts a counter for number of carparks
                 infoWindowContentString = `Found ${markerId} nearby carparks`;
             } else {
@@ -673,6 +683,104 @@ function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime) {
     });
 
 }
+var barChartInst;
+var pieChartInst;
+function updateChart() {
+    //removeCanvas('barChart');
+    plotChart();
+    plotPChart();
+  }
+function plotChart(){
+    
+    var filteredData = [];
+    for (var i = 0; i < xValues.length; i++) {
+        if (yValues[i] >= 0) {
+            filteredData.push({ x: xValues[i], y: yValues[i] });
+        }
+    }
+
+    // Sort the filtered data array by y values in descending order
+    filteredData.sort((a, b) => b.y - a.y);
+
+    xValues = filteredData.map(item => item.x);
+    yValues = filteredData.map(item => item.y);
+    
+    var barCanvas = document.getElementById('barChart');
+    
+    // Destroy the existing chart instance if it exists
+    if (barChartInst) {
+        barChartInst.destroy();
+    }
+    var barCtx = barCanvas.getContext('2d');
+    
+    barChartInst = new Chart(barCtx, {
+      type: "bar",
+      data: {
+        labels: xValues,
+        datasets: [{
+          backgroundColor: barColors,
+          data: yValues
+        }]
+      },
+      options: {
+          scales: {
+                y: {
+                    beginAtZero: true, // Start the y-axis scale at 0
+                }
+            },
+            tooltips: {
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var label = data.labels[tooltipItem.index];
+                  var value = data.datasets[0].data[tooltipItem.index];
+                  return label + ": " + value;
+                }
+              }
+            }
+          }
+        });
+}
+
+function plotPChart(){
+    var pieCanvas = document.getElementById('pieChart');
+    
+    // Destroy the existing chart instance if it exists
+    if (pieChartInst) {
+        pieChartInst.destroy();
+    }
+    var pieCtx = pieCanvas.getContext('2d');
+    pieChartInst = new Chart(pieCtx, {
+      type: "pie",
+      data: {
+        labels: xValues,
+        datasets: [{
+          backgroundColor: barColors,
+          data: yValues
+        }]
+      },
+      options: {
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data) {
+              var label = data.labels[tooltipItem.index];
+              var value = data.datasets[0].data[tooltipItem.index];
+              return label + ": " + value;
+            }
+          }
+        }
+      }
+    });
+}
+function generateDynamicColors(count) {
+      var dynamicColors = [];
+      for (var i = 0; i < count; i++) {
+        // Generate a random color
+        var color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+        dynamicColors.push(color);
+      }
+      return dynamicColors;
+    }
+
 
 
 document.getElementById("refreshBtn").onclick = function () {
@@ -683,13 +791,20 @@ document.getElementById("refreshBtn").onclick = function () {
     refreshIcon.setAttribute("class", "fa-spin btnIcon fa-solid fa-rotate-right");
     fetchCarparkAvailabilityData().then(function () {
         if (filteredData !== null || typeof filteredData !== "undefined") {
+            xValues = [];
+            yValues = [];
             for (const carpark of filteredData) {
 
                 let totalLotsAvailable = getTotalCarparkAvailable(carpark.carpark_id);
                 let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
                 document.getElementById("lots_" + carpark.carpark_id).textContent = "Lots Available: " + totalLotsAvailable;
                 document.getElementById("lastUpdated_" + carpark.carpark_id).textContent = "Last Updated: " + lastDate;
+                xValues.push(carpark.carpark_id);
+                yValues.push(totalLotsAvailable); ///////////////////////////////////////////////////////////////////////
+                i++;
             }
+            barColors = generateDynamicColors(xValues.length);
+            updateChart();
         }
     }).then(function () {
         refreshBtn.disabled = false;
