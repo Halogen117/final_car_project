@@ -9,7 +9,7 @@ let userHistoryCarparksFormatted;
 let carparkJson;
 let allCarparkJson;
 let table = $("#recentTable");
-let userID = 1;
+let userID = $.cookie("userId");
 
 
 
