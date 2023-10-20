@@ -27,16 +27,35 @@ var i = 0;
 
 
 
+
 //Function for when user clicks on Get Nearby carparks
 async function findMyLocation() {
-    getCurrentPosition().then(function (position) {
-        let lat = position.coords.latitude;
-        let lng = position.coords.longitude;
+    navigator.permissions.query({name: 'geolocation'}).then((permissionStatus) => {
 
-        initCarparks(lat, lng);
-
-
+        if (permissionStatus.state === "granted") {
+            getCurrentPosition().then(function (position) {
+                let lat = position.coords.latitude;
+                let lng = position.coords.longitude;
+                initCarparks(lat, lng);
+            });
+        } else if (permissionStatus.state === "prompt") {
+            createErrorAlert('Please enable location!', 4000);
+        } else if (permissionStatus.state === "denied") {
+            createErrorAlert('Please enable location!', 4000);
+        }
+        permissionStatus.addEventListener("change", () => {
+            if (permissionStatus.state === "granted") {
+                getCurrentPosition().then(function (position) {
+                    let lat = position.coords.latitude;
+                    let lng = position.coords.longitude;
+                    initCarparks(lat, lng);
+                });
+            } else {
+                createErrorAlert('Please enable location!', 4000);
+            }
+        });
     });
+
 
 
 
@@ -52,6 +71,7 @@ let getCurrentPosition = function (options) {
 
 //Initialise the map
 async function initMap() {
+
     // Request libraries when needed, not in the script tag.
     const [{Map}, {AdvancedMarkerElement}] = await Promise.all([
         google.maps.importLibrary("marker"),
@@ -63,7 +83,9 @@ async function initMap() {
         center: {lat: 1.3521, lng: 103.8198},
         zoom: 8,
         mapId: '8a715e13e7d9ce06',
-        mapTypeControl: false,
+        mapTypeControl:true,
+        mapTypeControlOptions:{position:google.maps.ControlPosition.BOTTOM_LEFT},
+        streetViewControl: false,
     });
     //Initialise Infowindow
     infoWindow = new google.maps.InfoWindow();
@@ -73,6 +95,8 @@ async function initMap() {
         await findMyLocation();
     } else {
         getCarpark(redirectCarparkID).then((value) => {
+            xValues = [];
+            yValues = [];
             clearCarparkCards();
             clearOverlays();
             var markerId = 0;
@@ -81,8 +105,17 @@ async function initMap() {
 
             let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
             let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
+            filteredData = [];
+            filteredData.push(allCarparkJson.find(item => item.carpark_id === carpark.carpark_id));
+
+
+
             initMarker(carpark, map);
             createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastDate);
+            xValues.push(carpark.carpark_id);
+            yValues.push(totalCarparkAvailableLot);
+            barColors = generateDynamicColors(xValues.length);
+            updateChart();
             map.setZoom(18);
             map.panTo({lat: resultLatLon.lat, lng: resultLatLon.lon});
 
@@ -180,7 +213,7 @@ if (url.searchParams.has("carparkID")) {
 }
 
 //Gets the user favourited carparks and fetch new carpark's available lots
-//Initialise the carpark cards and markers
+//Initialise the carpark cards and markers and charts
 function initCarparks(lat, lng) {
     let markerId = 0;
     let infoWindowContentString;
@@ -213,6 +246,7 @@ function initCarparks(lat, lng) {
             if (filteredData.length !== 0) {
                 xValues = [];
                 yValues = [];
+
                 refreshBtn.disabled = false;
                 for (const carpark of filteredData) {
                     let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
@@ -224,8 +258,7 @@ function initCarparks(lat, lng) {
                         lastUpdatedDateFormatted = moment(lastUpdatedDate).format('ddd, HH:mm:ss');
                     }
                     xValues.push(carpark.carpark_id);
-                    yValues.push(totalCarparkAvailableLot); ///////////////////////////////////////////////////////////////////////
-                    i++;
+                    yValues.push(totalCarparkAvailableLot);
                     initMarker(carpark, map);
                     createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted);
                     markerId++;
@@ -665,9 +698,9 @@ function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime) {
             deleteFavDB(userID, carpark.carpark_id).then(function (resolve) {
                 favButton.style.color = "#ffffff";
                 foundCarpark = -1;
-                createSuccessAlert(resolve);
+                createSuccessAlert(resolve, 3000);
             }).catch(function (err) {
-                createErrorAlert(err);
+                createErrorAlert(err, 4000);
             });
 
 
@@ -675,9 +708,9 @@ function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime) {
             insertFavDB(userID, carpark.carpark_id).then(function (resolve) {
                 foundCarpark = 1;
                 favButton.style.color = "#ff0000";
-                createSuccessAlert(resolve);
+                createSuccessAlert(resolve, 3000);
             }).catch(function (err) {
-                createErrorAlert(err);
+                createErrorAlert(err, 4000);
             });
 
         }
@@ -778,8 +811,7 @@ function plotPChart() {
         },
         options: {
             onClick(event, clickedElements) {
-                console.log(clickedElements);
-                console.log(event);
+
                 if (clickedElements.length !== 0) {
                     if (clickedElements[0]._model.label !== undefined) {
                         let carparkID = clickedElements[0]._model.label;
@@ -828,6 +860,7 @@ document.getElementById("refreshBtn").onclick = function () {
     refreshIcon.setAttribute("class", "fa-spin btnIcon fa-solid fa-rotate-right");
     fetchCarparkAvailabilityData().then(function () {
         if (filteredData !== null || typeof filteredData !== "undefined") {
+            
             xValues = [];
             yValues = [];
             for (const carpark of filteredData) {
@@ -855,7 +888,7 @@ document.getElementById("refreshBtn").onclick = function () {
 
 
 //Functions for creating Alert Message by appending to id="alertsContainer"
-function createSuccessAlert(alertMessage) {
+function createSuccessAlert(alertMessage, timeToFade) {
     let alert = document.createElement("div");
     alert.classList.add('alert', 'alert-success', 'alert-dismissible', 'fade', 'in', 'out', 'd-flex', 'align-items-center');
     alert.setAttribute('style', 'border-radius : 20px');
@@ -875,11 +908,13 @@ function createSuccessAlert(alertMessage) {
     $(alert).addClass("show");
     setTimeout(function () {
         $(alert).removeClass('show');
-        alert.remove();
-    }, 2000);
+        setTimeout(function () {
+            $(alert).remove();
+        }, 2000);
+    }, timeToFade);
 
 }
-function createErrorAlert(alertMessage) {
+function createErrorAlert(alertMessage, timeToFade) {
     let alert = document.createElement("div");
     alert.classList.add('alert', 'alert-danger', 'd-flex', 'align-items-center', 'alert-dismissible', 'fade', 'in', 'out');
     alert.setAttribute('style', 'border-radius : 20px');
@@ -899,8 +934,11 @@ function createErrorAlert(alertMessage) {
     $(alert).addClass("show");
     setTimeout(function () {
         $(alert).removeClass('show');
-        alert.remove();
-    }, 2000);
+        setTimeout(function () {
+            $(alert).remove();
+        }, 2000);
+    }, timeToFade);
+
 
 
 }

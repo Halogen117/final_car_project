@@ -113,9 +113,9 @@ function deleteItem(curID) {
             field: "history_ID",
             values: id,
         });
-        createSuccessAlert(successMessage);
+        createSuccessAlert(successMessage,3000);
     }).catch(function (err) {
-        createErrorAlert(err.statusText);
+        createErrorAlert(err.statusText,4000);
     });
 
 }
@@ -126,9 +126,9 @@ document.getElementById("deleteAllButton").onclick = function () {
     if (table.bootstrapTable('getData').length !== 0) {
         deleteAllUserHistory(userID).then(function (successMessage) {
             table.bootstrapTable('removeAll');
-            createSuccessAlert(successMessage);
+            createSuccessAlert(successMessage,3000);
         }).catch(function (err) {
-            createErrorAlert(err);
+            createErrorAlert(err,4000);
         });
 
     }
@@ -136,7 +136,7 @@ document.getElementById("deleteAllButton").onclick = function () {
 }
 
 //Functions for creating Alert Message by appending to id="alertsContainer"
-function createSuccessAlert(alertMessage) {
+function createSuccessAlert(alertMessage,timeToFade) {
     let alert = document.createElement("div");
     alert.classList.add('alert', 'alert-success', 'alert-dismissible', 'fade', 'in', 'out', 'd-flex', 'align-items-center');
     alert.setAttribute('style', 'border-radius : 20px');
@@ -156,12 +156,14 @@ function createSuccessAlert(alertMessage) {
     $(alert).addClass("show");
     setTimeout(function () {
         $(alert).removeClass('show');
-        alert.remove();
-    }, 2000);
+        setTimeout(function(){
+           $(alert).remove(); 
+        },2000);
+    }, timeToFade);
 
 }
 
-function createErrorAlert(alertMessage) {
+function createErrorAlert(alertMessage,timeToFade) {
     let alert = document.createElement("div");
     alert.classList.add('alert', 'alert-danger', 'd-flex', 'align-items-center', 'alert-dismissible', 'fade', 'in', 'out');
     alert.setAttribute('style', 'border-radius : 20px');
@@ -181,8 +183,10 @@ function createErrorAlert(alertMessage) {
     $(alert).addClass("show");
     setTimeout(function () {
         $(alert).removeClass('show');
-        alert.remove();
-    }, 2000);
+        setTimeout(function(){
+           $(alert).remove(); 
+        },2000);
+    }, timeToFade);
 
 
 }

@@ -333,7 +333,7 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
                 favButton.style.color = "#ffffff";
                 foundCarpark = -1;
                 //setTimeout($("#favouriteAlert").addClass("show"),5000);
-                createSuccessAlert(resolve);
+                createSuccessAlert(resolve,3000);
                 carparkCard.remove();
                 markersArray[id].setMap(null);
                 markersArray[id] = null;
@@ -343,7 +343,7 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
                 }
 
             }).catch(function (err) {
-                createErrorAlert(err.statusText);
+                createErrorAlert(err.statusText,3000);
             });
 
         }
@@ -352,7 +352,7 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
 
 }
 
-function createSuccessAlert(alertMessage) {
+function createSuccessAlert(alertMessage,timeToFade) {
     let alert = document.createElement("div");
     alert.classList.add('alert', 'alert-success', 'alert-dismissible', 'fade', 'in', 'out', 'd-flex', 'align-items-center');
     alert.setAttribute('style', 'border-radius : 20px');
@@ -372,11 +372,13 @@ function createSuccessAlert(alertMessage) {
     $(alert).addClass("show");
     setTimeout(function () {
         $(alert).removeClass('show');
-        alert.remove();
-    }, 2000);
+        setTimeout(function(){
+           $(alert).remove(); 
+        },2000);
+    }, timeToFade);
 
 }
-function createErrorAlert(alertMessage) {
+function createErrorAlert(alertMessage,timeToFade) {
     let alert = document.createElement("div");
     alert.classList.add('alert', 'alert-danger', 'd-flex', 'align-items-center', 'alert-dismissible', 'fade', 'in', 'out');
     alert.setAttribute('style', 'border-radius : 20px');
@@ -396,8 +398,10 @@ function createErrorAlert(alertMessage) {
     $(alert).addClass("show");
     setTimeout(function () {
         $(alert).removeClass('show');
-        alert.remove();
-    }, 2000);
+        setTimeout(function(){
+           $(alert).remove(); 
+        },2000);
+    }, timeToFade);
 
 
 }
