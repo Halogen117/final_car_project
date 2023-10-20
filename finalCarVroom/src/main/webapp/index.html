@@ -36,7 +36,9 @@
         <script src="js/moment.min.js"></script>
         <script type="module" src="js/userHelper.js"></script>
         <link href="css/maps.css" rel="stylesheet" href="url"/>
-
+        
+        
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
 
     <body id="page-top">
@@ -182,7 +184,7 @@
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                      aria-labelledby="userDropdown">
-                                    <a id="profileBtn" class="dropdown-item" href="#">
+                                    <a id="profileBtn" class="dropdown-item" href="profile.jsp">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Profile
                                     </a>
@@ -248,7 +250,7 @@
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div class="text-s font-weight-bold text-primary text-uppercase mb-1">
-                                                    NTU Carpark F</div>
+                                                    NTU Carpark A</div>
                                                 <div class="h5 mb-0 font-weight-bold text-gray-800">Lots Available: </div>
                                             </div>
                                             <div class="col-auto">
@@ -330,7 +332,15 @@
                                 </div>
                             </div>
 
-                        </div>                        
+                        </div>
+                        <div style="display: flex;">
+                            <div style="flex: 1;">
+                              <canvas id="barChart" width="350" height="350"></canvas>
+                            </div>
+                            <div style="flex: 1;">
+                              <canvas id="pieChart" width="200" height="200"></canvas>
+                            </div>
+                         </div>                        
 
                         <!-- Content Row -->
 
