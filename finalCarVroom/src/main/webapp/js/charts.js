@@ -90,8 +90,7 @@ function plotGraph(xValues, yValues, carparkID) {
     if (lineChartInst) {
         lineChartInst.destroy();
     }
-    console.log(xValues);
-    console.log(yValues);
+    let lineColor = generateDynamicColors(1);
     lineChartInst = new Chart(lineCtx, {
         type: 'line',
         data: {
@@ -100,7 +99,7 @@ function plotGraph(xValues, yValues, carparkID) {
                     label: carparkID,
                     data: yValues,
                     fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
+                    borderColor: lineColor,
                     tension: 0.1
                 }]
         }, options: {
@@ -142,4 +141,13 @@ function onBothDropdownChange() {
         });
     }
 
+}
+function generateDynamicColors(count) {
+    var dynamicColors = [];
+    for (var i = 0; i < count; i++) {
+        // Generate a random color
+        var color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+        dynamicColors.push(color);
+    }
+    return dynamicColors;
 }

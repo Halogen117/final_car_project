@@ -596,7 +596,7 @@ async function initMarker(carpark, map) {
         content.classList.add("carparkDetail");
         content.innerHTML = `
                 <div id="content">
-                    <div id="firstHeading" class="address">${carpark.address}</div>
+                    <div id="firstHeading" class="address h4 font-weight-bold">${carpark.address}</div>
                     <div id="bodyContent">
                         <div>Free Parking : ${carpark.free_parking}</div>
                         <div>Lots Available : ${lotsAvailable}</div>
