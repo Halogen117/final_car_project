@@ -58,7 +58,7 @@ async function getPastData(pastHours, carparkID) {
         console.log(moment());
         let pastDate = moment().subtract(pastHours, 'hours');
         
-        console.log(pastDate);
+        
         for (let i = 0; i <pastHours; i++) {
             pastDate=pastDate.add(1,'hours');
             
@@ -76,9 +76,7 @@ async function getPastData(pastHours, carparkID) {
             });
 
         }
-        console.log('test');
-        console.log(xValues);
-        console.log(yValues);
+        
         resolve();
 
     });
@@ -126,7 +124,7 @@ function onBothDropdownChange() {
     const lineGraph = document.getElementById('lineGraph');
     loadingGraphAnimation.classList.remove('d-none');
     lineGraph.classList.add('d-none');
-    console.log(carparkDropdown.selectedIndex);
+    
     if (hoursDropdown.value !== undefined && carparkDropdown.selectedIndex > 0) {
 
         let carparkID = carparkDropdown.options[carparkDropdown.selectedIndex].value;

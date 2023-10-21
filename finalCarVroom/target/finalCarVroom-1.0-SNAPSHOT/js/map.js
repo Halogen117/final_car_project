@@ -242,11 +242,11 @@ function initCarparks(lat, lng) {
 
             clearOverlays();
             clearCarparkCards();
-
+            xValues = [];
+            yValues = [];
             if (filteredData.length !== 0) {
-                xValues = [];
-                yValues = [];
-                populateCarparkDropdown(filteredData);
+
+                
                 refreshBtn.disabled = false;
                 for (const carpark of filteredData) {
                     let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
@@ -263,8 +263,7 @@ function initCarparks(lat, lng) {
                     createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted);
                     markerId++;
                 }
-                barColors = generateDynamicColors(xValues.length);
-                updateChart();
+
                 //MarkerID also acts a counter for number of carparks
                 infoWindowContentString = `Found ${markerId} nearby carparks`;
             } else {
@@ -273,7 +272,9 @@ function initCarparks(lat, lng) {
                 refreshBtn.disabled = true;
                 infoWindowContentString = `No carparks nearby`;
             }
-
+            populateCarparkDropdown(filteredData);
+            barColors = generateDynamicColors(xValues.length);
+            updateChart();
 
 
             infoWindow.close();
@@ -955,14 +956,18 @@ function populateCarparkDropdown(filteredData) {
     const lineGraph = document.getElementById('lineGraph');
     lineGraph.classList.add('d-none');
     $("#carparkDropdown").find('option').remove();
-    for (const carpark of filteredData) {
-        let option = document.createElement("option");
-        option.setAttribute('value', carpark.carpark_id);
+    if (filteredData.length !== 0) {
 
-        let optionText = document.createTextNode(carpark.address);
-        option.appendChild(optionText);
 
-        carparkDropdown.appendChild(option);
+        for (const carpark of filteredData) {
+            let option = document.createElement("option");
+            option.setAttribute('value', carpark.carpark_id);
+
+            let optionText = document.createTextNode(carpark.address);
+            option.appendChild(optionText);
+
+            carparkDropdown.appendChild(option);
+        }
     }
     $('#carparkDropdown').selectpicker('refresh');
 }
