@@ -55,13 +55,16 @@ async function getPastData(pastHours, carparkID) {
     return new Promise(async function (resolve, reject) {
         xValues = [];
         yValues = [];
-        let pastDate = moment().subtract(pastHours+1, 'hours');
-
-        for (let i = 0; i <=pastHours; i++) {
+        console.log(moment());
+        let pastDate = moment().subtract(pastHours, 'hours');
+        
+        console.log(pastDate);
+        for (let i = 0; i <pastHours; i++) {
             pastDate=pastDate.add(1,'hours');
+            
             await fetchCarparkAvailabilityData(pastDate.format("YYYY-MM-DDTHH:mm:ss"), carparkID).then(function (carparkJSON) {
                 if (carparkJSON === undefined) {
-                    xValues.push(pastDate.format("YYYY-MM-DDTHH:mm:ss"));
+                    xValues.push(pastDate.format("ddd, HH:mm"));
                     yValues.push(0);
                 } else {
                     xValues.push(moment(carparkJSON.update_datetime).format('ddd, HH:mm'));
