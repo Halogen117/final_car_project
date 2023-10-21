@@ -15,8 +15,8 @@ import java.sql.SQLException;
 public class ConnectDB {
 
     //Change this to your Database, user and password
-    private static final String urlDB = "jdbc:postgresql://localhost/carpark";
-    //private static final String urlDB = "jdbc:postgresql://localhost/user_storage";
+    //private static final String urlDB = "jdbc:postgresql://localhost/carpark";
+    private static final String urlDB = "jdbc:postgresql://localhost/user_storage";
     private static final String user = "postgres";
     private static final String password = "Pass1234";
     //private static final String password = "admin";

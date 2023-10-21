@@ -247,8 +247,10 @@
                                                         }
                                                         %>
                                     <form action="ProfileServlet">
+                                        <input type="submit" name="updatePassword" value="Change Password" 
+                                               class="btn btn-sm btn-primary" id="updatePassword"/>
                                         <input type="submit" name="updateProfile" value="Manage Profile" 
-                                               class="btn btn-sm btn-primary" />
+                                               class="btn btn-sm btn-primary" id="updateProfile"/>
                                     </form>
                                    
                                   </div>
