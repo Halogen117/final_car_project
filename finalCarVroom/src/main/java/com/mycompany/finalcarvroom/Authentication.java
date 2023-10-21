@@ -90,8 +90,8 @@ public class Authentication {
             ResultSet resultSet = statement.executeQuery(sql);
 
             if (resultSet.next()) {
-                if ((answer1.equals(resultSet.getString("ans1"))) 
-                        && (answer2.equals(resultSet.getString("ans2"))) 
+                if ((answer1.equals(resultSet.getString("ans1")))
+                        && (answer2.equals(resultSet.getString("ans2")))
                         && (answer3.equals(resultSet.getString("ans3")))) {
                     System.out.println("Verification Successful!");
                     return true;
@@ -133,26 +133,26 @@ public class Authentication {
         }
         return userDetails[0];
     }
+
     ////////////// Check Current Password ////////////////////////////
-    public boolean checkCurrPassword(String userId, String currPassword){
-        try{
+    public boolean checkCurrPassword(String userId, String currPassword) {
+        try {
             Connection conn = create.getConnection();
             Statement statement = conn.createStatement();
-            
+
             String sqlQuery = "SELECT password FROM user_DB WHERE user_id = '" + userId + "'";
             ResultSet result = statement.executeQuery(sqlQuery);
-            if(result.next()){
-                    String PasswordDB = result.getString("password");
-                    boolean checkSame = PasswordManager.verifyPassword(currPassword, PasswordDB);
-                    return checkSame;
+            if (result.next()) {
+                String PasswordDB = result.getString("password");
+                boolean checkSame = PasswordManager.verifyPassword(currPassword, PasswordDB);
+                return checkSame;
             }
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return true;
     }
-    
+
     ///////////////////////// ENCODER /////////////////////////
     public String encoder_link(String email) {
         String[] userDetails = new String[2];
@@ -213,5 +213,13 @@ public class Authentication {
         }
 
         return false;
+    }
+
+    public String[] return_encoded_link(String decode) {
+        String acquire_base_64 = decode;
+        byte[] baser = Base64.getDecoder().decode(acquire_base_64);
+        String decoded = new String(baser);
+        String[] arrOfStr = decoded.split("_|_");
+        return arrOfStr;
     }
 }

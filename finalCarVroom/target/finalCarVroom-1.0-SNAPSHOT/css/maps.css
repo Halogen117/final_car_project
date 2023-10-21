@@ -45,6 +45,7 @@ body {
     font-size: large;
     font-weight: bold;
     line-height: 30px;
+    left:0px;
 }
 
 #pac-input {
@@ -91,5 +92,11 @@ body {
 }
 .btnIcon{
     margin-right: 10px;
+}
+#alertsContainer{
+    position:fixed;
+    top: 50px;
+    left: 50%;
+    z-index:9999;
 }
 
