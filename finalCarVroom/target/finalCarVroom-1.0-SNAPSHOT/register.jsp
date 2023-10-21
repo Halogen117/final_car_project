@@ -66,6 +66,10 @@
                                             name="exampleRepeatPassword" placeholder="Repeat Password" required>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <input type="tel" class="form-control form-control-user" id="phoneNumber"
+                                        name="phoneNumber" placeholder="Phone Number" required>
+                                </div>
                                 <h5 class="h5 text-gray-900 mb-4">Security Question 1: What was the name of your first pet?</h5>
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-user" id="ans1"
@@ -81,7 +85,7 @@
                                     <input type="text" class="form-control form-control-user" id="ans3"
                                         name="ans3" placeholder="Security Question 3 Answer" required>
                                 </div>
-                                <input type="submit" value="egister Account" class="btn btn-primary btn-user btn-block">
+                                <input type="submit" value="Register Account" class="btn btn-primary btn-user btn-block">
                                 <hr>
                           
                             </form>
