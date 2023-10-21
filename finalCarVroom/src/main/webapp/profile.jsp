@@ -1,3 +1,14 @@
+<%
+    if(session==null || session.getAttribute("username") == null){
+        response.sendRedirect("login.jsp");
+    }
+    if(request.getAttribute("CurrentUserData") == null)
+    {
+        response.sendRedirect("ProfileServlet");
+    }
+    
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -211,7 +222,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">User Tan</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><%= session.getAttribute("username") %></span>
                                 <img class="img-profile rounded-circle"
                                     src="img/undraw_profile.svg">
                             </a>
@@ -251,7 +262,7 @@
                     
                     <div class="d-flex align-items-center">
                         <img class="img-profile rounded-circle mb-3" style="width: 100px; height: 100px;" src="img/undraw_profile.svg">
-                        <div class="ml-3 d-none d-lg-inline text-gray-600 small" style="font-size: xxx-large;">Hi User Tan!</div>
+                        <div class="ml-3 d-none d-lg-inline text-gray-600 small" style="font-size: xxx-large;">Hi <%= session.getAttribute("username") %></div>
                     </div>
                     
                                     
@@ -268,7 +279,13 @@
                                     <h3 class="mb-0">My Account</h3>
                                   </div>
                                   <div class="col-4 text-right">
-                                    <a href="updateprofile.jsp" class="btn btn-sm btn-primary" >Manage Profile</a>
+                                   <form action="ProfileServlet">
+                                        <input type="submit" name="updatePassword" value="Change Password" 
+                                               class="btn btn-sm btn-primary" id="updatePassword"/>
+                                        <input type="submit" name="updateProfile" value="Manage Profile" 
+                                               class="btn btn-sm btn-primary" id="updateProfile"/>
+                                    </form>
+                                   
                                   </div>
                                 </div>
                               </div>
@@ -280,13 +297,15 @@
                                       <div class="col-lg-6">
                                         <div class="form-group focused">
                                           <label class="form-control-label" for="input-username">Username</label>
-                                          <input type="text" id="input-username" class="form-control form-control-alternative" placeholder="Username" value=<%= session.getAttribute("username") %>>
+                                          <input type="text" id="input-username" class="form-control form-control-alternative" 
+                                          value='<%= session.getAttribute("username") %>' disabled>
                                         </div>
                                       </div>
                                       <div class="col-lg-6">
                                         <div class="form-group">
                                           <label class="form-control-label" for="input-email">Email Address</label>
-                                          <input type="email" id="input-email" class="form-control form-control-alternative" placeholder="usertan@example.com" value=<%= session.getAttribute("email") %>>
+                                          <input type="email" id="input-email" class="form-control form-control-alternative" 
+                                          value='${CurrentUserData.email}' disabled>
                                         </div>
                                       </div>
                                     </div>
@@ -294,13 +313,15 @@
                                       <div class="col-lg-6">
                                         <div class="form-group focused">
                                           <label class="form-control-label" for="input-first-name">First Name</label>
-                                          <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="First name" value=<%= session.getAttribute("username") %>>
+                                          <input type="text" id="input-first-name" class="form-control form-control-alternative" disabled
+                                          value='${CurrentUserData.first_name}' >
                                         </div>
                                       </div>
                                       <div class="col-lg-6">
                                         <div class="form-group focused">
                                           <label class="form-control-label" for="input-last-name">Last Name</label>
-                                          <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Last name" value="Tan">
+                                          <input type="text" id="input-last-name" class="form-control form-control-alternative" disabled
+                                          placeholder="Last name" value='${CurrentUserData.last_name}' >
                                         </div>
                                       </div>
                                     </div>
@@ -316,7 +337,7 @@
                                       <div class="col-lg-4">
                                         <div class="form-group focused">
                                           <label class="form-control-label" for="input-moblie">Mobile No.</label>
-                                          <input type="text" id="input-city" class="form-control form-control-alternative" placeholder="Mobile No." value=<%= session.getAttribute("contact") %>>
+                                          <input disabled type="text" id="input-city" class="form-control form-control-alternative" placeholder="Mobile No."  value='${CurrentUserData.phoneNum}' >
                                         </div>
                                       </div>
                             

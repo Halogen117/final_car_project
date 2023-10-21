@@ -46,7 +46,7 @@ public class FavouriteServlet extends HttpServlet {
 
         PrintWriter out = response.getWriter();
 
-        manipulateDb mDb = new manipulateDb();
+        ManipulateDB mDb = new ManipulateDB();
         String userID = request.getParameter("userID");
         String carparkID = request.getParameter("carparkID");
         System.out.println("inertion");

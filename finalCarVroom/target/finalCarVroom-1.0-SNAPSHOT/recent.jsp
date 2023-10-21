@@ -24,6 +24,13 @@
         <link rel="stylesheet" href=
               "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
+
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
+
+
+        <script src="js/moment.min.js"></script>
+
+
     </head>
 
     <body id="page-top">
@@ -263,38 +270,25 @@
                                         </h6>
                                     </div>
                                     <div class="card-body d-flex justify-content-center align-items-center flex-column border-bottom-primary">
-                                        <table class="table">
-                                            <thead class="thead-dark">
+                                        <!--Table for history-->
+                                        <div id="toolbar">
+                                            <button class="btn btn-danger" id="deleteAllButton">Delete all history</button>
+                                        </div>
+                                        
+                                        <table data-id-field="history_ID" data-page-size="10" data-pagination="true" data-toolbar-align="right" data-toolbar="#toolbar" id="recentTable" data-search="true">
+                                            <thead>
                                                 <tr>
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">First</th>
-                                                    <th scope="col">Last</th>
-                                                    <th scope="col">Handle</th>
+                                                    <th data-field="carpark_ID" data-sortable="true">Car park</th>
+                                                    <th data-field="address" data-sortable="true">Address</th>
+                                                    <th data-field="time_stamp" data-formatter="dateFormatter" data-sortable="true">Viewed at</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>Mark</td>
-                                                    <td>Otto</td>
-                                                    <td>@mdo</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>Jacob</td>
-                                                    <td>Thornton</td>
-                                                    <td>@fat</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>Larry</td>
-                                                    <td>the Bird</td>
-                                                    <td>@twitter</td>
-                                                </tr>
+
                                             </tbody>
                                         </table>
 
- 
+
                                     </div>
                                 </div>
 
@@ -302,7 +296,7 @@
 
 
 
-                        
+
 
                             </div>
 
@@ -394,9 +388,30 @@
                         </div>
                     </div>
                 </div>
+                <!-- delete Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p id="deleteModalBody"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Bootstrap core JavaScript-->
                 <script src="vendor/jquery/jquery.min.js"></script>
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
                 <!-- Core plugin JavaScript-->
@@ -404,6 +419,11 @@
 
                 <!-- Custom scripts for all pages-->
                 <script src="js/sb-admin-2.min.js"></script>
+
+                <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
+                <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/extensions/toolbar/bootstrap-table-toolbar.min.js"></script>
+                <script src="js/recent.js"></script>
+
 
                 </body>
 
