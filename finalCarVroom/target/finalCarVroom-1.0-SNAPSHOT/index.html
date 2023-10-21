@@ -364,12 +364,11 @@
                                 <h1 class="h3 mb-0 text-gray-800">Car park history available lots
                                     <i class="fa-solid fa-chart-simple"></i>
                                 </h1>
-                                <p>*0 available lots may be due to missing data</p>
+                                <p class='mb-0'>*0 available lots may be due to missing data</p>
+                                <p class='mb-0'>*Same date throughout the graph may be due to carpark's low update rate</p>
                             </div>
 
                             <div class="btn-group" role="group" aria-label="Basic example">
-
-
                                 <select id="carparkDropdown" class="selectpicker mr-3" data-live-search="true" title="Choose a carpark" data-style="btn-success">
                                 </select>
 
@@ -379,8 +378,11 @@
                                     <option value="48">Past 48 hours</option>
                                 </select>
                             </div>
+
+
                         </div>
-                        <div class="container d-flex align-items-center flex-column">
+
+                        <div class="container d-flex align-items-center flex-column w-50 mx-auto">
                             <div id='loadingGraphAnimation' class='d-none text-center mt-5 mb-5'>
                                 <div class="spinner-border mb-4" role="status">
                                 </div>
