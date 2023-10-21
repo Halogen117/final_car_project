@@ -83,8 +83,8 @@ async function initMap() {
         center: {lat: 1.3521, lng: 103.8198},
         zoom: 8,
         mapId: '8a715e13e7d9ce06',
-        mapTypeControl:true,
-        mapTypeControlOptions:{position:google.maps.ControlPosition.BOTTOM_LEFT},
+        mapTypeControl: true,
+        mapTypeControlOptions: {position: google.maps.ControlPosition.BOTTOM_LEFT},
         streetViewControl: false,
     });
     //Initialise Infowindow
@@ -107,7 +107,7 @@ async function initMap() {
             let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
             filteredData = [];
             filteredData.push(allCarparkJson.find(item => item.carpark_id === carpark.carpark_id));
-
+            populateCarparkDropdown(filteredData);
 
 
             initMarker(carpark, map);
@@ -246,7 +246,7 @@ function initCarparks(lat, lng) {
             if (filteredData.length !== 0) {
                 xValues = [];
                 yValues = [];
-
+                populateCarparkDropdown(filteredData);
                 refreshBtn.disabled = false;
                 for (const carpark of filteredData) {
                     let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
@@ -753,6 +753,7 @@ function plotChart() {
         data: {
             labels: xValues,
             datasets: [{
+                    label: 'Carparks Available Lots',
                     backgroundColor: barColors,
                     data: yValues
                 }]
@@ -787,7 +788,7 @@ function plotChart() {
                         return label + ": " + value;
                     }
                 }
-            }
+            }, responsive: true
         }
     });
 }
@@ -835,7 +836,7 @@ function plotPChart() {
                         return label + ": " + value;
                     }
                 }
-            }
+            }, responsive: true,
         }
     });
 }
@@ -860,7 +861,7 @@ document.getElementById("refreshBtn").onclick = function () {
     refreshIcon.setAttribute("class", "fa-spin btnIcon fa-solid fa-rotate-right");
     fetchCarparkAvailabilityData().then(function () {
         if (filteredData !== null || typeof filteredData !== "undefined") {
-            
+
             xValues = [];
             yValues = [];
             for (const carpark of filteredData) {
@@ -943,3 +944,26 @@ function createErrorAlert(alertMessage, timeToFade) {
 
 }
 //end of functions for creating alert messages
+
+
+
+//lineGraph functions
+
+const carparkDropdown = document.getElementById('carparkDropdown');
+
+function populateCarparkDropdown(filteredData) {
+    const lineGraph = document.getElementById('lineGraph');
+    lineGraph.classList.add('d-none');
+    $("#carparkDropdown").find('option').remove();
+    for (const carpark of filteredData) {
+        let option = document.createElement("option");
+        option.setAttribute('value', carpark.carpark_id);
+
+        let optionText = document.createTextNode(carpark.address);
+        option.appendChild(optionText);
+
+        carparkDropdown.appendChild(option);
+    }
+    $('#carparkDropdown').selectpicker('refresh');
+}
+

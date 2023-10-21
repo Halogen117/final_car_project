@@ -42,6 +42,11 @@
 
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     </head>
 
     <body id="page-top">
@@ -340,20 +345,50 @@
 
                         </div>
                         <div class="align-items-center justify-content-between mt-4 mb-4 ">
-                            <h1 class="h3 mb-0 text-gray-800">Car parks available lots
+                            <h1 class="h3 mb-0 text-gray-800">Nearby Car parks statistcs
                                 <i class="fa-solid fa-chart-simple"></i>
                             </h1>
                             <p>Click on the graph to find out more!</p>
 
                         </div>
-                        <div style="display: flex;">
-                            <div style="flex: 1;">
+                        <div class="d-flex justify-content-center mt-4 mb-4 ">
+                            <div class="chartFlex">
                                 <canvas id="barChart" width="350" height="350"></canvas>
                             </div>
-                            <div style="flex: 1;">
+                            <div class="chartFlex">
                                 <canvas id="pieChart" width="200" height="200"></canvas>
                             </div>
-                        </div>                        
+                        </div>
+                        <div class="d-flex justify-content-between mt-4 mb-4 ">
+                            <div>
+                                <h1 class="h3 mb-0 text-gray-800">Car park history available lots
+                                    <i class="fa-solid fa-chart-simple"></i>
+                                </h1>
+                                <p>*0 available lots may be due to missing data</p>
+                            </div>
+
+                            <div class="btn-group" role="group" aria-label="Basic example">
+
+
+                                <select id="carparkDropdown" class="selectpicker mr-3" data-live-search="true" title="Choose a carpark" data-style="btn-success">
+                                </select>
+
+                                <select id="hoursDropdown" class="selectpicker" data-style="btn-success">
+                                    <option value="12">Past 12 hours</option>
+                                    <option value="24">Past 24 hours</option>
+                                    <option value="48">Past 48 hours</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="container d-flex align-items-center flex-column">
+                            <div id='loadingGraphAnimation' class='d-none text-center mt-5 mb-5'>
+                                <div class="spinner-border mb-4" role="status">
+                                </div>
+                                <h4 class="h3 mb-0 text-gray-800">Loading graph...</h4>
+                            </div>
+
+                            <canvas id="lineGraph" width="350" height="350"></canvas>
+                        </div>
 
                         <!-- Content Row -->
 
@@ -438,6 +473,7 @@
                             ({key: "AIzaSyAJEWhhOxBAq1umLcPBZ1TQvmzV-cZBP-8", v: "alpha"});</script>
 
                 <script type="module" src="js/map.js"></script>
+                <script type="module" src="js/charts.js"></script>
 
                 <script type="module" src="js/cookies.js"></script>
 
