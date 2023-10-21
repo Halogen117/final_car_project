@@ -1,18 +1,31 @@
+package com.mycompany.finalcarvroom;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Project/Maven2/JavaApp/src/main/java/${packagePath}/${mainClassName}.java to edit this template
  */
-package com.mycompany.finalcarvroom;
+import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Timer;
+//import org.json.JSONArray;
+//import org.json.JSONObject;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  *
- * @author evans
+ * @author
  */
+public class carparkAPI {
 
-import java.sql.*;
+    private static final String urlDB = "jdbc:postgresql://localhost/user_storage";
+    private static final String user = "postgres";
+    // private static final String password = "admin";
+    private static final String password = "Pass1234";
 
-public class CreateDB {
-    
     public static void main(String[] args) {
 
         Connection connectDB = null;
@@ -37,7 +50,6 @@ public class CreateDB {
             //table.createCarparkDb();
             //table.createFavDb();
             //table.createUserDb();
-            //table.createFeedbackDb();
 
             String[] createAcc = new String[11];
 
@@ -69,18 +81,42 @@ public class CreateDB {
             se.printStackTrace();
         }
     }
-    ConnectDB create = new ConnectDB();
+
+
+}
+
+class Datab {
+    private static final String urlDB = "jdbc:postgresql://localhost/user_storage";
+    private static final String user = "postgres";
+    private static final String password = "Pass1234";
+    public Connection Conn() {
+
+        boolean run = true;
+        try {
+            DriverManager.registerDriver(new org.postgresql.Driver());
+            Connection connectDB = DriverManager.getConnection(urlDB, user, password);
+            System.out.println("Connected to PostgreSQL server");
+
+            // COMMENT OUT THIS LINE IF YOU ALREADY HAVE A TABLE
+            //createDatabase(connectDB);
+            //createFavDb(connectDB);
+            return connectDB;
+        } catch (SQLException se) {
+            se.printStackTrace();
+        }
+        return null;
+    }
+
     ////////////////////// USER DATABASE /////////////////////////////
-    public void createUserDb() {
-        
-    	try {
-            Connection connectDB = create.getConnection();
+    public void createUserDb(Connection connectDB) {
+        try {
             Statement statement = connectDB.createStatement();
 
-            String sql = "CREATE TABLE user_DB" + //EDIT here
+            String sql = "CREATE TABLE user_DB"
+                    + //EDIT here
                     "(user_ID TEXT,"
-                    + "name TEXT," +
-                    "email TEXT,"
+                    + "name TEXT,"
+                    + "email TEXT,"
                     + "password TEXT,"
                     + "phoneNum TEXT,"
                     + "sec1 TEXT,"
@@ -89,86 +125,52 @@ public class CreateDB {
                     + "ans1 TEXT,"
                     + "ans2 TEXT,"
                     + "ans3 TEXT)";
-                	
-            statement.executeUpdate(sql);
-            System.out.println("Table successfully created!");
-        	}
-        	catch(SQLException e) {
-            	System.out.println("Error in Creating Table to History Server");
-            	e.printStackTrace();
-            }
-    }
-    ///////////////////////////////////////////////////////////////////
-    
-    //////////////////// HISTORY DATABASE /////////////////////////////
-    public void createHistoryDb() {
-    	try {
-            Connection connectDB = create.getConnection();
-            Statement statement = connectDB.createStatement();
-
-            String sql = "CREATE TABLE history_DB" + //EDIT here
-                    "(user_ID TEXT," +
-                    "carpark_ID TEXT,"
-                    + "time_stamp TIMESTAMP WITH TIME ZONE)";
-                	
-            statement.executeUpdate(sql);
-            System.out.println("Table successfully created!");
-        	}
-        	catch(SQLException e) {
-            	System.out.println("Error in Creating History Table to Server");
-            	e.printStackTrace();
-            }
-    }
-    /////////////////////////////////////////////////////////////////////
-    
-    /////////////////// FAVOURITE DATABASE //////////////////////////////
-    public void createFavDb() {
-    	try {
-            Connection connectDB = create.getConnection();
-            Statement statement = connectDB.createStatement();
-
-            String sql = "CREATE TABLE favourite_DB" + //EDIT here
-                    "(user_ID TEXT," +
-                    "carpark_ID TEXT)";
 
             statement.executeUpdate(sql);
             System.out.println("Table successfully created!");
-    	}
-    	catch(SQLException e) {
-        	System.out.println("Error in Creating Favourite Table to Server");
-        	e.printStackTrace();
-        }
-    }
-    
-    public void createCarparkDb() {
-        try {
-            Connection connectDB = create.getConnection();
-            Statement statement = connectDB.createStatement();
-            
-            String sql="Create TABLE carpark_db (carpark_id TEXT,address TEXT,x_coord DOUBLE PRECISION,y_coord DOUBLE PRECISION,car_park_type TEXT,type_of_parking_system TEXT,short_term_parking TEXT,free_parking TEXT,night_parking TEXT,car_park_decks integer,gantry_height DOUBLE PRECISION,car_park_basement TEXT)";
-            statement.executeUpdate(sql);
-            System.out.println("Table successfully created!");
-        }catch(SQLException e){
-            System.out.println("Error in creating carpark table to server");
+        } catch (SQLException e) {
+            System.out.println("Error in Creating Table to History Server");
             e.printStackTrace();
         }
     }
-    
-    public void createFeedbackDb() {
-    	try {
-            Connection connectDB = create.getConnection();
+    ///////////////////////////////////////////////////////////////////
+
+    //////////////////// HISTORY DATABASE /////////////////////////////
+    public void createHistoryDb(Connection connectDB) {
+        try {
             Statement statement = connectDB.createStatement();
 
-            String sql = "CREATE TABLE feedback_DB" + //EDIT here
-                    "(user_ID TEXT," +
-                    "Feedback TEXT)";
+            String sql = "CREATE TABLE history_DB"
+                    + //EDIT here
+                    "(user_ID TEXT,"
+                    + "carpark_ID TEXT,"
+                    +"time_stamp TIMESTAMP WITH TIME ZONE)";
 
             statement.executeUpdate(sql);
             System.out.println("Table successfully created!");
-    	}
-    	catch(SQLException e) {
-        	System.out.println("Error in Creating Feedback Table to Server");
-        	e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error in Creating History Table to Server");
+            e.printStackTrace();
+        }
+    }
+    /////////////////////////////////////////////////////////////////////
+
+    /////////////////// FAVOURITE DATABASE //////////////////////////////
+    public void createFavDb(Connection connectDB) {
+        try {
+            Statement statement = connectDB.createStatement();
+
+            String sql = "CREATE TABLE favourite_DB"
+                    + //EDIT here
+                    "(user_ID TEXT,"
+                    + "carpark_ID TEXT)";
+
+            statement.executeUpdate(sql);
+            System.out.println("Table successfully created!");
+        } catch (SQLException e) {
+            System.out.println("Error in Creating Favourite Table to Server");
+            e.printStackTrace();
         }
     }
 }
+

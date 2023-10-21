@@ -34,13 +34,33 @@ public class UpdateProfileServlet extends HttpServlet {
         System.out.println("Updated email: " + updateAcc[1]);
         System.out.println("Updated phone num: " + updateAcc[2]);
 
-        ManipulateDB mDb = new ManipulateDB();
-        mDb.updateProfileDetails(userId, updateAcc[0], "name");
-        mDb.updateProfileDetails(userId, updateAcc[1], "email");
-        mDb.updateProfileDetails(userId, updateAcc[2], "phonenum");
         
-        user_session.setAttribute("username", updateAcc[0]);
         
-        response.sendRedirect("ProfileServlet");
+        // Email regex
+        String email_regex = "^[A-Za-z0-9+_.-]+@[^@]+\\.com$";
+        String phone_pattern = "^(\\d{4} ?\\d{4})$";
+        if(!updateAcc[1].matches(email_regex)){
+            System.out.println("Email does not match pattern! Please retype!");
+            user_session.setAttribute("update_prof", "email_incorr");
+            response.sendRedirect("ProfileServlet?updateProfile=Manage+Profile");
+            return;
+        }else if(!updateAcc[2].matches(phone_pattern)){
+            user_session.setAttribute("update_prof", "phone_no");
+            System.out.println("Phone Number format not correct");
+            response.sendRedirect("ProfileServlet?updateProfile=Manage+Profile");
+            return;   
+        }else{
+            ManipulateDB mDb = new ManipulateDB();
+            mDb.updateProfileDetails(userId, updateAcc[0], "name");
+            mDb.updateProfileDetails(userId, updateAcc[1], "email");
+            mDb.updateProfileDetails(userId, updateAcc[2], "phonenum");
+
+            user_session.setAttribute("username", updateAcc[0]);
+            user_session.setAttribute("update_prof", "success");
+            response.sendRedirect("ProfileServlet");
+        }
+
+
+
     }
 }

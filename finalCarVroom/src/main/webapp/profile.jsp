@@ -46,7 +46,7 @@
         <ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.jsp">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-car-front" viewBox="0 0 16 16">
                         <path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2H6ZM4.862 4.276 3.906 6.19a.51.51 0 0 0 .497.731c.91-.073 2.35-.17 3.597-.17 1.247 0 2.688.097 3.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 10.691 4H5.309a.5.5 0 0 0-.447.276Z"/>
@@ -61,7 +61,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.jsp">
+                <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-home"></i>
                     <span>Home</span></a>
             </li>
@@ -112,12 +112,6 @@
                     <span>Recent</span></a>
             </li>
 
-            <!-- Nav Item - Map -->
-            <li class="nav-item">
-                <a class="nav-link" href="maps.html">
-                    <i class="fas fa-fw fa-map-marker"></i>
-                    <span>Map</span></a>
-            </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -144,19 +138,6 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -186,34 +167,7 @@
                         </li>
 
                         <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">!</span>
-                            </a>
-                            <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Alerts Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-car text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">10 minutes ago</div>
-                                        <span class="font-weight-bold">Available Carpark Nearby!</span>
-                                    </div>
-                                </a>
-                                
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                            </div>
-                        </li>
+                        
 
                        
                         <div class="topbar-divider d-none d-sm-block"></div>
@@ -232,14 +186,6 @@
                                 <a class="dropdown-item" href="profile.jsp">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
@@ -279,18 +225,36 @@
                                     <h3 class="mb-0">My Account</h3>
                                   </div>
                                   <div class="col-4 text-right">
-                                   <form action="ProfileServlet">
-                                        <input type="submit" name="updatePassword" value="Change Password" 
-                                               class="btn btn-sm btn-primary" id="updatePassword"/>
+                                   <!-- <a href="ProfileServlet" class="btn btn-sm btn-primary">Manage Profile</a> -->
+                                   <%
+                                                        HttpSession user_session = request.getSession();
+
+                                                        if(session.getAttribute("update_prof") == "success"){
+                                                        user_session.setAttribute("update_prof", "");
+                                                        %>
+                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                <div class="alert alert-success d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16" style="margin-right: 10px;">
+                                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                                        <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                                                    </svg>
+                                                                    <div>
+                                                                        Profile successfully updated!
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        <%
+                                                        }
+                                                        %>
+                                    <form action="ProfileServlet">
                                         <input type="submit" name="updateProfile" value="Manage Profile" 
-                                               class="btn btn-sm btn-primary" id="updateProfile"/>
+                                               class="btn btn-sm btn-primary" />
                                     </form>
                                    
                                   </div>
                                 </div>
                               </div>
                               <div class="card-body">
-                                <form>
                                   <h6 class="heading-small text-muted mb-4">User information</h6>
                                   <div class="pl-lg-4">
                                     <div class="row">
@@ -331,7 +295,6 @@
                                   <h6 class="heading-small text-muted mb-4">Contact information</h6>
                                   <div class="pl-lg-4">
                                     <div class="row">
-                                     
                                     </div>
                                     <div class="row">
                                       <div class="col-lg-4">
@@ -340,13 +303,27 @@
                                           <input disabled type="text" id="input-city" class="form-control form-control-alternative" placeholder="Mobile No."  value='${CurrentUserData.phoneNum}' >
                                         </div>
                                       </div>
-                            
-                                        
-                                     
+                                    </div>
+                                    <hr class="my-4">
+                                    </div>
+                                        <h6 class="heading-small text-muted mb-4">Delete Account</h6>
+                                    <div class="pl-lg-4">
+                                    
+                                    <div class="row">
+                                      <div class="col-lg-4">
+                                        <div class="form-group focused">
+                                          <label class="form-control-label" for="input-moblie">Delete Account</label>
+                                        <form action="DeleteProfileServlet">
+                                        <input type="submit" name="deleteProfile" value="Delete Profile" 
+                                               class="btn btn-sm btn-primary" />
+                                    </form>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
                                   <hr class="my-4">
                                   <!-- Description -->
+                                    
                                   <div class="text-center"> <!-- Center-align the content -->
                                     <h6 class="heading-small text-muted mb-4">Submit your Feedback here!</h6>
                                     <div class="pl-lg-4">
@@ -356,13 +333,9 @@
                                             <button type="button" class="btn btn-primary" data-toggle= "modal" data-target="#feedbackModal">
                                                 Feedback Form
                                             </button>
-  
-                                            
                                         </div>
                                     </div>
                                 </div>
-                                
-                                </form>
                               </div>
                             </div>
                           </div>
@@ -379,7 +352,6 @@
                         <div class="col">
                             <h2><strong>Our Mission</strong></h2>
                             <p class="lead text-muted">Empowering Parking Choices in Singapore.</p>
-                            <a href="#" class="btn btn-primary justify-content-between mb-2 ">About Us</a>
                         </div>
                     </div>
                 </div>
@@ -459,26 +431,33 @@
 
 
 <!-- Feedback Modal -->
+<form action="FeedbackServlet">
 <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                
                 <h5 class="modal-title" id="exampleModalLabel">Feedback Form</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
+                    <span aria-hidden="true">X</span>
                 </button>
             </div>
             <div class="modal-body mx-auto">
+                
                 Please write your feedback here
                 <input type="text" id="input-feedback" class="form-control form-control-alternative mt-2" placeholder="" value="" style="width: 100%;">
             </div>
+            
             <div class="modal-footer">
+                
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#thankyouModal">Submit</button>
+                <input type="Submit" class="btn btn-primary" data-dismiss="modal" data-target="#thankyouModal" value="Submit">
+                
             </div>
         </div>
     </div>
 </div>
+    </form>
 
 <!-- Thank You Modal -->
 <div class="modal fade" id="thankyouModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

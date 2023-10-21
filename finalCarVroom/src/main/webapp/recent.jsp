@@ -27,14 +27,19 @@
 
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
 
+        <!--Jquery and JqueryCookie reference-->
+        <script src="js/jquery-3.7.1.min.js" type="text/javascript" ></script>
+        <script src="js/jquery_cookie.js" type="text/javascript"></script>
 
+        <script type="module" src="js/userHelper.js"></script>
         <script src="js/moment.min.js"></script>
-
+        <link href="css/maps.css" rel="stylesheet" href="url"/>
+        <script type="module" src="js/cookies.js"></script>
 
     </head>
 
     <body id="page-top">
-
+        <div id="alertsContainer"></div>
         <!-- Page Wrapper -->
         <div id="wrapper">
 
@@ -57,7 +62,7 @@
 
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item">
-                    <a class="nav-link" href="index.jsp">
+                    <a class="nav-link" href="index.html">
                         <i class="fas fa-fw fa-home"></i>
                         <span>Home</span></a>
                 </li>
@@ -108,12 +113,6 @@
                         <span>Recent</span></a>
                 </li>
 
-                <!-- Nav Item - Map -->
-                <li class="nav-item">
-                    <a class="nav-link" href="maps.html">
-                        <i class="fas fa-fw fa-map-marker"></i>
-                        <span>Map</span></a>
-                </li>
 
                 <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
@@ -140,19 +139,6 @@
                             <i class="fa fa-bars"></i>
                         </button>
 
-                        <!-- Topbar Search -->
-                        <form
-                            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                            <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                       aria-label="Search" aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
 
                         <!-- Topbar Navbar -->
                         <ul class="navbar-nav ml-auto">
@@ -180,62 +166,22 @@
                                     </form>
                                 </div>
                             </li>
-
-                            <!-- Nav Item - Alerts -->
-                            <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-bell fa-fw"></i>
-                                    <!-- Counter - Alerts -->
-                                    <span class="badge badge-danger badge-counter">!</span>
-                                </a>
-                                <!-- Dropdown - Alerts -->
-                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                     aria-labelledby="alertsDropdown">
-                                    <h6 class="dropdown-header">
-                                        Alerts Center
-                                    </h6>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-primary">
-                                                <i class="fas fa-car text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">10 minutes ago</div>
-                                            <span class="font-weight-bold">Available Carpark Nearby!</span>
-                                        </div>
-                                    </a>
-
-                                    <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                                </div>
-                            </li>
-
-
                             <div class="topbar-divider d-none d-sm-block"></div>
 
                             <!-- Nav Item - User Information -->
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">User Tan</span>
+                                    <span id="username" class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
                                     <img class="img-profile rounded-circle"
                                          src="img/undraw_profile.svg">
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                      aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="profile.jsp">
+                                    <a id="profileBtn" class="dropdown-item" href="profile.jsp">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Profile
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Settings
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Activity Log
                                     </a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
@@ -254,7 +200,7 @@
                     <div class="container-fluid">
 
                         <!-- Page Heading -->
-                        <h1 class="h2 mb-1 text-gray-900">Hi User Tan,</h1>
+                        <h1 class="h2 mb-1 text-gray-900">Hi <span id="welcomeUserText">User Tan</span>,</h1>
 
                         <p class="mb-4">Your Recent Activities can be found here...</p>
 
@@ -274,7 +220,7 @@
                                         <div id="toolbar">
                                             <button class="btn btn-danger" id="deleteAllButton">Delete all history</button>
                                         </div>
-                                        
+
                                         <table data-id-field="history_ID" data-page-size="10" data-pagination="true" data-toolbar-align="right" data-toolbar="#toolbar" id="recentTable" data-search="true">
                                             <thead>
                                                 <tr>
@@ -383,7 +329,7 @@
                             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                <a class="btn btn-primary" href="login.jsp">Logout</a>
+                                <button class="btn btn-primary" id="logoutBtn">Logout</button>
                             </div>
                         </div>
                     </div>
@@ -410,8 +356,6 @@
                 </div>
 
                 <!-- Bootstrap core JavaScript-->
-                <script src="vendor/jquery/jquery.min.js"></script>
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
                 <!-- Core plugin JavaScript-->

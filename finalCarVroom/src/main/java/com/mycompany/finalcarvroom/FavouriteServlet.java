@@ -109,10 +109,13 @@ public class FavouriteServlet extends HttpServlet {
 
     }
 
-    private void insertFavourite(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+    private void insertFavourite(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         String userID = request.getParameter("userID");
         String carparkID = request.getParameter("carparkID");
         favouriteDAO.insertFavourite(userID, carparkID);
+
+        
+        
     }
 
     private void deleteFavourite(HttpServletRequest request, HttpServletResponse response) {

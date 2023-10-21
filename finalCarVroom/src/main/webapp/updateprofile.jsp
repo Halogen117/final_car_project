@@ -46,6 +46,7 @@
 
                 <!-- Sidebar - Brand -->
                 <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.jsp">
+                <!--<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">-->
                     <div class="sidebar-brand-icon rotate-n-15">
                         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-car-front" viewBox="0 0 16 16">
                         <path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2H6ZM4.862 4.276 3.906 6.19a.51.51 0 0 0 .497.731c.91-.073 2.35-.17 3.597-.17 1.247 0 2.688.097 3.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 10.691 4H5.309a.5.5 0 0 0-.447.276Z"/>
@@ -61,6 +62,7 @@
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item">
                     <a class="nav-link" href="index.jsp">
+                    <!--<a class="nav-link" href="index.html">-->
                         <i class="fas fa-fw fa-home"></i>
                         <span>Home</span></a>
                 </li>
@@ -143,20 +145,6 @@
                             <i class="fa fa-bars"></i>
                         </button>
 
-                        <!-- Topbar Search -->
-                        <form
-                            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                            <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                       aria-label="Search" aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-
                         <!-- Topbar Navbar -->
                         <ul class="navbar-nav ml-auto">
 
@@ -184,38 +172,7 @@
                                 </div>
                             </li>
 
-                            <!-- Nav Item - Alerts -->
-                            <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-bell fa-fw"></i>
-                                    <!-- Counter - Alerts -->
-                                    <span class="badge badge-danger badge-counter">!</span>
-                                </a>
-                                <!-- Dropdown - Alerts -->
-                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                     aria-labelledby="alertsDropdown">
-                                    <h6 class="dropdown-header">
-                                        Alerts Center
-                                    </h6>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-primary">
-                                                <i class="fas fa-car text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">10 minutes ago</div>
-                                            <span class="font-weight-bold">Available Carpark Nearby!</span>
-                                        </div>
-                                    </a>
-
-                                    <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                                </div>
-                            </li>
-
-
-                            <div class="topbar-divider d-none d-sm-block"></div>
+                          <div class="topbar-divider d-none d-sm-block"></div>
 
                             <!-- Nav Item - User Information -->
                             <li class="nav-item dropdown no-arrow">
@@ -231,14 +188,6 @@
                                     <a class="dropdown-item" href="profile.jsp">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Profile
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Settings
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Activity Log
                                     </a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
@@ -297,7 +246,7 @@
                                                         </div>
                                                         <div class="col-md-12 mb-3">
                                                             <label class="labels">Email</label>
-                                                            <input type="text" class="form-control" placeholder="Update Email" 
+                                                            <input type="email" class="form-control" placeholder="Update Email" 
                                                                    value='${CurrentUserData.email}' name="updateEmail" id="updateEmail" required>
                                                         </div>
                                                         <div class="col-md-12 mb-3">
@@ -310,7 +259,46 @@
                                                     <div class="row mt-3">
 
                                                     </div>
+                                                        <%
+                                                        HttpSession user_session = request.getSession();
+
+                                                        if(session.getAttribute("update_prof") == "email_incorr"){
+                                                        user_session.setAttribute("update_prof", "");
+                                                        %>
+
+                                                        <div class="d-flex align-items-center justify-content-center">
+                                                            <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                                </svg>
+                                                                <div>
+                                                                    Email format incorrect! Please Retype <br>
+                                                                    Email format: email@emaildomain.com
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <%
+                                                        }else if(session.getAttribute("update_prof") == "phone_no"){
+                                                            user_session.setAttribute("update_prof", "");
+                                                        %>    
+                                                        <div class="d-flex align-items-center justify-content-center">
+                                                            <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                                </svg>
+                                                                <div>
+                                                                    Phone Number format is incorrect! <br>
+                                                                    Follow the example format: 62888888 or 9180 9182
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <%
+                                                        }
+                                                        %>
                                                     <div class="mt-5 text-center">
+                                                        <!--<a class="btn btn-primary btn-sm" href="profile.jsp">Save Profile</a>-->
                                                         <input type="submit" value="Update Profile" class="btn btn-primary">
                                                     </div>
                                                 </form>
@@ -320,8 +308,7 @@
                                 </div>
                             </div>
                         </div>
-
-
+                                
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         </div>
@@ -342,7 +329,6 @@
                             <div class="col">
                                 <h2><strong>Our Mission</strong></h2>
                                 <p class="lead text-muted">Empowering Parking Choices in Singapore.</p>
-                                <a href="#" class="btn btn-primary justify-content-between mb-2 ">About Us</a>
                             </div>
                         </div>
                     </div>

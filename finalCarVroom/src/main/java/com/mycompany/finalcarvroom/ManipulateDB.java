@@ -13,8 +13,8 @@ import java.sql.*;
 public class ManipulateDB {
 
     ConnectDB create = new ConnectDB();
-    //public void ManipulateDB() {};
     //////////////////////FAVOURITE DATABASE ////////////////////////////////////////
+
     public void insertFavDb(Connection connectDB, String userID, String carparkID) {
         try {
             //Connection connection = DriverManager.getConnection(url, user, password);
@@ -124,9 +124,7 @@ public class ManipulateDB {
             Connection connectDB = create.getConnection();
             Statement statement = connectDB.createStatement();
             /////////////////// check if userID column is the  /////////////////////////
-            String sql = "UPDATE user_DB SET " 
-                    + columnName + " = '" + changes 
-                    + "' WHERE user_ID = '" + userID + "'";
+            String sql = "UPDATE user_DB SET " + columnName + " = '" + changes + "' WHERE user_ID = '" + userID + "'";
 
             statement.executeUpdate(sql);
             System.out.println("Update Successful");
@@ -138,12 +136,44 @@ public class ManipulateDB {
     }
     // FOR Profile Page Details
 
+    public User getUser(String userID) {
+        User userDetails = null;
+        try {
+            Connection connectDB = create.getConnection();
+            Statement statement = connectDB.createStatement();
+
+            String sql = "SELECT * FROM user_DB WHERE user_ID = '" + userID + "'";
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            // get User details
+            while (resultSet.next()) {
+                String user_id = resultSet.getString("user_id");
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                String phonenum = resultSet.getString("phonenum");
+                String sec1 = resultSet.getString("sec1");
+                String sec2 = resultSet.getString("sec2");
+                String sec3 = resultSet.getString("sec3");
+                String ans1 = resultSet.getString("ans1");
+                String ans2 = resultSet.getString("ans2");
+                String ans3 = resultSet.getString("ans3");
+                userDetails = new User(user_id, name, email, password, phonenum, sec1, sec2, sec3, ans1, ans2, ans3);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userDetails;
+    }
+
     public String[] getUserDetails(String userID) {
         String[] userDetails = new String[11];
         try {
             Connection connectDB = create.getConnection();
             Statement statement = connectDB.createStatement();
-            System.out.println("Current User ID: " + userID);
+
             String sql = "SELECT * FROM user_DB WHERE user_ID = '" + userID + "'";
 
             ResultSet resultSet = statement.executeQuery(sql);
@@ -197,7 +227,6 @@ public class ManipulateDB {
             String checkContact = "SELECT * FROM user_DB WHERE phoneNum = '" + phoneNum + "'"; // [0] = user ID , [2] = email, [4] = phoneNumber
 
             ResultSet resultSet = statement.executeQuery(checkContact);
-            System.out.println("PhoneNum: " + phoneNum);
 
             if (resultSet.next()) {
                 //System.out.println("Phone Number already Existed!");
@@ -246,6 +275,7 @@ public class ManipulateDB {
             return 2;
         }
     }
+    
     // Retrieve data for session login
      public String[] getNameIdDB(String email) {
         String emailInput = email;
@@ -267,6 +297,25 @@ public class ManipulateDB {
             // TODO: handle exception
             System.out.println(e.toString());
             return userDataQuery;
+        }
+    }
+
+    public int insertFeedbackDb(String user_id, String feedback) {
+        try {
+            Connection connectDB = create.getConnection();
+            Statement statement = connectDB.createStatement();
+            String sql = "INSERT INTO feedback_DB "
+                    + "VALUES('" + user_id + "','" + feedback + "')";
+
+            statement.executeUpdate(sql);
+            System.out.println("Feedback Created!");
+            return 1;
+            //activate "Authentication Failed" display message code here
+
+        } catch (SQLException e) {
+            System.out.println("User Account Creation Failed!");
+            e.printStackTrace();
+            return 2;
         }
     }
 }
