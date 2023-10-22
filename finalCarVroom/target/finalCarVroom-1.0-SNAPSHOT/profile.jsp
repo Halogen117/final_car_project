@@ -35,6 +35,9 @@
         <!-- Link to social media logo -->
         <link rel="stylesheet" href=
               "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+        
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script type="module" src="js/userHelper.js"></script>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
@@ -77,7 +80,7 @@
 
                 <!-- Heading -->
                 <div class="sidebar-heading">
-                    Interface
+                    Pages
                 </div>
 
 
@@ -85,23 +88,7 @@
                 <hr class="sidebar-divider">
 
 
-                <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                       aria-expanded="true" aria-controls="collapsePages">
-                        <i class="fas fa-fw fa-folder"></i>
-                        <span>Pages</span>
-                    </a>
-                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Login Screens:</h6>
-                            <a class="collapse-item" href="login.jsp">Login</a>
-                            <a class="collapse-item" href="register.jsp">Register</a>
-                            <a class="collapse-item" href="forgot-password.jsp">Forgot Password</a>
-                            <div class="collapse-divider"></div>
-                        </div>
-                    </div>
-                </li>
+
 
 
                 <!-- Nav Item - Favourites -->
@@ -453,7 +440,7 @@
                     </div>
                     <div class="modal-body">Select "Delete Account" below if you are ready to delete your account.</div>
                         <div class="modal-footer">
-                            <form action="DeleteProfileServlet">
+                            <form class='btn-group' action="DeleteProfileServlet">
                             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                             <!-- <button id="deleteBtn" class="btn btn-primary">Delete Account</button>-->
                             <input type="submit" value="Delete Account" class="btn btn-primary btn-user btn-block">
@@ -532,8 +519,6 @@
         </div>
 
 
-        <!-- Bootstrap core JavaScript-->
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
         <!-- Bootstrap JavaScript -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.5.0/js/bootstrap.bundle.min.js"></script>

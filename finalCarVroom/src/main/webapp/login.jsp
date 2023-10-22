@@ -172,7 +172,7 @@
                                                     <a class="small" href="register.jsp">Create an Account!</a>
                                                 </div>
                                                 <div class="text-center">
-                                                    <a class="small" href="guestpage.jsp">Continue as Guest!</a>
+                                                    <a class="small" href="guestpage.html">Continue as Guest!</a>
                                                 </div>
                                             </div>
                                     </div>

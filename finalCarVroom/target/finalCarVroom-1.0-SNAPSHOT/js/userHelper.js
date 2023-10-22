@@ -46,7 +46,10 @@ logoutBtn.addEventListener('click', logout);
 var profileBtn = document.getElementById('profileBtn');
 profileBtn.addEventListener('click', getProfile);
 var deleteBtn = document.getElementById('deleteBtn');
-deleteBtn.addEventListener('click', getDeleteUser);
+if (deleteBtn) {
+    deleteBtn.addEventListener('click', getDeleteUser);
+}
+
 function getProfile() {
     return new Promise(function (resolve, reject) {
         const xhr = new XMLHttpRequest();

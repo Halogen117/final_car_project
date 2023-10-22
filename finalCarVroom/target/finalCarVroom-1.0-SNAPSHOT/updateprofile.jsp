@@ -1,12 +1,11 @@
 <%
-    if(session==null || session.getAttribute("username") == null){
+    if (session == null || session.getAttribute("username") == null) {
         response.sendRedirect("login.jsp");
     }
-    if(request.getAttribute("CurrentUserData") == null)
-    {
+    if (request.getAttribute("CurrentUserData") == null) {
         response.sendRedirect("ProfileServlet");
     }
-    
+
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +19,9 @@
         <meta name="author" content="">
 
         <title>Carpark Near U - Manage Profile</title>
+
+        <script src="js/jquery-3.7.1.min.js" type="text/javascript" ></script>
+        <script src="js/jquery_cookie.js" type="text/javascript"></script>
 
         <!-- Custom fonts for this template-->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -45,8 +47,8 @@
             <ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
 
                 <!-- Sidebar - Brand -->
-                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.jsp">
-                <!--<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">-->
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                    <!--<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">-->
                     <div class="sidebar-brand-icon rotate-n-15">
                         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-car-front" viewBox="0 0 16 16">
                         <path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2H6ZM4.862 4.276 3.906 6.19a.51.51 0 0 0 .497.731c.91-.073 2.35-.17 3.597-.17 1.247 0 2.688.097 3.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 10.691 4H5.309a.5.5 0 0 0-.447.276Z"/>
@@ -61,8 +63,8 @@
 
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item">
-                    <a class="nav-link" href="index.jsp">
-                    <!--<a class="nav-link" href="index.html">-->
+                    <a class="nav-link" href="index.html">
+                        <!--<a class="nav-link" href="index.html">-->
                         <i class="fas fa-fw fa-home"></i>
                         <span>Home</span></a>
                 </li>
@@ -72,7 +74,7 @@
 
                 <!-- Heading -->
                 <div class="sidebar-heading">
-                    Interface
+                    Pages
                 </div>
 
 
@@ -80,23 +82,7 @@
                 <hr class="sidebar-divider">
 
 
-                <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                       aria-expanded="true" aria-controls="collapsePages">
-                        <i class="fas fa-fw fa-folder"></i>
-                        <span>Pages</span>
-                    </a>
-                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Login Screens:</h6>
-                            <a class="collapse-item" href="login.jsp">Login</a>
-                            <a class="collapse-item" href="register.jsp">Register</a>
-                            <a class="collapse-item" href="forgot-password.jsp">Forgot Password</a>
-                            <div class="collapse-divider"></div>
-                        </div>
-                    </div>
-                </li>
+
 
 
                 <!-- Nav Item - Favourites -->
@@ -113,12 +99,7 @@
                         <span>Recent</span></a>
                 </li>
 
-                <!-- Nav Item - Map -->
-                <li class="nav-item">
-                    <a class="nav-link" href="maps.html">
-                        <i class="fas fa-fw fa-map-marker"></i>
-                        <span>Map</span></a>
-                </li>
+
 
                 <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
@@ -172,7 +153,7 @@
                                 </div>
                             </li>
 
-                          <div class="topbar-divider d-none d-sm-block"></div>
+                            <div class="topbar-divider d-none d-sm-block"></div>
 
                             <!-- Nav Item - User Information -->
                             <li class="nav-item dropdown no-arrow">
@@ -259,44 +240,44 @@
                                                     <div class="row mt-3">
 
                                                     </div>
-                                                        <%
+                                                    <%
                                                         HttpSession user_session = request.getSession();
 
-                                                        if(session.getAttribute("update_prof") == "email_incorr"){
-                                                        user_session.setAttribute("update_prof", "");
-                                                        %>
-
-                                                        <div class="d-flex align-items-center justify-content-center">
-                                                            <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
-                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                                                </svg>
-                                                                <div>
-                                                                    Email format incorrect! Please Retype <br>
-                                                                    Email format: email@emaildomain.com
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <%
-                                                        }else if(session.getAttribute("update_prof") == "phone_no"){
+                                                        if (session.getAttribute("update_prof") == "email_incorr") {
                                                             user_session.setAttribute("update_prof", "");
-                                                        %>    
-                                                        <div class="d-flex align-items-center justify-content-center">
-                                                            <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
-                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                                                </svg>
-                                                                <div>
-                                                                    Phone Number format is incorrect! <br>
-                                                                    Follow the example format: 62888888 or 9180 9182
-                                                                </div>
+                                                    %>
+
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                            </svg>
+                                                            <div>
+                                                                Email format incorrect! Please Retype <br>
+                                                                Email format: email@emaildomain.com
                                                             </div>
                                                         </div>
-                                                        <%
+                                                    </div>
+                                                    <%
+                                                    } else if (session.getAttribute("update_prof") == "phone_no") {
+                                                        user_session.setAttribute("update_prof", "");
+                                                    %>    
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                            </svg>
+                                                            <div>
+                                                                Phone Number format is incorrect! <br>
+                                                                Follow the example format: 62888888 or 9180 9182
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <%
                                                         }
-                                                        %>
+                                                    %>
                                                     <div class="mt-5 text-center">
                                                         <!--<a class="btn btn-primary btn-sm" href="profile.jsp">Save Profile</a>-->
                                                         <input type="submit" value="Update Profile" class="btn btn-primary">
@@ -308,7 +289,7 @@
                                 </div>
                             </div>
                         </div>
-                                
+
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         </div>
@@ -394,7 +375,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">Ã—</span>
+                            <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>

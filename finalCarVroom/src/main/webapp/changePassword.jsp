@@ -11,7 +11,7 @@
         response.sendRedirect("login.jsp");
     }
     //if(session.getAttribute("security_qn")!= "pass"){
-      //  response.sendRedirect("securityQn.jsp");
+    //  response.sendRedirect("securityQn.jsp");
     //}
 
 %>
@@ -27,7 +27,9 @@
         <meta name="author" content="">
 
         <title>Carpark Near U - Profile</title> 
-
+        <script src="js/jquery-3.7.1.min.js" type="text/javascript" ></script>
+        <script src="js/jquery_cookie.js" type="text/javascript"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- Custom fonts for this template-->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link
@@ -62,7 +64,7 @@
             <ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
 
                 <!-- Sidebar - Brand -->
-                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.jsp">
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                     <div class="sidebar-brand-icon rotate-n-15">
                         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-car-front" viewBox="0 0 16 16">
                         <path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2H6ZM4.862 4.276 3.906 6.19a.51.51 0 0 0 .497.731c.91-.073 2.35-.17 3.597-.17 1.247 0 2.688.097 3.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 10.691 4H5.309a.5.5 0 0 0-.447.276Z"/>
@@ -77,7 +79,7 @@
 
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item">
-                    <a class="nav-link" href="index.jsp">
+                    <a class="nav-link" href="index.html">
                         <i class="fas fa-fw fa-home"></i>
                         <span>Home</span></a>
                 </li>
@@ -87,7 +89,7 @@
 
                 <!-- Heading -->
                 <div class="sidebar-heading">
-                    Interface
+                    Pages
                 </div>
 
 
@@ -95,23 +97,7 @@
                 <hr class="sidebar-divider">
 
 
-                <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                       aria-expanded="true" aria-controls="collapsePages">
-                        <i class="fas fa-fw fa-folder"></i>
-                        <span>Pages</span>
-                    </a>
-                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Login Screens:</h6>
-                            <a class="collapse-item" href="login.jsp">Login</a>
-                            <a class="collapse-item" href="register.jsp">Register</a>
-                            <a class="collapse-item" href="forgot-password.jsp">Forgot Password</a>
-                            <div class="collapse-divider"></div>
-                        </div>
-                    </div>
-                </li>
+
 
 
                 <!-- Nav Item - Favourites -->
@@ -305,7 +291,6 @@
                             <div class="col">
                                 <h2><strong>Our Mission</strong></h2>
                                 <p class="lead text-muted">Empowering Parking Choices in Singapore.</p>
-                                <a href="#" class="btn btn-primary justify-content-between mb-2 ">About Us</a>
                             </div>
                         </div>
                     </div>
@@ -371,7 +356,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">Ã</span>
+                            <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
@@ -383,15 +368,12 @@
             </div>
         </div>
 
-        <!-- Bootstrap core JavaScript-->
-        <script src="vendor/jquery/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        
 
         <!-- Bootstrap JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.5.0/js/bootstrap.bundle.min.js"></script>
 
-        <!-- Core plugin JavaScript-->
-        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
 
         <!-- Custom scripts for all pages-->
         <script src="js/sb-admin-2.min.js"></script>
