@@ -19,8 +19,9 @@ public class LoginServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        // Get user's inputs
+        // Retrieve current user session
         HttpSession user_session = request.getSession();
+        // Get user's inputs
         String user_email = request.getParameter("userEmail");
         String user_password = request.getParameter("userPassword");
         String[] userNameId = new String[2];
@@ -30,13 +31,11 @@ public class LoginServlet extends HttpServlet {
         if (getDataFromDB.userAuthLogin(user_email, user_password)) {
             // Get username from DB using email
             userNameId = getDataFromDB.getNameIdDB(user_email);
-            // Retrieve current user session
-            
             // Set username to current session
             user_session.setAttribute("userId", userNameId[0]);
             user_session.setAttribute("username", userNameId[1]);
-            Cookie urlCookie = new Cookie("userId", URLEncoder.encode( userNameId[0], "UTF-8" ));
-            Cookie urlCookie_2 = new Cookie("username", URLEncoder.encode( userNameId[1], "UTF-8" ));
+            Cookie urlCookie = new Cookie("userId", URLEncoder.encode(userNameId[0], "UTF-8"));
+            Cookie urlCookie_2 = new Cookie("username", URLEncoder.encode(userNameId[1], "UTF-8"));
             response.addCookie(urlCookie);
             response.addCookie(urlCookie_2);
             // Change page to main page

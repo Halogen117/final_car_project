@@ -39,12 +39,95 @@
                         <div class="card-body p-0">
                             <!-- Nested Row within Card Body -->
                             <div class="row">
-
                                 <div class="col">
                                     <div class="p-5">
+
                                         <div class="text-center">
                                             <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                         </div>
+                                        <%
+                                            HttpSession user_session = request.getSession();
+                                            if (session.getAttribute("work") == "worked") {
+                                                user_session.setAttribute("work", "");
+                                        %>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="alert alert-success d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16" style="margin-right: 10px;">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                                </svg>
+                                                <div>
+                                                    Successful Registration!
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <%
+                                        } else if (session.getAttribute("work") == "failed") {
+                                            user_session.setAttribute("work", "");
+                                        %>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                </svg>
+                                                <div>
+                                                    Registration Failed! Please try again.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <%
+                                        } else if (session.getAttribute("work") == "login_failed") {
+                                            user_session.setAttribute("work", "");
+                                        %>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                </svg>
+                                                <div>
+                                                    Login Failed! Try again.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <%
+                                        } else if (session.getAttribute("work") == "change_pass_success") {
+                                            user_session.setAttribute("work", "");
+                                        %>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="alert alert-success d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16" style="margin-right: 10px;">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                                </svg>
+                                                <div>
+                                                    Password Successfully updated!
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <%
+                                        } else if (session.getAttribute("verify_email") == "success") {
+                                            user_session.setAttribute("verify_email", "");
+                                        %>          
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="alert alert-success d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16" style="margin-right: 10px;">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                                </svg>
+                                                <div>
+                                                    A link should be sent out to your email to reset your password!
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <%
+                                        } else {
+
+                                        %>
+                                        <p></p>
+                                        <%            }
+                                        %>
                                         <form action="LoginServlet" class="user">
                                             <div class="form-group">
                                                 <input type="email" class="form-control form-control-user"
@@ -86,97 +169,15 @@
                 </div>
             </div>
         </div>
-        <%
-            HttpSession user_session = request.getSession();
-            if (session.getAttribute("work") == "worked") {
-                user_session.setAttribute("work", "");
-        %>
-        <div class="d-flex align-items-center justify-content-center">
-            <div class="alert alert-success d-flex align-items-center" role="alert" style="border-radius: 20px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16" style="margin-right: 10px;">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                </svg>
-                <div>
-                    Successful Registration!
-                </div>
-            </div>
-        </div>
-        <%
-        } else if (session.getAttribute("work") == "failed") {
-            user_session.setAttribute("work", "");
-        %>
-        <div class="d-flex align-items-center justify-content-center">
-            <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                </svg>
-                <div>
-                    Registration Failed! Please try again.
-                </div>
-            </div>
-        </div>
-        <%
-        } else if (session.getAttribute("work") == "login_failed") {
-            user_session.setAttribute("work", "");
-        %>
-        <div class="d-flex align-items-center justify-content-center">
-            <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                </svg>
-                <div>
-                    Login Failed! Try again.
-                </div>
-            </div>
-        </div>
-        <%
-        } else if (session.getAttribute("work") == "change_pass_success") {
-            user_session.setAttribute("work", "");
-        %>
-        <div class="d-flex align-items-center justify-content-center">
-            <div class="alert alert-success d-flex align-items-center" role="alert" style="border-radius: 20px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16" style="margin-right: 10px;">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                </svg>
-                <div>
-                    Password Successfully updated!
-                </div>
-            </div>
-        </div>
-        <%
-        } else if (session.getAttribute("verify_email") == "success") {
-            user_session.setAttribute("verify_email", "");
-        %>          
-        <div class="d-flex align-items-center justify-content-center">
-            <div class="alert alert-success d-flex align-items-center" role="alert" style="border-radius: 20px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16" style="margin-right: 10px;">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                </svg>
-                <div>
-                    A link should be sent out to your email to reset your password!
-                </div>
-            </div>
-        </div>
-        <%
-        } else {
 
-        %>
-        <p></p>
-        <%            }
-        %>
     </div>
 
     <!-- Footer Container Start -->
-    <footer class="footer fixed-bottom bg-success text-center text-light">
+    <footer class="footer bg-success text-center text-light">
         <!-- Grid container -->
         <div class="container pt-4">
             <!-- Section: Social media -->
-            <section class="mb-4">
+            <section class="sm-4">
                 <!-- Social media icons -->
                 <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
                     <i class="fa fa-facebook-f"></i>
@@ -203,7 +204,7 @@
 
         <!-- Copyright -->
         <div class="text-center p-3">
-            Â© 2023 Carpark Near U. All rights reserved.
+            © 2023 Carpark Near U. All rights reserved.
         </div>
         <!-- Copyright -->
     </footer>

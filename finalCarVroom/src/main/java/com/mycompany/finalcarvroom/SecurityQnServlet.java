@@ -30,11 +30,13 @@ public class SecurityQnServlet extends HttpServlet {
             boolean results = checkAns.verification((String)user_session.getAttribute("userId"),
                     firstAns, secondAns, thirdAns);
             if(results){
+                user_session.setAttribute("security_qn", "pass");
                 response.sendRedirect("changePassword.jsp");
             }
             else
             {
-                System.out.println("securityQn.jsp");
+                user_session.setAttribute("security_qn", "wrong");
+                response.sendRedirect("securityQn.jsp");
             }
         }
 }

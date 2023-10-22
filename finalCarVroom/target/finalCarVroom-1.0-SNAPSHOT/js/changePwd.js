@@ -10,6 +10,7 @@ var currPwd = document.getElementById("currPassword"),
         repeatPwdAlert = document.getElementById("repeatValid"),
         repeatValid = document.getElementById("repeatPwdValid"),
         repeatInvalid = document.getElementById("repeatPwdInvalid"),
+        checkSameOldNew = document.getElementById("checkSameCurrentIv"),
         requirements = document.querySelectorAll(".requirements");
 var lengthBoolean = false,
         numberBoolean = false,
@@ -26,10 +27,20 @@ function checkValidation() {
     if (lengthBoolean == true && numberBoolean == true
             && specialCharBoolean == true && capsLetterBoolean == true
             && newPwd.value == repeatPwd.value) {
+        if (newPwd.value == currPwd.value) {
+            checkSameOldNew.classList.remove("d-none");
+            return false
+        }
         console.log("Success!");
         return true;
     } else
     {
+        if (newPwd.value == currPwd.value) {
+            checkSameOldNew.classList.remove("d-none");
+        } else
+        {
+            checkSameOldNew.classList.add("d-none");
+        }
         console.log("Fail!");
         return false;
     }
@@ -45,6 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!newPwd.classList.contains("is-valid")) {
             newPwd.classList.add("is-invalid");
         }
+        checkSameOldNew.classList.add("d-none");
+        
     });
     newPwd.addEventListener("blur", () => {
         newPwdAlert.classList.add("d-none");

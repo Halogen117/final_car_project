@@ -24,13 +24,24 @@
         <link rel="stylesheet" href=
               "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
+        <style>
+            .wrong .fa-check
+            {
+                display: none;
+            }
+
+            .good .fa-times
+            {
+                display: none;
+            }
+        </style>
     </head>
 
-    <body class="bg-gradient-light" style="padding-bottom: 70px;">
+    <body class="bg-gradient-light" >
 
         <div class="container">
 
-            <div class="container d-flex justify-content-center align-items-center" style="min-height: 50vh; padding-bottom: 70px;">
+            <div class="container d-flex justify-content-center align-items-center" style="min-height: 50vh;">
                 <div class="card o-hidden col-xl-7 border-0 shadow-lg my-5">
 
                     <div class="card-body p-0">
@@ -41,53 +52,7 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                                     </div>
-                                    <form class="user" action="RegisterServlet" method="Get">
-                                        <div class="form-group row">
-                                            <div class="col-sm-6 mb-3 mb-sm-0">
-                                                <input type="text" class="form-control form-control-user" name="firstName"
-                                                       placeholder="First Name" required>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <input type="text" class="form-control form-control-user" name="lastName"
-                                                       placeholder="Last Name" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="email" class="form-control form-control-user" name="inputEmail"
-                                                   placeholder="Email Address" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="type" class="form-control form-control-user" name="phoneNumber"
-                                                   placeholder="Phone Number" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
-                                                   name="inputPassword" placeholder="Password" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
-                                                   name="repeatPassword" placeholder="Repeat Password" required>
-
-                                        </div>
-                                        <h5 class="h5 text-gray-900 mb-4">Security Question 1: What was the name of your first pet?</h5>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-user" name="ans1"
-                                                   placeholder="Security Question 1 Answer" required>
-                                        </div>
-                                        <h5 class="h5 text-gray-900 mb-4">Security Question 2: What is your favorite movie?</h5>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-user" name="ans2"
-                                                   placeholder="Security Question 2 Answer" required>
-                                        </div>
-                                        <h5 class="h5 text-gray-900 mb-4">Security Question 3: What is your lucky number?</h5>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-user" name="ans3"
-                                                   placeholder="Security Question 3 Answer" required>
-                                        </div>
-                                        <input type="submit" value="Register Account" class="btn btn-primary btn-user btn-block">
-                                        
-
-                                        <hr>
+                                    <form class="user" action="RegisterServlet" method="Get" onsubmit="return checkValidation()">
                                         <%
                                             HttpSession user_session = request.getSession();
 
@@ -188,8 +153,85 @@
                                         } else {
 
                                         %>
-                                        <%                                    }
+                                        <%                                            }
                                         %>
+                                        <div class="form-group row">
+                                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                                <input type="text" class="form-control form-control-user" name="firstName"
+                                                       placeholder="First Name" required>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-user" name="lastName"
+                                                       placeholder="Last Name" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="email" class="form-control form-control-user" name="inputEmail"
+                                                   placeholder="Email Address" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="type" class="form-control form-control-user" name="phoneNumber"
+                                                   placeholder="Phone Number" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control form-control-user" id="inputPassword"
+                                                   name="inputPassword" placeholder="Password" required>
+                                            <p></p>
+                                            <div id="inputPwdValid" class="alert alert-danger px-4 py-3 mb-0 d-none">
+                                                <ul class="list-unstyled mb-0">
+                                                    <li class="requirements leng">
+                                                        <i class="fas fa-check text-success me-2"></i>
+                                                        <i class="fas fa-times text-danger me-3"></i>
+                                                        Your password must have at least 8 character</li>
+                                                    <li class="requirements big-letter">
+                                                        <i class="fas fa-check text-success me-2"></i>
+                                                        <i class="fas fa-times text-danger me-3"></i>
+                                                        Your password must have at least 1 capital letter.</li>
+                                                    <li class="requirements num">
+                                                        <i class="fas fa-check text-success me-2"></i>
+                                                        <i class="fas fa-times text-danger me-3"></i>
+                                                        Your password must have at least 1 number.</li>
+                                                    <li class="requirements special-char">
+                                                        <i class="fas fa-check text-success me-2"></i>
+                                                        <i class="fas fa-times text-danger me-3"></i>
+                                                        Your password must have at least 1 special character.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control form-control-user" id="repeatPassword"
+                                                   name="repeatPassword" placeholder="Repeat Password" required>
+                                            <div id="repeatValid" class="d-none">
+                                                <p></p>
+                                                <div id="repeatPwdValid" class="alert alert-success d-none" role="alert"> 
+                                                    <i class="fas fa-check text-success me-2"></i> 
+                                                    All's good!
+                                                </div>
+                                                <div id="repeatPwdInvalid" class="alert alert-danger d-none" role="alert"> 
+                                                    <i class="fas fa-times text-danger me-3"></i>
+                                                    The Passwords are NOT the SAME!
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h5 class="h5 text-gray-900 mb-4">Security Question 1: What was the name of your first pet?</h5>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-user" name="ans1"
+                                                   placeholder="Security Question 1 Answer" required>
+                                        </div>
+                                        <h5 class="h5 text-gray-900 mb-4">Security Question 2: What is your favorite movie?</h5>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-user" name="ans2"
+                                                   placeholder="Security Question 2 Answer" required>
+                                        </div>
+                                        <h5 class="h5 text-gray-900 mb-4">Security Question 3: What is your lucky number?</h5>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-user" name="ans3"
+                                                   placeholder="Security Question 3 Answer" required>
+                                        </div>
+                                        <input type="submit" value="Register Account" class="btn btn-primary btn-user btn-block">
+
+
+
                                     </form>
                                     <hr>
                                     <div class="text-center">
@@ -204,55 +246,56 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+        <!-- Footer Container Start -->
+        <footer class="footer bg-success text-center text-light">
+            <!-- Grid container -->
+            <div class="container pt-4">
+                <!-- Section: Social media -->
+                <section class="sm-4">
+                    <!-- Social media icons -->
+                    <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
+                        <i class="fa fa-facebook-f"></i>
+                    </a>
+                    <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                    <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
+                        <i class="fa fa-google"></i>
+                    </a>
+                    <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
+                        <i class="fa fa-instagram"></i>
+                    </a>
+                    <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
+                        <i class="fa fa-linkedin"></i>
+                    </a>
+                    <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
+                        <i class="fa fa-github"></i>
+                    </a>
+                </section>
+                <!-- Section: Social media -->
+            </div>
+            <!-- Grid container -->
 
-            <!-- Footer Container Start -->
-            <footer class="footer fixed-bottom bg-success text-center text-light">
-                <!-- Grid container -->
-                <div class="container pt-4">
-                    <!-- Section: Social media -->
-                    <section class="mb-4">
-                        <!-- Social media icons -->
-                        <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
-                            <i class="fa fa-facebook-f"></i>
-                        </a>
-                        <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
-                            <i class="fa fa-twitter"></i>
-                        </a>
-                        <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
-                            <i class="fa fa-google"></i>
-                        </a>
-                        <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
-                            <i class="fa fa-instagram"></i>
-                        </a>
-                        <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
-                            <i class="fa fa-linkedin"></i>
-                        </a>
-                        <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button" data-mdb-ripple-color="dark">
-                            <i class="fa fa-github"></i>
-                        </a>
-                    </section>
-                    <!-- Section: Social media -->
-                </div>
-                <!-- Grid container -->
+            <!-- Copyright -->
+            <div class="text-center p-3">
+                © 2023 Carpark Near U. All rights reserved.
+            </div>
+            <!-- Copyright -->
+        </footer>
+        <!-- Footer Container End -->
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-                <!-- Copyright -->
-                <div class="text-center p-3">
-                    Â© 2023 Carpark Near U. All rights reserved.
-                </div>
-                <!-- Copyright -->
-            </footer>
-            <!-- Footer Container End -->
-            <!-- Bootstrap core JavaScript-->
-            <script src="vendor/jquery/jquery.min.js"></script>
-            <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-            <!-- Core plugin JavaScript-->
-            <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin-2.min.js"></script>
 
-            <!-- Custom scripts for all pages-->
-            <script src="js/sb-admin-2.min.js"></script>
-
+        <script src="<%= request.getContextPath()%>/js/register.js"></script>
     </body>
 
 </html>

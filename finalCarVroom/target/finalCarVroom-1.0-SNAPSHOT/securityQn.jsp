@@ -116,13 +116,6 @@
                         <span>Recent</span></a>
                 </li>
 
-                <!-- Nav Item - Map -->
-                <li class="nav-item">
-                    <a class="nav-link" href="maps.html">
-                        <i class="fas fa-fw fa-map-marker"></i>
-                        <span>Map</span></a>
-                </li>
-
                 <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
 
@@ -148,77 +141,10 @@
                             <i class="fa fa-bars"></i>
                         </button>
 
-                        <!-- Topbar Search -->
-                        <form
-                            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                            <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                       aria-label="Search" aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                       
 
                         <!-- Topbar Navbar -->
                         <ul class="navbar-nav ml-auto">
-
-                            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                            <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-search fa-fw"></i>
-                                </a>
-                                <!-- Dropdown - Messages -->
-                                <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                     aria-labelledby="searchDropdown">
-                                    <form class="form-inline mr-auto w-100 navbar-search">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control bg-light border-0 small"
-                                                   placeholder="Search for..." aria-label="Search"
-                                                   aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="button">
-                                                    <i class="fas fa-search fa-sm"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </li>
-
-                            <!-- Nav Item - Alerts -->
-                            <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-bell fa-fw"></i>
-                                    <!-- Counter - Alerts -->
-                                    <span class="badge badge-danger badge-counter">!</span>
-                                </a>
-                                <!-- Dropdown - Alerts -->
-                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                     aria-labelledby="alertsDropdown">
-                                    <h6 class="dropdown-header">
-                                        Alerts Center
-                                    </h6>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-primary">
-                                                <i class="fas fa-car text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">10 minutes ago</div>
-                                            <span class="font-weight-bold">Available Carpark Nearby!</span>
-                                        </div>
-                                    </a>
-
-                                    <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                                </div>
-                            </li>
-
 
                             <div class="topbar-divider d-none d-sm-block"></div>
 
@@ -237,7 +163,7 @@
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Profile
                                     </a>
-                                    
+
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                         <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -270,6 +196,27 @@
 
                                         </div>
                                     </div>
+                                    <%
+                                        HttpSession user_session = request.getSession();
+
+                                        if (session.getAttribute("security_qn") == "wrong") {
+                                            user_session.removeAttribute("security_qn");
+                                    %>
+                                    <p></p>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                            </svg>
+                                            <div>
+                                                One or more of the answers are wrong! Please try again!
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <%                                    
+                                        }
+                                    %> 
                                     <div class="card-body">
                                         <form action="SecurityQnServlet">
 
