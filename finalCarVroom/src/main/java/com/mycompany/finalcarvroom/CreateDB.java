@@ -105,7 +105,7 @@ public class CreateDB {
 
             String sql = "CREATE TABLE history_DB"
                     + //EDIT here
-                    "(history_id BIGSERIAL, user_ID TEXT,"
+                    "(history_id BIGSERI    AL, user_ID TEXT,"
                     + "carpark_ID TEXT,"
                     + "time_stamp TIMESTAMP WITH TIME ZONE)";
 
