@@ -8,11 +8,10 @@ package com.mycompany.finalcarvroom;
  *
  * @author evans
  */
-
 import java.sql.*;
 
 public class CreateDB {
-    
+
     public static void main(String[] args) {
 
         Connection connectDB = null;
@@ -20,8 +19,6 @@ public class CreateDB {
         //Datab db = new Datab();
         //manipulateDb manDb = new manipulateDb();
         //db.Conn();  //Connect
-
-
         boolean run = true;
         try {
             //DriverManager.registerDriver(new org.postgresql.Driver());
@@ -62,25 +59,26 @@ public class CreateDB {
             //String[] userDetails = manip.getUserDetails(connectDB, "user3");
             //for (int i = 0; i < userDetails.length; i++) {
             //    System.out.println(userDetails[i]);
-           // }
-
+            // }
             connectDB.close();
         } catch (SQLException se) {
             se.printStackTrace();
         }
     }
     ConnectDB create = new ConnectDB();
+
     ////////////////////// USER DATABASE /////////////////////////////
     public void createUserDb() {
-        
-    	try {
+
+        try {
             Connection connectDB = create.getConnection();
             Statement statement = connectDB.createStatement();
 
-            String sql = "CREATE TABLE user_DB" + //EDIT here
+            String sql = "CREATE TABLE user_DB"
+                    + //EDIT here
                     "(user_ID TEXT,"
-                    + "name TEXT," +
-                    "email TEXT,"
+                    + "name TEXT,"
+                    + "email TEXT,"
                     + "password TEXT,"
                     + "phoneNum TEXT,"
                     + "sec1 TEXT,"
@@ -89,86 +87,85 @@ public class CreateDB {
                     + "ans1 TEXT,"
                     + "ans2 TEXT,"
                     + "ans3 TEXT)";
-                	
-            statement.executeUpdate(sql);
-            System.out.println("Table successfully created!");
-        	}
-        	catch(SQLException e) {
-            	System.out.println("Error in Creating Table to History Server");
-            	e.printStackTrace();
-            }
-    }
-    ///////////////////////////////////////////////////////////////////
-    
-    //////////////////// HISTORY DATABASE /////////////////////////////
-    public void createHistoryDb() {
-    	try {
-            Connection connectDB = create.getConnection();
-            Statement statement = connectDB.createStatement();
-
-            String sql = "CREATE TABLE history_DB" + //EDIT here
-                    "(user_ID TEXT," +
-                    "carpark_ID TEXT,"
-                    + "time_stamp TIMESTAMP WITH TIME ZONE)";
-                	
-            statement.executeUpdate(sql);
-            System.out.println("Table successfully created!");
-        	}
-        	catch(SQLException e) {
-            	System.out.println("Error in Creating History Table to Server");
-            	e.printStackTrace();
-            }
-    }
-    /////////////////////////////////////////////////////////////////////
-    
-    /////////////////// FAVOURITE DATABASE //////////////////////////////
-    public void createFavDb() {
-    	try {
-            Connection connectDB = create.getConnection();
-            Statement statement = connectDB.createStatement();
-
-            String sql = "CREATE TABLE favourite_DB" + //EDIT here
-                    "(user_ID TEXT," +
-                    "carpark_ID TEXT)";
 
             statement.executeUpdate(sql);
             System.out.println("Table successfully created!");
-    	}
-    	catch(SQLException e) {
-        	System.out.println("Error in Creating Favourite Table to Server");
-        	e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error in Creating Table to History Server");
+            e.printStackTrace();
         }
     }
-    
+    ///////////////////////////////////////////////////////////////////
+
+    //////////////////// HISTORY DATABASE /////////////////////////////
+    public void createHistoryDb() {
+        try {
+            Connection connectDB = create.getConnection();
+            Statement statement = connectDB.createStatement();
+
+            String sql = "CREATE TABLE history_DB"
+                    + //EDIT here
+                    "(history_id BIGSERIAL, user_ID TEXT,"
+                    + "carpark_ID TEXT,"
+                    + "time_stamp TIMESTAMP WITH TIME ZONE)";
+
+            statement.executeUpdate(sql);
+            System.out.println("Table successfully created!");
+        } catch (SQLException e) {
+            System.out.println("Error in Creating History Table to Server");
+            e.printStackTrace();
+        }
+    }
+    /////////////////////////////////////////////////////////////////////
+
+    /////////////////// FAVOURITE DATABASE //////////////////////////////
+    public void createFavDb() {
+        try {
+            Connection connectDB = create.getConnection();
+            Statement statement = connectDB.createStatement();
+
+            String sql = "CREATE TABLE favourite_DB"
+                    + //EDIT here
+                    "(user_ID TEXT,"
+                    + "carpark_ID TEXT)";
+
+            statement.executeUpdate(sql);
+            System.out.println("Table successfully created!");
+        } catch (SQLException e) {
+            System.out.println("Error in Creating Favourite Table to Server");
+            e.printStackTrace();
+        }
+    }
+
     public void createCarparkDb() {
         try {
             Connection connectDB = create.getConnection();
             Statement statement = connectDB.createStatement();
-            
-            String sql="Create TABLE carpark_db (carpark_id TEXT,address TEXT,x_coord DOUBLE PRECISION,y_coord DOUBLE PRECISION,car_park_type TEXT,type_of_parking_system TEXT,short_term_parking TEXT,free_parking TEXT,night_parking TEXT,car_park_decks integer,gantry_height DOUBLE PRECISION,car_park_basement TEXT)";
+
+            String sql = "Create TABLE carpark_db (carpark_id TEXT,address TEXT,x_coord DOUBLE PRECISION,y_coord DOUBLE PRECISION,car_park_type TEXT,type_of_parking_system TEXT,short_term_parking TEXT,free_parking TEXT,night_parking TEXT,car_park_decks integer,gantry_height DOUBLE PRECISION,car_park_basement TEXT)";
             statement.executeUpdate(sql);
             System.out.println("Table successfully created!");
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error in creating carpark table to server");
             e.printStackTrace();
         }
     }
-    
+
     public void createFeedbackDb() {
-    	try {
+        try {
             Connection connectDB = create.getConnection();
             Statement statement = connectDB.createStatement();
 
-            String sql = "CREATE TABLE feedback_DB" + //EDIT here
-                    "(user_ID TEXT," +
-                    "Feedback TEXT)";
+            String sql = "CREATE TABLE feedback_DB"
+                    + //EDIT here
+                    "(user_ID TEXT,"
+                    + "Feedback TEXT)";
 
             statement.executeUpdate(sql);
             System.out.println("Table successfully created!");
-    	}
-    	catch(SQLException e) {
-        	System.out.println("Error in Creating Feedback Table to Server");
-        	e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error in Creating Feedback Table to Server");
+            e.printStackTrace();
         }
     }
 }
