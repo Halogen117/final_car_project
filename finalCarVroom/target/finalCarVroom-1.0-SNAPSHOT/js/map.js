@@ -606,7 +606,7 @@ async function initMarker(carpark, map) {
                             <p>Car Park Type : ${carpark.car_park_type}</p>
                             <p>Car park decks	 : ${carpark.car_park_decks}</p>
                             <p>Gantry Height(m) : ${carpark.gantry_height}</p>
-                            <button class="btn-success btn" onclick='window.open("https://www.google.com/maps/dir/${currentPos.coords.latitude},${currentPos.coords.longitude}/${resultLatLon.lat},${resultLatLon.lon}");return false;'>Get Directions</button>
+                            <button class="btn-success btn" onclick='window.open("https://www.google.com/maps/dir/?api=1&origin=${currentPos.coords.latitude},${currentPos.coords.longitude}&destination=${resultLatLon.lat},${resultLatLon.lon}&travelmode=driving");return false;'>Get Directions</button>
 
                         </div>
                     </div>
