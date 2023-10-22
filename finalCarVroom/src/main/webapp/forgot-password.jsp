@@ -53,10 +53,7 @@
                                                 name="inputEmail" aria-describedby="emailHelp"
                                                 placeholder="Enter Email Address...">
                                         </div>
-                                        <input type="submit" value="submit">
-                                        <a class="btn btn-primary btn-user btn-block">
-                                            Reset Password
-                                        </a>
+                                        <input type="submit" value="Reset Password" class="btn btn-primary btn-user btn-block">
                                     </form>
                                     <%
                                 HttpSession user_session = request.getSession();

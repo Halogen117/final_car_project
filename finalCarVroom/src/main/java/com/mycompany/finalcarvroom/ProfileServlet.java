@@ -28,23 +28,9 @@ public class ProfileServlet extends HttpServlet {
         if (request.getParameter("updatePassword") != null) {
             response.sendRedirect("securityQn.jsp");
         } else {
-            Connection connectDB = null;
-
+            
             ManipulateDB mDb = new ManipulateDB();
 
-            //String urlDB = "jdbc:postgresql://localhost/carparkInformation";
-            String urlDB = "jdbc:postgresql://localhost/user_storage";
-            String user = "postgres";
-            //String password = "68709904";
-            String password = "Pass1234";
-
-            try {
-                connectDB = DriverManager.getConnection(urlDB, user, password);
-                System.out.println("Connected to PostgreSQL server");
-
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
             HttpSession user_session = request.getSession();
             String currentUserId = (String) user_session.getAttribute("userId");
             String[] userDetails = mDb.getUserDetails(currentUserId);  //user must change to user ID (Global variable)
@@ -55,7 +41,6 @@ public class ProfileServlet extends HttpServlet {
             currUserData.setLast_name(userDetails[1]);
             currUserData.setEmail(userDetails[2]);
             currUserData.setPhoneNum(userDetails[4]);
-
             // Send UserData obj to webpage
             request.setAttribute("CurrentUserData", currUserData);
             // Redirect to profile page or update profile page

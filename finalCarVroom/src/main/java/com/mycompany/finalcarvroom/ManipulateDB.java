@@ -318,4 +318,20 @@ public class ManipulateDB {
             return 2;
         }
     }
+    
+    public boolean deleteUserData(String email){
+        String query = "DELETE from user_db where email = '"+email+"'";
+        try {
+            Connection conn = create.getConnection();
+            Statement statement = conn.createStatement();
+            statement.executeUpdate(query);
+            
+            return true;
+            
+        } catch (SQLException e) {
+            System.out.println("User Account Deletion Failed!");
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

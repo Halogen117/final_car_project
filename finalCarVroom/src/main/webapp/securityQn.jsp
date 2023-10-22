@@ -39,6 +39,7 @@
         <link rel="stylesheet" href=
               "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
+        <script type="module" src="js/userHelper.js"></script>
     </head>
 
     <body id="page-top">
@@ -258,7 +259,6 @@
                             <div class="col">
                                 <h2><strong>Our Mission</strong></h2>
                                 <p class="lead text-muted">Empowering Parking Choices in Singapore.</p>
-                                <a href="#" class="btn btn-primary justify-content-between mb-2 ">About Us</a>
                             </div>
                         </div>
                     </div>
@@ -298,7 +298,7 @@
 
                     <!-- Copyright -->
                     <div class="text-center p-3">
-                        Â© 2023 Carpark Near U. All rights reserved.
+                        © 2023 Carpark Near U. All rights reserved.
                     </div>
                     <!-- Copyright -->
                 </footer>
@@ -317,24 +317,24 @@
         </a>
 
         <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">Ã</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="login.jsp">Logout</a>
+                <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary" id="logoutBtn">Logout</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
         <!-- Bootstrap core JavaScript-->
         <script src="vendor/jquery/jquery.min.js"></script>

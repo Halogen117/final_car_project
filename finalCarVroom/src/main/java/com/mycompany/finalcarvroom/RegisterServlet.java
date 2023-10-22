@@ -101,12 +101,29 @@ public class RegisterServlet extends HttpServlet {
                 createAcc[10] = request.getParameter("ans3"); 
                 
                 
-                
-                if(mDb.insertUserDb(createAcc) == 1){
+                int result = mDb.insertUserDb(createAcc);
+                if(result == 1){
                     user_session.setAttribute("work", "worked");
                     response.sendRedirect("login.jsp");
                     return;
-                    
+                }else if(result == 0){
+                    user_session.setAttribute("work", "email_exist");
+                    response.sendRedirect("register.jsp");
+                    return;
+                        
+                        
+                }else if(result == -1){
+                    user_session.setAttribute("work", "phone_exist");
+                    response.sendRedirect("register.jsp");
+                    return;
+                        
+                        
+                }else if(result == -2){
+                    user_session.setAttribute("work", "unknown_error");
+                    response.sendRedirect("register.jsp");
+                    return;
+                        
+                        
                 }else{
                     user_session.setAttribute("work", "failed");
                     response.sendRedirect("login.jsp");

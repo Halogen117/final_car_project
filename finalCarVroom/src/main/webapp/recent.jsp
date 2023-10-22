@@ -61,7 +61,7 @@
                 <hr class="sidebar-divider my-0">
 
                 <!-- Nav Item - Dashboard -->
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a class="nav-link" href="index.html">
                         <i class="fas fa-fw fa-home"></i>
                         <span>Home</span></a>
@@ -257,7 +257,6 @@
                                     <div class="col">
                                         <h2><strong>Our Mission</strong></h2>
                                         <p class="lead text-muted">Empowering Parking Choices in Singapore.</p>
-                                        <a href="#" class="btn btn-primary justify-content-between mb-2 ">About Us</a>
                                     </div>
                                 </div>
                             </div>
@@ -297,7 +296,7 @@
 
                             <!-- Copyright -->
                             <div class="text-center p-3">
-                                Â© 2023 Carpark Near U. All rights reserved.
+                                © 2023 Carpark Near U. All rights reserved.
                             </div>
                             <!-- Copyright -->
                         </footer>
@@ -323,7 +322,7 @@
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">Ã—</span>
+                                    <span aria-hidden="true">×</span>
                                 </button>
                             </div>
                             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>

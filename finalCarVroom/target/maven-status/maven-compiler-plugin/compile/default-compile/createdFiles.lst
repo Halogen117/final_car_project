@@ -24,6 +24,7 @@ com\mycompany\finalcarvroom\Authentication.class
 com\mycompany\finalcarvroom\User.class
 com\mycompany\finalcarvroom\FeedbackServlet.class
 com\mycompany\finalcarvroom\Gmailer.class
+com\mycompany\finalcarvroom\DeleteProfileServlet.class
 com\mycompany\finalcarvroom\PasswordManager.class
 com\mycompany\finalcarvroom\UserData.class
 com\mycompany\finalcarvroom\CarparkDAO.class

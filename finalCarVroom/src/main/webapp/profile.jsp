@@ -29,10 +29,18 @@
         <!-- Custom styles for this template-->
         <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
+                <!--Jquery and JqueryCookie reference-->
+        <script src="js/jquery-3.7.1.min.js" type="text/javascript" ></script>
+        <script src="js/jquery_cookie.js" type="text/javascript"></script>
         <!-- Link to social media logo -->
         <link rel="stylesheet" href=
               "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+        <script type="module" src="js/userHelper.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     </head>
 
     <body id="page-top">
@@ -181,7 +189,7 @@
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                      aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="profile.jsp">
+                                    <a class="dropdown-item" id="profileBtn">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Profile
                                     </a>
@@ -241,8 +249,22 @@
                                 </div>
                             </div>
                         </div>
+                        <%
+                        }else if (session.getAttribute("update_prof") == "user_fail") {
+                            user_session.removeAttribute("update_prof");
+                        %>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                </svg>
+                                                <div>
+                                                    Account Deletion Failed!
+                                                </div>
+                                            </div>
+                                        </div>
                         <%}%>
-
 
                         <!-- Content Row -->
                         <div class="row">
@@ -323,11 +345,9 @@
                                             <div class="row">
                                                 <div class="col-lg-4">
                                                     <div class="form-group focused">
-                                                        <label class="form-control-label" for="input-moblie">Delete Account</label>
-                                                        <form action="DeleteProfileServlet">
-                                                            <input type="submit" name="deleteProfile" value="Delete Profile" 
-                                                                   class="btn btn-sm btn-primary" />
-                                                        </form>
+                                    
+                                    <input type="submit" value="Delete Account" class="btn btn-primary btn-user btn-block" data-toggle="modal" data-target="#deleteModal">
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -420,25 +440,48 @@
             <i class="fas fa-angle-up"></i>
         </a>
 
-        <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <!-- Delete Modal-->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteLabel"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <h5 class="modal-title" id="deleteLabel">Are you sure you want to delete your account? This action is irreversible.</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">Ã—</span>
+                            <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="login.jsp">Logout</a>
-                    </div>
+                    <div class="modal-body">Select "Delete Account" below if you are ready to delete your account.</div>
+                        <div class="modal-footer">
+                            <form action="DeleteProfileServlet">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <!-- <button id="deleteBtn" class="btn btn-primary">Delete Account</button>-->
+                            <input type="submit" value="Delete Account" class="btn btn-primary btn-user btn-block">
+                            </form>
+                        </div>
                 </div>
             </div>
         </div>
+        
+        <!-- Logout Modal-->
+                <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                <button id="logoutBtn" class="btn btn-primary">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
         <!-- Feedback Modal -->
@@ -490,14 +533,12 @@
 
 
         <!-- Bootstrap core JavaScript-->
-        <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
         <!-- Bootstrap JavaScript -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.5.0/js/bootstrap.bundle.min.js"></script>
 
         <!-- Core plugin JavaScript-->
-        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
         <!-- Custom scripts for all pages-->
         <script src="js/sb-admin-2.min.js"></script>

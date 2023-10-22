@@ -45,10 +45,30 @@ var logoutBtn = document.getElementById('logoutBtn');
 logoutBtn.addEventListener('click', logout);
 var profileBtn = document.getElementById('profileBtn');
 profileBtn.addEventListener('click', getProfile);
+var deleteBtn = document.getElementById('deleteBtn');
+deleteBtn.addEventListener('click', getDeleteUser);
 function getProfile() {
     return new Promise(function (resolve, reject) {
         const xhr = new XMLHttpRequest();
         let url = '/finalCarVroom/ProfileServlet';
+        xhr.open("GET", url, true);
+        let status = xhr.status;
+        xhr.onload = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                resolve("it works");
+            } else {
+                reject(status);
+            }
+        }
+        xhr.send();
+    });
+
+}
+
+function getDeleteUser() {
+    return new Promise(function (resolve, reject) {
+        const xhr = new XMLHttpRequest();
+        let url = '/finalCarVroom/DeleteProfileServlet';
         xhr.open("GET", url, true);
         let status = xhr.status;
         xhr.onload = () => {

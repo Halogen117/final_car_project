@@ -24,12 +24,12 @@ function fetchCarparkAvailabilityData(datetime, carparkID) {
                     let carparkAvailabilityJson = JSON.parse(xhr.response).items[0].carpark_data;
                     let carparkJson = carparkAvailabilityJson.find(item => item.carpark_number === carparkID);
                     resolve(carparkJson);
-                } else {
+                }else{
                     resolve();
                 }
 
 
-
+                
             } else {
                 reject(status);
             }
@@ -57,11 +57,11 @@ async function getPastData(pastHours, carparkID) {
         yValues = [];
         console.log(moment());
         let pastDate = moment().subtract(pastHours, 'hours');
-
-
-        for (let i = 0; i < pastHours; i++) {
-            pastDate = pastDate.add(1, 'hours');
-
+        
+        
+        for (let i = 0; i <pastHours; i++) {
+            pastDate=pastDate.add(1,'hours');
+            
             await fetchCarparkAvailabilityData(pastDate.format("YYYY-MM-DDTHH:mm:ss"), carparkID).then(function (carparkJSON) {
                 if (carparkJSON === undefined) {
                     xValues.push(pastDate.format("ddd, HH:mm"));
@@ -76,7 +76,7 @@ async function getPastData(pastHours, carparkID) {
             });
 
         }
-
+        
         resolve();
 
     });
@@ -115,17 +115,16 @@ carparkDropdown.addEventListener('change', onBothDropdownChange);
 hoursDropdown.addEventListener('change', onBothDropdownChange);
 
 function onBothDropdownChange() {
+    carparkDropdown.disabled = true;
+    hoursDropdown.disabled = true;
+    $(carparkDropdown).selectpicker('refresh');
+    $(hoursDropdown).selectpicker('refresh');
+    const loadingGraphAnimation = document.getElementById('loadingGraphAnimation');
+    const lineGraph = document.getElementById('lineGraph');
+    loadingGraphAnimation.classList.remove('d-none');
+    lineGraph.classList.add('d-none');
+    
     if (hoursDropdown.value !== undefined && carparkDropdown.selectedIndex > 0) {
-        carparkDropdown.disabled = true;
-        hoursDropdown.disabled = true;
-        $(carparkDropdown).selectpicker('refresh');
-        $(hoursDropdown).selectpicker('refresh');
-        const loadingGraphAnimation = document.getElementById('loadingGraphAnimation');
-        const lineGraph = document.getElementById('lineGraph');
-        loadingGraphAnimation.classList.remove('d-none');
-        lineGraph.classList.add('d-none');
-
-
 
         let carparkID = carparkDropdown.options[carparkDropdown.selectedIndex].value;
         let hours = hoursDropdown.options[hoursDropdown.selectedIndex].value;
