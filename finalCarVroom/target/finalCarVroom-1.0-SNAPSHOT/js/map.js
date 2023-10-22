@@ -83,8 +83,8 @@ async function initMap() {
         center: {lat: 1.3521, lng: 103.8198},
         zoom: 8,
         mapId: '8a715e13e7d9ce06',
-        mapTypeControl:true,
-        mapTypeControlOptions:{position:google.maps.ControlPosition.BOTTOM_LEFT},
+        mapTypeControl: true,
+        mapTypeControlOptions: {position: google.maps.ControlPosition.BOTTOM_LEFT},
         streetViewControl: false,
     });
     //Initialise Infowindow
@@ -107,7 +107,7 @@ async function initMap() {
             let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
             filteredData = [];
             filteredData.push(allCarparkJson.find(item => item.carpark_id === carpark.carpark_id));
-
+            populateCarparkDropdown(filteredData);
 
 
             initMarker(carpark, map);
@@ -242,11 +242,11 @@ function initCarparks(lat, lng) {
 
             clearOverlays();
             clearCarparkCards();
-
+            xValues = [];
+            yValues = [];
             if (filteredData.length !== 0) {
-                xValues = [];
-                yValues = [];
 
+                
                 refreshBtn.disabled = false;
                 for (const carpark of filteredData) {
                     let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
@@ -263,8 +263,7 @@ function initCarparks(lat, lng) {
                     createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted);
                     markerId++;
                 }
-                barColors = generateDynamicColors(xValues.length);
-                updateChart();
+
                 //MarkerID also acts a counter for number of carparks
                 infoWindowContentString = `Found ${markerId} nearby carparks`;
             } else {
@@ -273,7 +272,9 @@ function initCarparks(lat, lng) {
                 refreshBtn.disabled = true;
                 infoWindowContentString = `No carparks nearby`;
             }
-
+            populateCarparkDropdown(filteredData);
+            barColors = generateDynamicColors(xValues.length);
+            updateChart();
 
 
             infoWindow.close();
@@ -595,7 +596,7 @@ async function initMarker(carpark, map) {
         content.classList.add("carparkDetail");
         content.innerHTML = `
                 <div id="content">
-                    <div id="firstHeading" class="address">${carpark.address}</div>
+                    <div id="firstHeading" class="address h4 font-weight-bold">${carpark.address}</div>
                     <div id="bodyContent">
                         <div>Free Parking : ${carpark.free_parking}</div>
                         <div>Lots Available : ${lotsAvailable}</div>
@@ -753,6 +754,7 @@ function plotChart() {
         data: {
             labels: xValues,
             datasets: [{
+                    label: 'Carparks Available Lots',
                     backgroundColor: barColors,
                     data: yValues
                 }]
@@ -787,7 +789,7 @@ function plotChart() {
                         return label + ": " + value;
                     }
                 }
-            }
+            }, responsive: true
         }
     });
 }
@@ -835,7 +837,7 @@ function plotPChart() {
                         return label + ": " + value;
                     }
                 }
-            }
+            }, responsive: true,
         }
     });
 }
@@ -860,7 +862,7 @@ document.getElementById("refreshBtn").onclick = function () {
     refreshIcon.setAttribute("class", "fa-spin btnIcon fa-solid fa-rotate-right");
     fetchCarparkAvailabilityData().then(function () {
         if (filteredData !== null || typeof filteredData !== "undefined") {
-            
+
             xValues = [];
             yValues = [];
             for (const carpark of filteredData) {
@@ -943,3 +945,30 @@ function createErrorAlert(alertMessage, timeToFade) {
 
 }
 //end of functions for creating alert messages
+
+
+
+//lineGraph functions
+
+const carparkDropdown = document.getElementById('carparkDropdown');
+
+function populateCarparkDropdown(filteredData) {
+    const lineGraph = document.getElementById('lineGraph');
+    lineGraph.classList.add('d-none');
+    $("#carparkDropdown").find('option').remove();
+    if (filteredData.length !== 0) {
+
+
+        for (const carpark of filteredData) {
+            let option = document.createElement("option");
+            option.setAttribute('value', carpark.carpark_id);
+
+            let optionText = document.createTextNode(carpark.address);
+            option.appendChild(optionText);
+
+            carparkDropdown.appendChild(option);
+        }
+    }
+    $('#carparkDropdown').selectpicker('refresh');
+}
+

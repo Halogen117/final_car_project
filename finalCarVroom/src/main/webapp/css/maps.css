@@ -100,3 +100,6 @@ body {
     z-index:9999;
 }
 
+.chartFlex{
+    flex:1
+}
