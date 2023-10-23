@@ -106,9 +106,10 @@ public class CreateDB {
             Connection connectDB = create.getConnection();
             Statement statement = connectDB.createStatement();
 
-            String sql = "CREATE TABLE history_DB" + //EDIT here
-                    "(user_ID TEXT," +
-                    "carpark_ID TEXT,"
+            String sql = "CREATE TABLE history_DB"
+                    + //EDIT here
+                    "(history_id BIGSERIAL, user_ID TEXT,"
+                    + "carpark_ID TEXT,"
                     + "time_stamp TIMESTAMP WITH TIME ZONE)";
                 	
             statement.executeUpdate(sql);
