@@ -29,7 +29,8 @@ public class CarparkDAO {
             while (rs.next()) {
                 Carpark carpark = new Carpark(rs.getString(1), rs.getString(2), Double.parseDouble(rs.getString(3)), Double.parseDouble(rs.getString(4)),
                         rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
-                        Integer.parseInt(rs.getString(10)), Double.parseDouble(rs.getString(11)), rs.getString(12));
+                        Integer.parseInt(rs.getString(10)), Double.parseDouble(rs.getString(11)), rs.getString(12),
+                        rs.getBoolean(13),rs.getDouble(14),rs.getDouble(15),rs.getDouble(16));
                 carparkList.add(carpark);
             }
         }
@@ -47,7 +48,8 @@ public class CarparkDAO {
             while (rs.next()) {
                 carpark = new Carpark(rs.getString(1), rs.getString(2), Double.parseDouble(rs.getString(3)), Double.parseDouble(rs.getString(4)),
                         rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
-                        Integer.parseInt(rs.getString(10)), Double.parseDouble(rs.getString(11)), rs.getString(12));
+                        Integer.parseInt(rs.getString(10)), Double.parseDouble(rs.getString(11)), rs.getString(12),
+                rs.getBoolean(13),rs.getDouble(14),rs.getDouble(15),rs.getDouble(16));
                 
             }
         }

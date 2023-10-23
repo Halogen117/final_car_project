@@ -28,7 +28,7 @@ async function initMap() {
     infoWindow = new google.maps.InfoWindow();
     clearOverlays();
     clearCarparkCards();
-    
+
     if (userFavouritedCarparks.length !== 0) {
         for (let i = 0; i < userFavouritedCarparks.length; i++) {
             //Filter all of the carpark data to only the user favourited carparks
@@ -38,11 +38,19 @@ async function initMap() {
             });
 
             if (filteredData.length !== 0) {
+                let carparkRate;
                 let carpark = filteredData[0];
                 let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
-                let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
+                let lastUpdatedDate = getCarparkLastUpdatedTime(carpark.carpark_id);
+                let lastUpdatedDateFormatted;
+                if (lastUpdatedDate === -1) {
+                    lastUpdatedDateFormatted = -1;
+                } else {
+                    lastUpdatedDateFormatted = moment(lastUpdatedDate).format('ddd, HH:mm:ss');
+                }
+                carparkRate=getCarparkRates(carpark);
                 initMarker(filteredData[0], map, totalCarparkAvailableLot);
-                createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastDate);
+                createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted, carparkRate);
                 markerId++;
 
             }
@@ -69,7 +77,24 @@ fetchCarparkAvailabilityData().then(function () {
 });
 
 
+function getCarparkRates(carpark) {
+    let carparkRate;
+    if (carpark.is_central) {
+        let curDate = moment();
+        let dayOfWeek = curDate.weekday();
 
+        if (dayOfWeek !== 0 && (curDate.isAfter(moment('07:00', 'HH:mm')) && curDate.isBefore(moment('17:00', 'HH:mm')))) {
+            carparkRate = "$1.20";
+        } else {
+            carparkRate = "$0.60";
+        }
+
+
+    } else {
+        carparkRate = "$0.60 per half-hour";
+    }
+    return carparkRate;
+}
 
 
 function getAllCarparks() {
@@ -118,13 +143,17 @@ function getUserFavouritedCarparks(userID) {
 //getTotalCarparkAvailable adds up the different lot type of a specific carpark as given by carparkNo and returns the total available lots
 function getTotalCarparkAvailable(carparkNo) {
     let totalCarparkAvailableLot = 0;
+
     if (carparkAvailabilityJson !== null || typeof carparkAvailabilityJson !== "undefined") {
-
         let carparkJson = carparkAvailabilityJson.find(item => item.carpark_number === carparkNo);
-
-        for (let i = 0; i < carparkJson.carpark_info.length; i++) {
-            totalCarparkAvailableLot += parseInt(carparkJson.carpark_info[i].lots_available);
+        if (carparkJson === undefined || carparkJson === null) {
+            totalCarparkAvailableLot = -1;
+        } else {
+            for (let i = 0; i < carparkJson.carpark_info.length; i++) {
+                totalCarparkAvailableLot += parseInt(carparkJson.carpark_info[i].lots_available);
+            }
         }
+
     }
 
     return totalCarparkAvailableLot;
@@ -132,6 +161,9 @@ function getTotalCarparkAvailable(carparkNo) {
 
 function getCarparkLastUpdatedTime(carparkNo) {
     let carparkJson = carparkAvailabilityJson.find(item => item.carpark_number === carparkNo);
+    if (carparkJson === undefined || carparkJson === null) {
+        return -1;
+    }
     return carparkJson.update_datetime;
 }
 
@@ -238,7 +270,7 @@ async function initMarker(carpark, map) {
 
     //add a click listener when user clicks on marker and display the info window
     marker.addListener("click", function () {
-
+        let hourlyRate;
         if (map.getZoom() < 15) {
             map.setZoom(16);
         }
@@ -248,30 +280,71 @@ async function initMarker(carpark, map) {
         let lastUpdatedDateTime = getCarparkLastUpdatedTime(carpark.carpark_id);
 
         lotsAvailable = `${lotsAvailable} (Last updated on : ${moment(lastUpdatedDateTime).format('ddd, HH:mm:ss')})`;
-        if (lotsAvailable === -1 && lastUpdatedDateTime === -1) {
+        if (lotsAvailable === -1 || lastUpdatedDateTime === -1) {
             lotsAvailable = 'No data';
+        }
+        if (carpark.is_central) {
+            hourlyRate = `$1.20 per half-hour (7:00am to 5:00pm, Mondays to Saturdays)\n$0.60 per half-hour (other hours)`;
+        } else {
+            hourlyRate = "$0.60 per half-hour";
         }
         const content = document.createElement("div");
         content.classList.add("carparkDetail");
         content.innerHTML = `
                 <div id="content">
                     <div id="firstHeading" class="address h4 font-weight-bold">${carpark.address}</div>
-                    <div id="bodyContent">
-                        <div>Free Parking : ${carpark.free_parking}</div>
-                        <div>Lots Available : ${lotsAvailable}</div>
-                        <div>Night Parking : ${carpark.night_parking}</div>
-                        <div>Type of Parking System : ${carpark.type_of_parking_system}</div>
-                        <div>Short-term Parking : ${carpark.short_term_parking}</div>
-                        <div>Car Park Type : ${carpark.car_park_type}</div>
-                        <div>Car park decks	 : ${carpark.car_park_decks}</div>
-                        <div>Gantry Height(m) : ${carpark.gantry_height}</div>
-
+                    <div class="d-flex flex-column" id="bodyContent">
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Free Parking : </p>
+                            <p>${carpark.free_parking}</p>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Lots Available : </p>
+                            <p>${lotsAvailable}</p>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Night Parking : </p>
+                            <p>${carpark.night_parking}</p>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Car park Rates : </p>
+                            <p id="hourlyRate">${hourlyRate}</p>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Type of Parking System : </p>
+                            <p>${carpark.type_of_parking_system}</p>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Short-term Parking : </p>
+                            <p>${carpark.short_term_parking}</p>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Car Park Type : </p>
+                            <p>${carpark.car_park_type}</p>
+                        </div>                                                                                                                        
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Car Park Decks : </p>
+                            <p>${carpark.car_park_decks}</p>
+                        </div>                                                                                                                        
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Gantry Height(m) : </p>
+                            <p>${carpark.gantry_height}</p>
+                        </div>                                                                                                                        
+                                                                        
+                        
+                        
+                        
+                        
+                        
                     </div>
                 </div>
+        </div>
                 `;
         infoWindow.close();
         infoWindow.setContent(content);
         infoWindow.open(marker.map, marker);
+
+
 
         document.getElementById(carpark.carpark_id).focus();
 
@@ -289,7 +362,15 @@ async function initMarker(carpark, map) {
 
 //Create the carparkcards html and buttons
 //Call this multiple times for multiple carparks
-function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
+function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime, carparkRate) {
+    let lastUpdatedDatetime = _lastUpdatedDatetime;
+    if (lastUpdatedDatetime === -1) {
+        lastUpdatedDatetime = "No data";
+    }
+    let lotsAvailable = _lotsAvailable;
+    if (lotsAvailable === -1) {
+        lotsAvailable = "No data";
+    }
     const carparkCard = document.createElement("div");
     carparkCard.classList.add("col-xl-3");
     carparkCard.classList.add("col-md-6");
@@ -299,8 +380,9 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div class="text-s font-weight-bold text-primary text-uppercase mb-1">${carpark.address}</div>
-                                                <div id="lots_${carpark.carpark_id}" class="h5 mb-0 font-weight-bold text-gray-800">Lots Available: ${lotsAvailable} </div>
-                                                <div id="lastUpdated_${carpark.carpark_id}" class="h5 mb-0 font-weight-bold text-gray-800">Last Updated: ${lastUpdatedDatetime} </div>
+                                                <div id="lots_${carpark.carpark_id}" class="h6 mb-2 font-weight-bold text-gray-800">Lots Available: ${lotsAvailable} </div>
+                                                <div id="lastUpdated_${carpark.carpark_id}" class="h6 mb-2 font-weight-bold text-gray-800">Last Updated: ${lastUpdatedDatetime} </div>
+                                                <div id="rates_${carpark.carpark_id}" class="h6 mb-0 font-weight-bold text-gray-800">Rates (per half-hour) : ${carparkRate} </div>
                                             </div>
                                             <div class="btn-group">
                                                 <button id="btn_${carpark.carpark_id}" class="btn btn-success">Go</button>
@@ -333,7 +415,7 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
                 favButton.style.color = "#ffffff";
                 foundCarpark = -1;
                 //setTimeout($("#favouriteAlert").addClass("show"),5000);
-                createSuccessAlert(resolve,3000);
+                createSuccessAlert(resolve, 3000);
                 carparkCard.remove();
                 markersArray[id].setMap(null);
                 markersArray[id] = null;
@@ -343,7 +425,7 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
                 }
 
             }).catch(function (err) {
-                createErrorAlert(err.statusText,3000);
+                createErrorAlert(err.statusText, 3000);
             });
 
         }
@@ -352,7 +434,7 @@ function createCarparkCards(id, carpark, lotsAvailable, lastUpdatedDatetime) {
 
 }
 
-function createSuccessAlert(alertMessage,timeToFade) {
+function createSuccessAlert(alertMessage, timeToFade) {
     let alert = document.createElement("div");
     alert.classList.add('alert', 'alert-success', 'alert-dismissible', 'fade', 'in', 'out', 'd-flex', 'align-items-center');
     alert.setAttribute('style', 'border-radius : 20px');
@@ -372,13 +454,13 @@ function createSuccessAlert(alertMessage,timeToFade) {
     $(alert).addClass("show");
     setTimeout(function () {
         $(alert).removeClass('show');
-        setTimeout(function(){
-           $(alert).remove(); 
-        },2000);
+        setTimeout(function () {
+            $(alert).remove();
+        }, 2000);
     }, timeToFade);
 
 }
-function createErrorAlert(alertMessage,timeToFade) {
+function createErrorAlert(alertMessage, timeToFade) {
     let alert = document.createElement("div");
     alert.classList.add('alert', 'alert-danger', 'd-flex', 'align-items-center', 'alert-dismissible', 'fade', 'in', 'out');
     alert.setAttribute('style', 'border-radius : 20px');
@@ -398,9 +480,9 @@ function createErrorAlert(alertMessage,timeToFade) {
     $(alert).addClass("show");
     setTimeout(function () {
         $(alert).removeClass('show');
-        setTimeout(function(){
-           $(alert).remove(); 
-        },2000);
+        setTimeout(function () {
+            $(alert).remove();
+        }, 2000);
     }, timeToFade);
 
 
@@ -430,12 +512,24 @@ document.getElementById("refreshBtn").onclick = function () {
                 return carparkNo === userFavouritedCarparks[i];
             });
             if (filteredData.length !== 0) {
+                let carparkRate;
                 let carpark = filteredData[0];
-                console.log(carpark.carpark_id);
+                
                 let totalLotsAvailable = getTotalCarparkAvailable(carpark.carpark_id);
-                let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
+                let lastUpdatedDate = getCarparkLastUpdatedTime(carpark.carpark_id);
+                let lastUpdatedDateFormatted;
+                if (lastUpdatedDate === -1) {
+                    lastUpdatedDateFormatted = "No data";
+                } else {
+                    lastUpdatedDateFormatted = moment(lastUpdatedDate).format('ddd, HH:mm:ss');
+                }
+                if (totalLotsAvailable === -1) {
+                    totalLotsAvailable = "No data";
+                }
+                carparkRate=getCarparkRates(carpark);
                 document.getElementById("lots_" + carpark.carpark_id).textContent = "Lots Available: " + totalLotsAvailable;
-                document.getElementById("lastUpdated_" + carpark.carpark_id).textContent = "Last Updated: " + lastDate;
+                document.getElementById("lastUpdated_" + carpark.carpark_id).textContent = "Last Updated: " + lastUpdatedDateFormatted;
+                document.getElementById("rates_" + carpark.carpark_id).textContent = "Rates (per half-hour) : " + carparkRate;
             }
         }
 

@@ -95,6 +95,7 @@ async function initMap() {
         await findMyLocation();
     } else {
         getCarpark(redirectCarparkID).then((value) => {
+            let carparkRate;
             xValues = [];
             yValues = [];
             clearCarparkCards();
@@ -104,14 +105,20 @@ async function initMap() {
             var resultLatLon = cv.computeLatLon(parseFloat(carpark.y_coord), parseFloat(carpark.x_coord));
 
             let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
-            let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
+            let lastUpdatedDate = getCarparkLastUpdatedTime(carpark.carpark_id);
+            let lastUpdatedDateFormatted;
+            if (lastUpdatedDate === -1) {
+                lastUpdatedDateFormatted = -1;
+            } else {
+                lastUpdatedDateFormatted = moment(lastUpdatedDate).format('ddd, HH:mm:ss');
+            }
             filteredData = [];
             filteredData.push(allCarparkJson.find(item => item.carpark_id === carpark.carpark_id));
             populateCarparkDropdown(filteredData);
 
-
+            carparkRate=getCarparkRates(carpark);
             initMarker(carpark, map);
-            createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastDate);
+            createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted, carparkRate);
             xValues.push(carpark.carpark_id);
             yValues.push(totalCarparkAvailableLot);
             barColors = generateDynamicColors(xValues.length);
@@ -249,6 +256,7 @@ function initCarparks(lat, lng) {
 
                 refreshBtn.disabled = false;
                 for (const carpark of filteredData) {
+                    let carparkRate;
                     let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
                     let lastUpdatedDate = getCarparkLastUpdatedTime(carpark.carpark_id);
                     let lastUpdatedDateFormatted;
@@ -257,10 +265,11 @@ function initCarparks(lat, lng) {
                     } else {
                         lastUpdatedDateFormatted = moment(lastUpdatedDate).format('ddd, HH:mm:ss');
                     }
+                    carparkRate=getCarparkRates(carpark);
                     xValues.push(carpark.carpark_id);
                     yValues.push(totalCarparkAvailableLot);
                     initMarker(carpark, map);
-                    createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted);
+                    createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted, carparkRate);
                     markerId++;
                 }
 
@@ -422,6 +431,25 @@ function getAllCarparks() {
 
 
 }
+
+function getCarparkRates(carpark) {
+    let carparkRate;
+    if (carpark.is_central) {
+        let curDate = moment();
+        let dayOfWeek = curDate.weekday();
+
+        if (dayOfWeek !== 0 && (curDate.isAfter(moment('07:00', 'HH:mm')) && curDate.isBefore(moment('17:00', 'HH:mm')))) {
+            carparkRate = "$1.20";
+        } else {
+            carparkRate = "$0.60";
+        }
+
+
+    } else {
+        carparkRate = "$0.60 per half-hour";
+    }
+    return carparkRate;
+}
 //---End of getter methods---
 
 
@@ -581,38 +609,74 @@ async function initMarker(carpark, map) {
 
 
     //add a click listener when user clicks on marker and display the info window
-    marker.addListener("click", async function () {
+    marker.addListener("click", function () {
 
-        let currentPos = await getCurrentPosition();
+        let hourlyRate;
         //Creating content html for the infowindow which is when user clicks on the marker, a info window will popup
         let lotsAvailable = getTotalCarparkAvailable(carpark.carpark_id);
         let lastUpdatedDateTime = getCarparkLastUpdatedTime(carpark.carpark_id);
 
         lotsAvailable = `${lotsAvailable} (Last updated on : ${moment(lastUpdatedDateTime).format('ddd, HH:mm:ss')})`;
-        if (lotsAvailable === -1 && lastUpdatedDateTime === -1) {
+        if (lotsAvailable === -1 || lastUpdatedDateTime === -1) {
             lotsAvailable = 'No data';
+        }
+        if (carpark.is_central) {
+            hourlyRate = "$1.20 per half-hour (7:00am to 5:00pm, Mondays to Saturdays)\n$0.60 per half-hour (other hours)";
+        } else {
+            hourlyRate = "$0.60 per half-hour";
         }
         const content = document.createElement("div");
         content.classList.add("carparkDetail");
         content.innerHTML = `
                 <div id="content">
                     <div id="firstHeading" class="address h4 font-weight-bold">${carpark.address}</div>
-                    <div id="bodyContent">
-                        <p>Free Parking : ${carpark.free_parking}</p>
-                        <p>Lots Available : ${lotsAvailable}</p>
-                        <p>Night Parking : ${carpark.night_parking}</p>
-                        <p>Type of Parking System : ${carpark.type_of_parking_system}</p>
-                        <p>Short-term Parking : ${carpark.short_term_parking}</p>
-                        <p>Car Park Type : ${carpark.car_park_type}</p>
-                        <p>Car park decks	 : ${carpark.car_park_decks}</p>
-                        <p>Gantry Height(m) : ${carpark.gantry_height}</p>
+                    <div class="d-flex flex-column" id="bodyContent">
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Free Parking : </p>
+                            <p>${carpark.free_parking}</p>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Lots Available : </p>
+                            <p>${lotsAvailable}</p>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Night Parking : </p>
+                            <p>${carpark.night_parking}</p>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Car park Rates : </p>
+                            <p id='hourlyRate'>${hourlyRate}</p>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Type of Parking System : </p>
+                            <p>${carpark.type_of_parking_system}</p>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Short-term Parking : </p>
+                            <p>${carpark.short_term_parking}</p>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Car Park Type : </p>
+                            <p>${carpark.car_park_type}</p>
+                        </div>                                                                                                                        
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Car Park Decks : </p>
+                            <p>${carpark.car_park_decks}</p>
+                        </div>                                                                                                                        
+                        <div class="d-flex justify-content-start">
+                            <p class="mr-2">Gantry Height(m) : </p>
+                            <p>${carpark.gantry_height}</p>
+                        </div>                                                                                                                        
+                                                                        
                     </div>
                 </div>
         </div>
                 `;
+
         infoWindow.close();
         infoWindow.setContent(content);
         infoWindow.open(marker.map, marker);
+
         document.getElementById(carpark.carpark_id).focus();
         insertHistDB(userID, carpark.carpark_id);
         if (map.getZoom() < 15) {
@@ -648,7 +712,7 @@ function clearCarparkCards() {
 
 //Create the carparkcards html and buttons
 //Call this multiple times for multiple carparks
-function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime) {
+function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime, carparkRate) {
     let lastUpdatedDatetime = _lastUpdatedDatetime;
     if (lastUpdatedDatetime === -1) {
         lastUpdatedDatetime = "No data";
@@ -666,8 +730,9 @@ function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime) {
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div class="text-s font-weight-bold text-primary text-uppercase mb-1">${carpark.address}</div>
-                                                <div id="lots_${carpark.carpark_id}" class="h5 mb-0 font-weight-bold text-gray-800">Lots Available: ${lotsAvailable} </div>
-                                                <div id="lastUpdated_${carpark.carpark_id}" class="h5 mb-0 font-weight-bold text-gray-800">Last Updated: ${lastUpdatedDatetime} </div>
+                                                <div id="lots_${carpark.carpark_id}" class="h6 mb-2 font-weight-bold text-gray-800">Lots Available: ${lotsAvailable} </div>
+                                                <div id="lastUpdated_${carpark.carpark_id}" class="h6 mb-2 font-weight-bold text-gray-800">Last Updated: ${lastUpdatedDatetime} </div>
+                                                <div id="rates_${carpark.carpark_id}" class="h6 mb-0 font-weight-bold text-gray-800">Rates (per half-hour) : ${carparkRate} </div>
                                             </div>
                                             <div class="btn-group">
                                                 <button id="btn_${carpark.carpark_id}" class="btn btn-success">Go</button>
@@ -866,11 +931,22 @@ document.getElementById("refreshBtn").onclick = function () {
             xValues = [];
             yValues = [];
             for (const carpark of filteredData) {
-
+                let carparkRate;
                 let totalLotsAvailable = getTotalCarparkAvailable(carpark.carpark_id);
-                let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
+                let lastUpdatedDate = getCarparkLastUpdatedTime(carpark.carpark_id);
+                let lastUpdatedDateFormatted;
+                if (lastUpdatedDate === -1) {
+                    lastUpdatedDateFormatted = "No data";
+                } else {
+                    lastUpdatedDateFormatted = moment(lastUpdatedDate).format('ddd, HH:mm:ss');
+                }
+                if (totalLotsAvailable === -1) {
+                    totalLotsAvailable = "No data";
+                }
+                carparkRate=getCarparkRates(carpark);
                 document.getElementById("lots_" + carpark.carpark_id).textContent = "Lots Available: " + totalLotsAvailable;
-                document.getElementById("lastUpdated_" + carpark.carpark_id).textContent = "Last Updated: " + lastDate;
+                document.getElementById("lastUpdated_" + carpark.carpark_id).textContent = "Last Updated: " + lastUpdatedDateFormatted;
+                document.getElementById("rates_" + carpark.carpark_id).textContent = "Rates (per half-hour) : " + carparkRate;
                 xValues.push(carpark.carpark_id);
                 yValues.push(totalLotsAvailable); ///////////////////////////////////////////////////////////////////////
                 i++;

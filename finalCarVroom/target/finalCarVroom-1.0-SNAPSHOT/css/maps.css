@@ -88,13 +88,11 @@ body {
     overflow: hidden;
     white-space: nowrap;
 }
-#bodyContent>p{
+#bodyContent>div>p{
 
     font-size:14px;
 }
-#bodyContent>button{
-    font-size:14px;
-}
+
 .btnIcon{
     margin-right: 10px;
 }
@@ -107,4 +105,7 @@ body {
 
 .chartFlex{
     flex:1
+}
+#hourlyRate{
+    white-space: pre-wrap;
 }

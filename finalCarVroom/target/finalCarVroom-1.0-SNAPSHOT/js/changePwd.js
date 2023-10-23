@@ -101,8 +101,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // Check for uppper case letters
-        if (value.toLowerCase() == value) {
+        // Check for uppper and lower case letters
+        if (value.toLowerCase() == value || value.toUpperCase() == value) {
             capsLetterBoolean = false;
         } else {
             capsLetterBoolean = true;

@@ -29,7 +29,7 @@
         <title>Carpark Near U - Profile</title> 
         <script src="js/jquery-3.7.1.min.js" type="text/javascript" ></script>
         <script src="js/jquery_cookie.js" type="text/javascript"></script>
-        
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- Custom fonts for this template-->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link
@@ -235,19 +235,19 @@
                                                             <li class="requirements leng">
                                                                 <i class="fas fa-check text-success me-2"></i>
                                                                 <i class="fas fa-times text-danger me-3"></i>
-                                                                Your password must have at least 8 character</li>
+                                                                Must contain at least 8 character</li>
                                                             <li class="requirements big-letter">
                                                                 <i class="fas fa-check text-success me-2"></i>
                                                                 <i class="fas fa-times text-danger me-3"></i>
-                                                                Your password must have at least 1 capital letter.</li>
+                                                                Must contain at least 1 upper and 1 lower letter.</li>
                                                             <li class="requirements num">
                                                                 <i class="fas fa-check text-success me-2"></i>
                                                                 <i class="fas fa-times text-danger me-3"></i>
-                                                                Your password must have at least 1 number.</li>
+                                                                Must contain at least 1 number.</li>
                                                             <li class="requirements special-char">
                                                                 <i class="fas fa-check text-success me-2"></i>
                                                                 <i class="fas fa-times text-danger me-3"></i>
-                                                                Your password must have at least 1 special character.</li>
+                                                                Must contain at least 1 special character.</li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -372,8 +372,8 @@
 
 
         <!-- Bootstrap JavaScript -->
-        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
 
         <!-- Custom scripts for all pages-->

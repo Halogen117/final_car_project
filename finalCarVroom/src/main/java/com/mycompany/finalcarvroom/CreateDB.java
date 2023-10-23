@@ -33,8 +33,8 @@ public class CreateDB {
             //db.createFavDb(connectDB);
             //db.createHistoryDb(connectDB);
             //db.createUserDb(connectDB);
-            table.createHistoryDb();
-            //table.createCarparkDb();
+            //table.createHistoryDb();
+            table.createCarparkDb();
             //table.createFavDb();
             //table.createUserDb();
             //table.createFeedbackDb();
@@ -55,7 +55,7 @@ public class CreateDB {
 
             ManipulateDB manip = new ManipulateDB();
 
-            manip.insertUserDb(createAcc);
+            //manip.insertUserDb(createAcc);
 
             //create array for ["name", "password", "phoneNum"] , and boolean array [false, false, false]
             //manip.updateProfileDetails(connectDB, "user3", "Russel", "name");
@@ -146,7 +146,7 @@ public class CreateDB {
             Connection connectDB = create.getConnection();
             Statement statement = connectDB.createStatement();
             
-            String sql="Create TABLE carpark_db (carpark_id TEXT,address TEXT,x_coord DOUBLE PRECISION,y_coord DOUBLE PRECISION,car_park_type TEXT,type_of_parking_system TEXT,short_term_parking TEXT,free_parking TEXT,night_parking TEXT,car_park_decks integer,gantry_height DOUBLE PRECISION,car_park_basement TEXT)";
+            String sql="Create TABLE carpark_db (carpark_id TEXT,address TEXT,x_coord DOUBLE PRECISION,y_coord DOUBLE PRECISION,car_park_type TEXT,type_of_parking_system TEXT,short_term_parking TEXT,free_parking TEXT,night_parking TEXT,car_park_decks integer,gantry_height DOUBLE PRECISION,car_park_basement TEXT,is_central BOOLEAN,outside_central_rate DOUBLE PRECISION,central_mon_to_fri_rate DOUBLE PRECISION,central_other_rate DOUBLE PRECISION)";
             statement.executeUpdate(sql);
             System.out.println("Table successfully created!");
         }catch(SQLException e){
