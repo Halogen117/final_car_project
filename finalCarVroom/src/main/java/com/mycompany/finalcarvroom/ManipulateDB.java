@@ -334,4 +334,19 @@ public class ManipulateDB {
             return false;
         }
     }
+    
+    public boolean deleteFavData(String userId){
+        String query = "DELETE from favourite_db where user_id = '"+userId+"'";
+        try {
+            Connection conn = create.getConnection();
+            Statement statement = conn.createStatement();
+            statement.executeUpdate(query);
+            return true;
+            
+        } catch (SQLException e) {
+            System.out.println("Favourite DB Deletion Failed!");
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

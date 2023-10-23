@@ -20,7 +20,7 @@ var length = document.querySelector(".leng"),
         number = document.querySelector(".num"),
         specialCheck = document.querySelector(".special-char"),
         capsLetter = document.querySelector(".big-letter"),
-        specialChars = "!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?`~",
+        specialChars = " !@#$%^&*()-_=+[{]}\\|;:'\",<.>/?`~",
         digits = "0123456789";
 // Check for validation when clicking on button
 function checkValidation() {

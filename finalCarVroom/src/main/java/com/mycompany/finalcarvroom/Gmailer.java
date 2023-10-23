@@ -47,7 +47,7 @@ public class Gmailer {
         NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
         service = new Gmail.Builder(httpTransport, jsonFactory, getCredentials(httpTransport, jsonFactory))
-                .setApplicationName("sc2006_test_email")
+                .setApplicationName("sc2006_car_vroom")
                 .build();
         System.out.println("Successful in loading mailer");
     }

@@ -33,6 +33,7 @@ protected void doGet(HttpServletRequest request,
                 if(mDb.checkEmailExist(cDb.getConnection(), profile_acq[2])){
                     System.out.println("Email found! Deleting account!");
                     boolean deletion = mDb.deleteUserData(profile_acq[2]);
+                    boolean deletion_fav_tab = mDb.deleteFavData(profile_acq[0]);
                     System.out.println(profile_acq[2]);
                     if(mDb.checkEmailExist(cDb.getConnection(), profile_acq[2]) == false && deletion == true){
                         System.out.println("Successful Deletion of User Account!");

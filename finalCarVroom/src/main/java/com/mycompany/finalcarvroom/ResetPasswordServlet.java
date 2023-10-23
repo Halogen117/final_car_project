@@ -29,7 +29,7 @@ public class ResetPasswordServlet extends HttpServlet {
     String[] return_decode = auth.return_encoded_link(user_session.getAttribute("authenticator").toString());
     String norm_pass = request.getParameter("retypePass");
     String repeat_pass = request.getParameter("passAgain");
-    String password_pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+    String password_pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#&()–[{}]:;',?/*~$^+=<>_ \\\"\\\\]).{8,}$";
     if(!norm_pass.equals(repeat_pass)){
         user_session.setAttribute("verify_reset", "not_same_password");
         System.out.println("Different Password!");

@@ -45,7 +45,7 @@ public class RegisterServlet extends HttpServlet {
                 String repeat_pass = request.getParameter("repeatPassword");
                 // Regex
                 String name_pattern = "^[a-zA-Z0-9]{1,}$";
-                String password_pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+                String password_pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#&()–[{}]:;',?/*~$^+=<>_ \\\"\\\\]).{8,}$";
                 String phone_pattern = "^(\\d{4} ?\\d{4})$";
                 if(!request.getParameter("firstName").matches(name_pattern)){
                     user_session.setAttribute("work", "first_name_blank");

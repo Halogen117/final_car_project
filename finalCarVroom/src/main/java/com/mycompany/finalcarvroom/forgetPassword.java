@@ -43,7 +43,7 @@ public class forgetPassword extends HttpServlet {
                                     Ignore this email if you need not reset your password!
                                     \n
                                     Best Regards, 
-                                    Car Park Near U""",auth.forget_password(email_retr), auth.encoder_link(email_retr));
+                                    Car Park Near U""",mdb.getUserDetails(mdb.getNameIdDB(email_retr)[0])[2], auth.encoder_link(email_retr));
                 
                 new Gmailer().sendMail("Change your password", email_message,email_retr);
                 user_session.setAttribute("verify_email", "success");

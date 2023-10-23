@@ -246,7 +246,7 @@ function initCarparks(lat, lng) {
             yValues = [];
             if (filteredData.length !== 0) {
 
-
+                
                 refreshBtn.disabled = false;
                 for (const carpark of filteredData) {
                     let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
@@ -581,9 +581,9 @@ async function initMarker(carpark, map) {
 
 
     //add a click listener when user clicks on marker and display the info window
-    marker.addListener("click", async function () {
+    marker.addListener("click", function () {
 
-        let currentPos = await getCurrentPosition();
+
         //Creating content html for the infowindow which is when user clicks on the marker, a info window will popup
         let lotsAvailable = getTotalCarparkAvailable(carpark.carpark_id);
         let lastUpdatedDateTime = getCarparkLastUpdatedTime(carpark.carpark_id);
@@ -597,20 +597,18 @@ async function initMarker(carpark, map) {
         content.innerHTML = `
                 <div id="content">
                     <div id="firstHeading" class="address h4 font-weight-bold">${carpark.address}</div>
-                        <div id="bodyContent">
-                            <p>Free Parking : ${carpark.free_parking}</p>
-                            <p>Lots Available : ${lotsAvailable}</p>
-                            <p>Night Parking : ${carpark.night_parking}</p>
-                            <p>Type of Parking System : ${carpark.type_of_parking_system}</p>
-                            <p>Short-term Parking : ${carpark.short_term_parking}</p>
-                            <p>Car Park Type : ${carpark.car_park_type}</p>
-                            <p>Car park decks	 : ${carpark.car_park_decks}</p>
-                            <p>Gantry Height(m) : ${carpark.gantry_height}</p>
-                            <button class="btn-success btn" onclick='window.open("https://www.google.com/maps/dir/?api=1&origin=${currentPos.coords.latitude},${currentPos.coords.longitude}&destination=${resultLatLon.lat},${resultLatLon.lon}&travelmode=driving");return false;'>Get Directions</button>
+                    <div id="bodyContent">
+                        <div>Free Parking : ${carpark.free_parking}</div>
+                        <div>Lots Available : ${lotsAvailable}</div>
+                        <div>Night Parking : ${carpark.night_parking}</div>
+                        <div>Type of Parking System : ${carpark.type_of_parking_system}</div>
+                        <div>Short-term Parking : ${carpark.short_term_parking}</div>
+                        <div>Car Park Type : ${carpark.car_park_type}</div>
+                        <div>Car park decks	 : ${carpark.car_park_decks}</div>
+                        <div>Gantry Height(m) : ${carpark.gantry_height}</div>
 
-                        </div>
                     </div>
-                 </div>
+                </div>
                 `;
         infoWindow.close();
         infoWindow.setContent(content);

@@ -85,12 +85,8 @@ body {
 .carparkDetail{
     font-size:18px;
 }
-#bodyContent>p{
-
-    font-size:14px;
-}
-#bodyContent>button{
-    
+#bodyContent>div{
+    margin-top: 10px;
 
     font-size:14px;
 }

@@ -333,7 +333,7 @@
                                                 <div class="col-lg-4">
                                                     <div class="form-group focused">
 
-                                                        <input type="submit" value="Delete Account" class="btn btn-primary btn-user btn-block" data-toggle="modal" data-target="#deleteModal">
+                                                        <input type="submit" value="Delete Account" class="btn btn-danger btn-user btn-block" data-toggle="modal" data-target="#deleteModal">
 
                                                     </div>
                                                 </div>
@@ -341,19 +341,6 @@
                                         </div>
                                         <hr class="my-4">
                                         <!-- Description -->
-
-                                        <div class="text-center"> <!-- Center-align the content -->
-                                            <h6 class="heading-small text-muted mb-4">Submit your Feedback here!</h6>
-                                            <div class="pl-lg-4">
-                                                <div class="d-flex justify-content-center align-items-center"> <!-- Center-align the button -->
-
-                                                    <!-- Button trigger modal -->
-                                                    <button type="button" class="btn btn-primary" data-toggle= "modal" data-target="#feedbackModal">
-                                                        Feedback Form
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -444,7 +431,7 @@
                         <form action="DeleteProfileServlet">
 
                             <!-- <button id="deleteBtn" class="btn btn-primary">Delete Account</button>-->
-                            <input type="submit" value="Delete Account" class="btn btn-primary btn-user btn-block">
+                            <input type="submit" value="Delete Account" class="btn btn-danger btn-user btn-block">
                         </form>
                     </div>
                 </div>
@@ -471,36 +458,6 @@
             </div>
         </div>
 
-
-        <!-- Feedback Modal -->
-        <form action="FeedbackServlet">
-            <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-
-                            <h5 class="modal-title" id="exampleModalLabel">Feedback Form</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">X</span>
-                            </button>
-                        </div>
-                        <div class="modal-body mx-auto">
-
-                            Please write your feedback here
-                            <input type="text" id="input-feedback" class="form-control form-control-alternative mt-2" placeholder="" value="" style="width: 100%;">
-                        </div>
-
-                        <div class="modal-footer">
-
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                            <input type="Submit" class="btn btn-primary" data-dismiss="modal" data-target="#thankyouModal" value="Submit">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-
         <!-- Thank You Modal -->
         <div class="modal fade" id="thankyouModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -525,8 +482,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.5.0/js/bootstrap.bundle.min.js"></script>
 
         <!-- Core plugin JavaScript-->
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
         <!-- Custom scripts for all pages-->
         <script src="js/sb-admin-2.min.js"></script>
 
