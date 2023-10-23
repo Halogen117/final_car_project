@@ -29,7 +29,7 @@
         <title>Carpark Near U - Profile</title> 
         <script src="js/jquery-3.7.1.min.js" type="text/javascript" ></script>
         <script src="js/jquery_cookie.js" type="text/javascript"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        
         <!-- Custom fonts for this template-->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link
@@ -369,10 +369,11 @@
         </div>
 
 
-        
+
 
         <!-- Bootstrap JavaScript -->
-
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 
         <!-- Custom scripts for all pages-->
