@@ -26,6 +26,7 @@ protected void doGet(HttpServletRequest request,
                 HttpSession user_session = request.getSession();
                 ManipulateDB mDb = new ManipulateDB();
                 ConnectDB cDb = new ConnectDB();
+                HistoryDAO hisdao = new HistoryDAO();
                 
                 // Search for Profile
                 String[] profile_acq = mDb.getUserDetails((String)user_session.getAttribute("userId"));
@@ -34,8 +35,8 @@ protected void doGet(HttpServletRequest request,
                     System.out.println("Email found! Deleting account!");
                     boolean deletion = mDb.deleteUserData(profile_acq[2]);
                     boolean deletion_fav_tab = mDb.deleteFavData(profile_acq[0]);
-                    System.out.println(profile_acq[2]);
-                    if(mDb.checkEmailExist(cDb.getConnection(), profile_acq[2]) == false && deletion == true){
+                    boolean deletion_history = hisdao.deleteAllHistory(profile_acq[0]);
+                    if(mDb.checkEmailExist(cDb.getConnection(), profile_acq[2]) == false && deletion_history == true && deletion_fav_tab == true && deletion == true){
                         System.out.println("Successful Deletion of User Account!");
                         user_session.setAttribute("work", "delete_success");
                         response.sendRedirect("login.jsp");

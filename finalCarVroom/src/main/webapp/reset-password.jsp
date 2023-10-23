@@ -219,7 +219,7 @@
 
             <!-- Copyright -->
             <div class="text-center p-3">
-                Â© 2023 Carpark Near U. All rights reserved.
+                © 2023 Carpark Near U. All rights reserved.
             </div>
             <!-- Copyright -->
         </footer>
