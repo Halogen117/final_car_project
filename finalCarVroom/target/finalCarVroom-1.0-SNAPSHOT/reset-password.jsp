@@ -77,7 +77,7 @@
                                             <h1 class="h4 text-gray-900 mb-2">Reset your password!</h1>
                                             <p class="mb-4">Reset your password below</p>
                                         </div>
-                                        <form class="user" action="ResetPasswordServlet" method="Get">
+                                        <form class="user" action="ResetPasswordServlet" method="Get" onsubmit="return checkValidation()">
                                             <div class="form-group">
                                                 <input type="password" class="form-control form-control-user"
                                                        name="retypePass" aria-describedby="emailHelp" id="retypePass"
