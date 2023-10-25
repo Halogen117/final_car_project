@@ -31,7 +31,7 @@ function checkValidation() {
     {
         console.log("Fail!");
         window.scrollTo({top: 0, behavior: 'auto'});
-        document.getElementById("inputPassword").focus();
+        inputPwd.focus();
         return false;
     }
 
