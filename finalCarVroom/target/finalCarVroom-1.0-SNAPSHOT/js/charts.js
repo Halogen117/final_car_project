@@ -23,9 +23,15 @@ function fetchCarparkAvailabilityData(datetime, carparkID) {
                 if (JSON.parse(xhr.response).items.length !== 0) {
                     let carparkAvailabilityJson = JSON.parse(xhr.response).items[0].carpark_data;
                     let carparkJson = carparkAvailabilityJson.find(item => item.carpark_number === carparkID);
+                    console.log(carparkJson)
                     resolve(carparkJson);
                 } else {
-                    resolve();
+                    let carparkJson={carpark_info:[{
+                                lot_type:"C",
+                                lots_available:"0",
+                                total_lots:"0",
+                    }],carpark_number:carparkID,update_datetime:moment()};
+                    resolve(carparkJson);
                 }
 
 

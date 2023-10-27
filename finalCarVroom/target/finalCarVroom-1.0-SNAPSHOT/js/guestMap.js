@@ -44,7 +44,24 @@ let getCurrentPosition = function (options) {
     });
 }
 
+function getCarparkRates(carpark) {
+    let carparkRate;
+    if (carpark.is_central) {
+        let curDate = moment();
+        let dayOfWeek = curDate.weekday();
 
+        if (dayOfWeek !== 0 && (curDate.isAfter(moment('07:00', 'HH:mm')) && curDate.isBefore(moment('17:00', 'HH:mm')))) {
+            carparkRate = "$1.20";
+        } else {
+            carparkRate = "$0.60";
+        }
+
+
+    } else {
+        carparkRate = "$0.60 per half-hour";
+    }
+    return carparkRate;
+}
 
 //Initialise the map
 async function initMap() {
@@ -69,6 +86,7 @@ async function initMap() {
         await findMyLocation();
     } else {
         getCarpark(redirectCarparkID).then((value) => {
+            let carparkRate;
             clearCarparkCards();
             clearOverlays();
             var markerId = 0;
@@ -78,7 +96,8 @@ async function initMap() {
             let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
             let lastDate = moment(getCarparkLastUpdatedTime(carpark.carpark_id)).format('ddd, HH:mm:ss');
             initMarker(carpark, map);
-            createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastDate);
+            carparkRate=getCarparkRates(carpark);
+            createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastDate,carparkRate);
             map.setZoom(18);
             map.panTo({lat: resultLatLon.lat, lng: resultLatLon.lon});
 
@@ -207,6 +226,7 @@ function initCarparks(lat, lng) {
             if (filteredData.length !== 0) {
                 refreshBtn.disabled = false;
                 for (const carpark of filteredData) {
+                    let carparkRate;
                     let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
                     let lastUpdatedDate = getCarparkLastUpdatedTime(carpark.carpark_id);
                     let lastUpdatedDateFormatted;
@@ -215,9 +235,9 @@ function initCarparks(lat, lng) {
                     } else {
                         lastUpdatedDateFormatted = moment(lastUpdatedDate).format('ddd, HH:mm:ss');
                     }
-
+                    carparkRate=getCarparkRates(carpark);
                     initMarker(carpark, map);
-                    createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted);
+                    createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted,carparkRate);
                     markerId++;
                 }
                 //MarkerID also acts a counter for number of carparks
@@ -513,7 +533,7 @@ function clearCarparkCards() {
 
 //Create the carparkcards html and buttons
 //Call this multiple times for multiple carparks
-function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime) {
+function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime, carparkRate) {
     let lastUpdatedDatetime = _lastUpdatedDatetime;
     if (lastUpdatedDatetime === -1) {
         lastUpdatedDatetime = "No data";
@@ -531,8 +551,9 @@ function createCarparkCards(id, carpark, _lotsAvailable, _lastUpdatedDatetime) {
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div class="text-s font-weight-bold text-primary text-uppercase mb-1">${carpark.address}</div>
-                                                <div id="lots_${carpark.carpark_id}" class="h5 mb-0 font-weight-bold text-gray-800">Lots Available: ${lotsAvailable} </div>
-                                                <div id="lastUpdated_${carpark.carpark_id}" class="h5 mb-0 font-weight-bold text-gray-800">Last Updated: ${lastUpdatedDatetime} </div>
+                                                <div id="lots_${carpark.carpark_id}" class="h6 mb-0 font-weight-bold text-gray-800">Lots Available: ${lotsAvailable} </div>
+                                                <div id="lastUpdated_${carpark.carpark_id}" class="h6 mb-0 font-weight-bold text-gray-800">Last Updated: ${lastUpdatedDatetime} </div>
+                                                <div id="rates_${carpark.carpark_id}" class="h6 mb-0 font-weight-bold text-gray-800">Rates (per half-hour) : ${carparkRate} </div>
                                             </div>
                                             <div class="btn-group">
                                                 <button id="btn_${carpark.carpark_id}" class="btn btn-success">Go</button>
