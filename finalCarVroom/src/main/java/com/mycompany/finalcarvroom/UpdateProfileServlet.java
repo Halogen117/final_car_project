@@ -46,18 +46,26 @@ public class UpdateProfileServlet extends HttpServlet {
             user_session.setAttribute("update_prof", "email_incorr");
             response.sendRedirect("ProfileServlet?updateProfile=Manage+Profile");
             return;
-        }else if(mDb.checkEmailExist(cDb.getConnection(), updateAcc[1])){
+        /*}
+        else if(mDb.checkEmailExist(cDb.getConnection(), updateAcc[1])){
             System.out.println("Email is found in the database! Please retype!");
             user_session.setAttribute("update_prof", "email_repeat");
             response.sendRedirect("ProfileServlet?updateProfile=Manage+Profile");
             return; 
-        
+        */
         }else if(!updateAcc[2].matches(phone_pattern)){
             user_session.setAttribute("update_prof", "phone_no");
             System.out.println("Phone Number format not correct");
             response.sendRedirect("ProfileServlet?updateProfile=Manage+Profile");
             return;   
-        }else{
+        }/*else if(mDb.checkContactExist(cDb.getConnection(), updateAcc[2])){
+            System.out.println("Phone Number is found in the database! Please retype!");
+            user_session.setAttribute("update_prof", "phone_no_repeat");
+            response.sendRedirect("ProfileServlet?updateProfile=Manage+Profile");
+            return;
+        }*/
+        int checkData = mDb.updateCheck(cDb.getConnection(),userId,updateAcc[0],updateAcc[1],updateAcc[2]);
+        if(checkData == 1){
             mDb.updateProfileDetails(userId, updateAcc[0], "name");
             mDb.updateProfileDetails(userId, updateAcc[1], "email");
             mDb.updateProfileDetails(userId, updateAcc[2], "phonenum");
@@ -65,9 +73,31 @@ public class UpdateProfileServlet extends HttpServlet {
             user_session.setAttribute("username", updateAcc[0]);
             user_session.setAttribute("update_prof", "success");
             response.sendRedirect("ProfileServlet");
+            return;
         }
-
-
-
+        else if(checkData == -1)
+        {
+            System.out.println("Email is found in the database! Please retype!");
+            user_session.setAttribute("update_prof", "email_repeat");
+            response.sendRedirect("ProfileServlet?updateProfile=Manage+Profile");
+            return; 
+        }
+        else if(checkData==-2){
+            System.out.println("Phone Number is found in the database! Please retype!");
+            user_session.setAttribute("update_prof", "phone_no_repeat");
+            response.sendRedirect("ProfileServlet?updateProfile=Manage+Profile");
+            return;
+        }
+        else if(checkData==-3){
+            System.out.println("Email and Phone Number is found in the database! Please retype!");
+            user_session.setAttribute("update_prof", "email_phone_no_repeat");
+            response.sendRedirect("ProfileServlet?updateProfile=Manage+Profile");
+            return;
+        }
+        else{
+            System.out.println("System Error!");
+            user_session.setAttribute("update_prof", "sysErr");
+            response.sendRedirect("ProfileServlet?updateProfile=Manage+Profile");
+        }
     }
 }

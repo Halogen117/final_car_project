@@ -25,13 +25,15 @@ public class ProfileServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Java code to process the request
+        HttpSession user_session = request.getSession();
         if (request.getParameter("updatePassword") != null) {
             response.sendRedirect("securityQn.jsp");
-        } else {
+        } else if(user_session.getAttribute("work") == "delete_success"){  
+            response.sendRedirect("login.jsp");
+        }else{
             
             ManipulateDB mDb = new ManipulateDB();
 
-            HttpSession user_session = request.getSession();
             String currentUserId = (String) user_session.getAttribute("userId");
             String[] userDetails = mDb.getUserDetails(currentUserId);  //user must change to user ID (Global variable)
 

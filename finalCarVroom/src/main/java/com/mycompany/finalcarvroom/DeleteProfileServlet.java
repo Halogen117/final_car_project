@@ -36,7 +36,13 @@ protected void doGet(HttpServletRequest request,
                     boolean deletion = mDb.deleteUserData(profile_acq[2]);
                     boolean deletion_fav_tab = mDb.deleteFavData(profile_acq[0]);
                     boolean deletion_history = hisdao.deleteAllHistory(profile_acq[0]);
-                    if(mDb.checkEmailExist(cDb.getConnection(), profile_acq[2]) == false && deletion_history == true && deletion_fav_tab == true && deletion == true){
+                    //boolean deletion = true;
+                    //boolean deletion_fav_tab = true;
+                    //boolean deletion_history = true;
+                    //System.out.println(deletion);
+                    //System.out.println(deletion_fav_tab);
+                    //System.out.println(deletion_history);
+                    if(mDb.checkEmailExist(cDb.getConnection(), profile_acq[2]) == false && deletion_fav_tab == true && deletion == true){
                         System.out.println("Successful Deletion of User Account!");
                         user_session.setAttribute("work", "delete_success");
                         response.sendRedirect("login.jsp");

@@ -205,41 +205,6 @@
                                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                                         <h4 class="text-right">Profile Settings</h4>
                                                     </div>
-                                                    <div class="row mt-2">
-                                                        <div class="col-md-6">
-                                                            <label class="labels">First Name</label>
-                                                            <input type="text" class="form-control" placeholder="First Name" 
-                                                                   value='${CurrentUserData.first_name}' id="updateFirstName"
-                                                                   name="updateFirstName" required>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label class="labels">Last Name</label>
-                                                            <input type="text" class="form-control" 
-                                                                   value='${CurrentUserData.last_name}' placeholder="Last Name" 
-                                                                   id="updateLastName" name="updateLastName" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mt-3">
-                                                        <div class="col-md-12 mb-3">
-                                                            <label class="labels">Username</label>
-                                                            <input type="text" class="form-control" placeholder="Update Username"
-                                                                   name="updateUsername" id="updateUsername" disabled>
-                                                        </div>
-                                                        <div class="col-md-12 mb-3">
-                                                            <label class="labels">Email</label>
-                                                            <input type="email" class="form-control" placeholder="Update Email" 
-                                                                   value='${CurrentUserData.email}' name="updateEmail" id="updateEmail" required>
-                                                        </div>
-                                                        <div class="col-md-12 mb-3">
-                                                            <label class="labels">Mobile Number</label>
-                                                            <input type="text" class="form-control" placeholder="Update Mobile No." 
-                                                                   value='${CurrentUserData.phoneNum}' name="updatePhoneNum" id="updatePhoneNum" required>
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="row mt-3">
-
-                                                    </div>
                                                     <%
                                                         HttpSession user_session = request.getSession();
 
@@ -291,8 +256,93 @@
                                                         </div>
                                                     </div>
                                                     <%
+                                                    } else if (session.getAttribute("update_prof") == "phone_no_repeat") {
+                                                        user_session.setAttribute("update_prof", "");
+                                                    %>    
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                            </svg>
+                                                            <div>
+                                                                Phone Number already exist! <br>
+                                                                Please try using another one!
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <%
+                                                    } else if (session.getAttribute("update_prof") == "email_phone_no_repeat") {
+                                                        user_session.setAttribute("update_prof", "");
+                                                    %>    
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                            </svg>
+                                                            <div>
+                                                                Email and Phone Number already exist! <br>
+                                                                Please try using another one!
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <%
+                                                    } else if (session.getAttribute("update_prof") == "sysErr") {
+                                                        user_session.setAttribute("update_prof", "");
+                                                    %>    
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        <div class="alert alert-danger d-flex align-items-center" role="alert" style="border-radius: 20px;">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16" style="margin-right: 10px;" >
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                            </svg>
+                                                            <div>
+                                                                System Error! <br>
+                                                                Please try again!
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <%
                                                         }
                                                     %>
+                                                    <div class="row mt-2">
+                                                        <div class="col-md-6">
+                                                            <label class="labels">First Name</label>
+                                                            <input type="text" class="form-control" placeholder="First Name" 
+                                                                   value='${CurrentUserData.first_name}' id="updateFirstName"
+                                                                   name="updateFirstName" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="labels">Last Name</label>
+                                                            <input type="text" class="form-control" 
+                                                                   value='${CurrentUserData.last_name}' placeholder="Last Name" 
+                                                                   id="updateLastName" name="updateLastName" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-3">
+                                                        <div class="col-md-12 mb-3">
+                                                            <label class="labels">Username</label>
+                                                            <input type="text" class="form-control" placeholder="Update Username"
+                                                                   name="updateUsername" id="updateUsername" disabled>
+                                                        </div>
+                                                        <div class="col-md-12 mb-3">
+                                                            <label class="labels">Email</label>
+                                                            <input type="email" class="form-control" placeholder="Update Email" 
+                                                                   value='${CurrentUserData.email}' name="updateEmail" id="updateEmail" required>
+                                                        </div>
+                                                        <div class="col-md-12 mb-3">
+                                                            <label class="labels">Mobile Number</label>
+                                                            <input type="text" class="form-control" placeholder="Update Mobile No." 
+                                                                   value='${CurrentUserData.phoneNum}' name="updatePhoneNum" id="updatePhoneNum" required>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row mt-3">
+
+                                                    </div>
+                                                    
                                                     <div class="mt-5 text-center">
                                                         <!--<a class="btn btn-primary btn-sm" href="profile.jsp">Save Profile</a>-->
                                                         <input type="submit" value="Update Profile" class="btn btn-primary">

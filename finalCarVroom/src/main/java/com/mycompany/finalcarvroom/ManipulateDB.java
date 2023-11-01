@@ -242,6 +242,63 @@ public class ManipulateDB {
         return true;
     }
 
+        // UpdateProfile - FOR Email and phone number validation
+    public int updateCheck(Connection connectDB, String userID, String nameUpdate,
+            String emailUpdate, String phoneUpdate) {
+
+        try {
+            Statement statement = connectDB.createStatement();
+            /////////////////// check if email and phone number already exist /////////////////////////
+            String[] userData = getUserDetails(userID);
+            
+            if(userData[2].equals(emailUpdate)&&userData[4].equals(phoneUpdate))
+            {
+                return 1;
+            }
+            else if(!userData[2].equals(emailUpdate)&&userData[4].equals(phoneUpdate)){
+                boolean checkEmail = checkEmailExist(connectDB, emailUpdate);
+                if(checkEmail){
+                    return -1;
+                }
+                else{
+                    return 1;
+                }
+            }
+            else if(userData[2].equals(emailUpdate)&&!userData[4].equals(phoneUpdate)){
+                boolean checkPhoneNum = checkContactExist(connectDB, phoneUpdate);
+                if(checkPhoneNum){
+                    return -2;
+                }
+                else{
+                    return 1;
+                }
+            }
+            else if(!userData[2].equals(emailUpdate)&&!userData[4].equals(phoneUpdate)){
+                boolean checkEmail = checkEmailExist(connectDB, emailUpdate);
+                boolean checkPhoneNum = checkContactExist(connectDB, phoneUpdate);
+                if(checkEmail){
+                    return -1;
+                }
+                else if(checkPhoneNum){
+                    return -2;
+                }
+                else if(checkEmail&&checkPhoneNum){
+                    return -3;
+                }
+                else{
+                    return 1;
+                }
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Error Validating Email!");
+            e.printStackTrace();
+
+        }
+        return 0;
+    }
+
+    
     //CreateAccount
     public int insertUserDb(String[] createAcc) {
         try {

@@ -10,6 +10,20 @@ package com.mycompany.finalcarvroom;
  */
 public class User {
 
+    private String user_id;
+    private String name;
+    private String email;
+    private String password;
+    private String phonenum;
+    private String sec1;
+    private String sec2;
+    private String sec3;
+    private String ans1;
+    private String ans2;
+    private String ans3;
+    private String first_name;
+    private String last_name;
+
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
@@ -21,7 +35,9 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
+    public User(){
+        
+    }
     public User(String user_id, String name, String email, String password, String phonenum, String sec1, String sec2, String sec3, String ans1, String ans2, String ans3) {
         this.user_id = user_id;
         this.name = name;
@@ -36,11 +52,27 @@ public class User {
         this.ans3 = ans3;
     }
 
+    public void setFirst_name(String username) {
+        this.first_name = username.substring(0, username.lastIndexOf(" "));
+    }
+
+    public void setLast_name(String username) {
+        this.last_name = username.substring(username.lastIndexOf(" ") + 1);
+    }
+
+    public String getFirst_name() {
+        return this.first_name;
+    }
+
+    public String getLast_name() {
+        return this.last_name;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public void setPhonenum(String phonenum) {
+    public void setPhoneNum(String phonenum) {
         this.phonenum = phonenum;
     }
 
@@ -67,17 +99,6 @@ public class User {
     public void setAns3(String ans3) {
         this.ans3 = ans3;
     }
-    private String user_id;
-    private String name;
-    private String email;
-    private String password;
-    private String phonenum;
-    private String sec1;
-    private String sec2;
-    private String sec3;
-    private String ans1;
-    private String ans2;
-    private String ans3;
 
     public String getUser_id() {
         return user_id;
@@ -95,7 +116,7 @@ public class User {
         return password;
     }
 
-    public String getPhonenum() {
+    public String getPhoneNum() {
         return phonenum;
     }
 
