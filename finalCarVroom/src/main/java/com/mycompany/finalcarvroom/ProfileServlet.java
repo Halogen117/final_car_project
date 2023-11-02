@@ -38,7 +38,7 @@ public class ProfileServlet extends HttpServlet {
             String[] userDetails = mDb.getUserDetails(currentUserId);  //user must change to user ID (Global variable)
 
             // Retrieve current user session
-            UserData currUserData = new UserData();
+            User currUserData = new User();
             currUserData.setFirst_name(userDetails[1]);
             currUserData.setLast_name(userDetails[1]);
             currUserData.setEmail(userDetails[2]);
