@@ -47,12 +47,19 @@ public class RegisterServlet extends HttpServlet {
                 String name_pattern = "^[a-zA-Z0-9]{1,}$";
                 String password_pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#&()–[{}]:;',?/*~$^+=<>_ \\\"\\\\]).{8,}$";
                 String phone_pattern = "^(\\d{4} ?\\d{4})$";
+                String email_regex = "^[A-Za-z0-9+_.-]+@[^@]+\\.com$";
                 if(!request.getParameter("firstName").matches(name_pattern)){
                     user_session.setAttribute("work", "first_name_blank");
                     System.out.println("First Name should not be blank!");
                     response.sendRedirect("register.jsp");
                     return;
                     
+                }else if(!request.getParameter("inputEmail").matches(email_regex)){
+                    System.out.println("Email does not match pattern! Please retype!");
+                    user_session.setAttribute("work", "email_incorr_reg");
+                    response.sendRedirect("register.jsp");
+                    return;
+                
                 }else if(!request.getParameter("lastName").matches(name_pattern)){
                     user_session.setAttribute("work", "last_name_blank");
                     System.out.println("Last Name should not be blank!");

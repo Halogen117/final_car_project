@@ -76,6 +76,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <%
                                         } else if (session.getAttribute("work") == "login_failed") {
                                             user_session.setAttribute("work", "");

@@ -9,11 +9,9 @@
 <%
     if (session == null || session.getAttribute("username") == null) {
         response.sendRedirect("login.jsp");
-    }
-    //if(session.getAttribute("security_qn")!= "pass"){
-    //  response.sendRedirect("securityQn.jsp");
-    //}
-
+    } else if (session.getAttribute("security_qn") != "pass") {
+        response.sendRedirect("securityQn.jsp");
+    } 
 %>
 
 <!DOCTYPE html>
@@ -380,7 +378,7 @@
         <script src="js/sb-admin-2.min.js"></script>
 
         <script src="<%= request.getContextPath()%>/js/changePwd.js"></script>
-
+        
     </body>
 
 </html>

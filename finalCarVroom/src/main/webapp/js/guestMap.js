@@ -134,53 +134,85 @@ async function initMap() {
 //@ts-ignore
 
 
-    // Create the input HTML element, and add it to the map as a custom control.
-    const input = document.createElement("input");
-
-    input.id = "pac-input";
-    input.placeholder = "Search for a place...";
-    //@ts-ignore
-    const pac = new google.maps.places.PlaceAutocompleteElement({
-        inputElement: input,
-        componentRestrictions: {country: ['sg']},
-    });
+    //Get the input element
+    const input = document.getElementById("pac-input");
+    
+    //get the card element for the automcomplete search box
     const card = document.getElementById("pac-card");
 
 
-    card.appendChild(pac.element);
+
+
+
+
+    const options = {
+
+        componentRestrictions: {country: "sg"},
+        
+    };
+    const autocomplete = new google.maps.places.Autocomplete(input, options);
+    autocomplete.bindTo("bounds", map);
+    autocomplete.addListener("place_changed", () => {
+        infoWindow.close();
+        //marker.setVisible(false);
+
+        const place = autocomplete.getPlace();
+
+        if (!place.geometry || !place.geometry.location) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            createErrorAlert(`${place.name} is an invalid place!`,4000);
+            
+            return;
+        } else {
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            initCarparks(lat, lng);
+        }
+
+
+
+
+
+
+    });
+    
+
+
+    //card.appendChild(pac.element);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(card);
 
 
 
     // Add the gmp-placeselect listener, and display the results on the map.
     // This method happens after a user have clicked on a place on the search result list
-    pac.addListener("gmp-placeselect", async ({ place }) => {
-        await place.fetchFields({
-            fields: ["displayName", "formattedAddress", "location"],
-        });
-        let placeJson = place.toJSON();
-        let lat = placeJson.location.lat;
-        let lng = placeJson.location.lng;
-        initCarparks(lat, lng);
-        let content =
-                '<div id="infowindow-content">' +
-                '<span id="place-displayname" class="title">' +
-                place.displayName +
-                "</span><br />" +
-                '<span id="place-address">' +
-                place.formattedAddress +
-                "</span>" +
-                "</div>";
-        infoWindow.close();
-        infoWindow.setContent(content);
-        infoWindow.setPosition({lat: lat, lng: lng});
-        infoWindow.open({
-            map,
-            anchor: draggableMarker,
-            shouldFocus: false,
-        });
-
-    });
+//    pac.addListener("gmp-placeselect", async ({ place }) => {
+//        await place.fetchFields({
+//            fields: ["displayName", "formattedAddress", "location"],
+//        });
+//        let placeJson = place.toJSON();
+//        let lat = placeJson.location.lat;
+//        let lng = placeJson.location.lng;
+//        initCarparks(lat, lng);
+//        let content =
+//                '<div id="infowindow-content">' +
+//                '<span id="place-displayname" class="title">' +
+//                place.displayName +
+//                "</span><br />" +
+//                '<span id="place-address">' +
+//                place.formattedAddress +
+//                "</span>" +
+//                "</div>";
+//        infoWindow.close();
+//        infoWindow.setContent(content);
+//        infoWindow.setPosition({lat: lat, lng: lng});
+//        infoWindow.open({
+//            map,
+//            anchor: draggableMarker,
+//            shouldFocus: false,
+//        });
+//
+//    });
 
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
 
