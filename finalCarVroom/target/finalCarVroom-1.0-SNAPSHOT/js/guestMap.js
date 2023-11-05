@@ -25,13 +25,30 @@ let redirectCarparkID;
 
 //Function for when user clicks on Get Nearby carparks
 async function findMyLocation() {
-    getCurrentPosition().then(function (position) {
-        let lat = position.coords.latitude;
-        let lng = position.coords.longitude;
+    navigator.permissions.query({name: 'geolocation'}).then((permissionStatus) => {
 
-        initCarparks(lat, lng);
-
-
+        if (permissionStatus.state === "granted") {
+            getCurrentPosition().then(function (position) {
+                let lat = position.coords.latitude;
+                let lng = position.coords.longitude;
+                initCarparks(lat, lng);
+            });
+        } else if (permissionStatus.state === "prompt") {
+            createErrorAlert('Please enable location!', 4000);
+        } else if (permissionStatus.state === "denied") {
+            createErrorAlert('Please enable location!', 4000);
+        }
+        permissionStatus.addEventListener("change", () => {
+            if (permissionStatus.state === "granted") {
+                getCurrentPosition().then(function (position) {
+                    let lat = position.coords.latitude;
+                    let lng = position.coords.longitude;
+                    initCarparks(lat, lng);
+                });
+            } else {
+                createErrorAlert('Please enable location!', 4000);
+            }
+        });
     });
 
 
