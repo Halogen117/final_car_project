@@ -136,7 +136,7 @@ async function initMap() {
 
     //Get the input element
     const input = document.getElementById("pac-input");
-    
+
     //get the card element for the automcomplete search box
     const card = document.getElementById("pac-card");
 
@@ -148,7 +148,7 @@ async function initMap() {
     const options = {
 
         componentRestrictions: {country: "sg"},
-        
+
     };
     const autocomplete = new google.maps.places.Autocomplete(input, options);
     autocomplete.bindTo("bounds", map);
@@ -161,8 +161,8 @@ async function initMap() {
         if (!place.geometry || !place.geometry.location) {
             // User entered the name of a Place that was not suggested and
             // pressed the Enter key, or the Place Details request failed.
-            createErrorAlert(`${place.name} is an invalid place!`,4000);
-            
+            createErrorAlert(`${place.name} is an invalid place!`, 4000);
+
             return;
         } else {
             const lat = place.geometry.location.lat();
@@ -176,7 +176,7 @@ async function initMap() {
 
 
     });
-    
+
 
 
     //card.appendChild(pac.element);
@@ -234,66 +234,95 @@ function initCarparks(lat, lng) {
     draggableMarker.position = {lat: lat, lng: lng};
     clearOverlays();
     clearCarparkCards();
-    fetchCarparkAvailabilityData().then(function () {
+    var geocoder = new google.maps.Geocoder(),
+            latlng = new google.maps.LatLng(lat, lng);
+    geocoder.geocode({'latLng': latlng}, function (results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+            if (results[0]) {
+                for (var i = 0; i < results[0].address_components.length; i++) {
+                    if (results[0].address_components[i].types[0] === "country") {
+                        //If location specified is not within Singapore
+                        if (results[0].address_components[i].long_name !== "Singapore") {
+                            createErrorAlert("Please choose a location within Singapore", 5000);
+                            infoWindowContentString = `No carparks nearby`;
+                            infoWindow.close();
+                            infoWindow.setContent(infoWindowContentString);
+                            infoWindow.open(draggableMarker.map, draggableMarker);
+                            let carparkCardsRow = document.getElementById("carpark");
+                            carparkCardsRow.innerHTML = `<p class="h4 ml-4">No nearby carparks, choose a new location!</p>`;
+                            //If location specified is not within Singapore
+                        } else {
+                            fetchCarparkAvailabilityData().then(function () {
 
 
-        // If the place has a geometry, then present it on a map.
+                                // If the place has a geometry, then present it on a map.
 
 
-        map.setCenter({lat: lat, lng: lng});
-        if (map.getZoom() < 15) {
-            map.setZoom(16);
-        }
+                                map.setCenter({lat: lat, lng: lng});
+                                if (map.getZoom() < 15) {
+                                    map.setZoom(16);
+                                }
 
 
 
-        //Convert The location lat and lon to SVY21 northing and easting (y and x values)
-        let result = cv.computeSVY21(lat, lng);
-        if (offset > 0) {
-            filteredData = filterByLocation(allCarparkJson, result.E, result.N, offset);
+                                //Convert The location lat and lon to SVY21 northing and easting (y and x values)
+                                let result = cv.computeSVY21(lat, lng);
+                                if (offset > 0) {
+                                    filteredData = filterByLocation(allCarparkJson, result.E, result.N, offset);
 
-            clearOverlays();
-            clearCarparkCards();
+                                    clearOverlays();
+                                    clearCarparkCards();
 
-            if (filteredData.length !== 0) {
-                refreshBtn.disabled = false;
-                for (const carpark of filteredData) {
-                    let carparkRate;
-                    let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
-                    let lastUpdatedDate = getCarparkLastUpdatedTime(carpark.carpark_id);
-                    let lastUpdatedDateFormatted;
-                    if (lastUpdatedDate === -1) {
-                        lastUpdatedDateFormatted = -1;
-                    } else {
-                        lastUpdatedDateFormatted = moment(lastUpdatedDate).format('ddd, HH:mm:ss');
+                                    if (filteredData.length !== 0) {
+                                        refreshBtn.disabled = false;
+                                        for (const carpark of filteredData) {
+                                            let carparkRate;
+                                            let totalCarparkAvailableLot = getTotalCarparkAvailable(carpark.carpark_id);
+                                            let lastUpdatedDate = getCarparkLastUpdatedTime(carpark.carpark_id);
+                                            let lastUpdatedDateFormatted;
+                                            if (lastUpdatedDate === -1) {
+                                                lastUpdatedDateFormatted = -1;
+                                            } else {
+                                                lastUpdatedDateFormatted = moment(lastUpdatedDate).format('ddd, HH:mm:ss');
+                                            }
+                                            carparkRate = getCarparkRates(carpark);
+                                            initMarker(carpark, map);
+                                            createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted, carparkRate);
+                                            markerId++;
+                                        }
+                                        //MarkerID also acts a counter for number of carparks
+                                        infoWindowContentString = `Found ${markerId} nearby carparks`;
+                                    } else {
+                                        let carparkCardsRow = document.getElementById("carpark");
+                                        carparkCardsRow.innerHTML = `<p class="h4 ml-4">No nearby carparks, choose a new location!</p>`;
+                                        refreshBtn.disabled = true;
+                                        infoWindowContentString = `No carparks nearby`;
+                                    }
+
+
+
+                                    infoWindow.close();
+                                    infoWindow.setContent(infoWindowContentString);
+                                    infoWindow.open(draggableMarker.map, draggableMarker);
+
+                                }
+
+
+
+                            }).catch(function (err) {
+                                console.log(err);
+                            });
+                        }
+
                     }
-                    carparkRate = getCarparkRates(carpark);
-                    initMarker(carpark, map);
-                    createCarparkCards(markerId, carpark, totalCarparkAvailableLot, lastUpdatedDateFormatted, carparkRate);
-                    markerId++;
                 }
-                //MarkerID also acts a counter for number of carparks
-                infoWindowContentString = `Found ${markerId} nearby carparks`;
-            } else {
-                let carparkCardsRow = document.getElementById("carpark");
-                carparkCardsRow.innerHTML = `<p class="h4 ml-4">No nearby carparks, choose a new location!</p>`;
-                refreshBtn.disabled = true;
-                infoWindowContentString = `No carparks nearby`;
             }
-
-
-
-            infoWindow.close();
-            infoWindow.setContent(infoWindowContentString);
-            infoWindow.open(draggableMarker.map, draggableMarker);
-
+        } else {
+            createErrorAlert("Error getting location", 4000);
+            //failed
         }
-
-
-
-    }).catch(function (err) {
-        console.log(err);
     });
+
 }
 
 

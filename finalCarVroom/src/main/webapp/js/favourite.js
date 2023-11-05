@@ -15,7 +15,7 @@ let infoWindow;
 let markersArrayLength = 0;
 
 //Initialise the map
-async function initMap() {
+async function initFavouritesMap() {
     let markerId = 0;
     const {Map} = await google.maps.importLibrary("maps");
 
@@ -71,7 +71,7 @@ fetchCarparkAvailabilityData().then(function () {
 }).then(function () {
     return getUserFavouritedCarparks(userID);
 }).then(function () {
-    initMap();
+    initFavouritesMap()();
 }).catch(function (err) {
     console.log(err);
 });

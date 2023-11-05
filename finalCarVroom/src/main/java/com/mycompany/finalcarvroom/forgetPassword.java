@@ -28,7 +28,6 @@ public class forgetPassword extends HttpServlet {
         // If email exists, proceed
         ManipulateDB mdb = new ManipulateDB();
         ConnectDB conn = new ConnectDB();
-        
         if(mdb.checkEmailExist(conn.getConnection(), email_retr)){
             System.out.println("Email Exists!");
             Authentication auth = new Authentication();
